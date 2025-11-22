@@ -5,7 +5,7 @@
     "bio": "Autoritaire et puissant.",
     "openaiVoice": "onyx",
     "openaiStyle": "angry",
-    "avatar": "assets/img_tigre.png"
+    "avatar": "assets/avatar_tigre.png"
   },
   {
     "id": "hideyoshi",
@@ -13,13 +13,13 @@
     "bio": "Sage et pacifiste.",
     "openaiVoice": "alloy",
     "openaiStyle": "calm",
-    "avatar": "assets/img_grue.png"
+    "avatar": "assets/avatar_grue.png"
   },
   {
     "id": "oracle",
     "displayName": "L'Esprit du Temple",
     "bio": "Neutre et mystérieux. Il aide à réfléchir.",
     "openaiVoice": "echo",
-    "avatar": "assets/img_oracle.png"
+    "avatar": "assets/avatar_esprit.png"
   }
 ]
