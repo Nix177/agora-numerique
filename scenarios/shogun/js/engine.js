@@ -50,27 +50,25 @@ function mapPersonas(list) {
     return map;
 }
 
-// --- SÉLECTION DU MODE (NOUVEAU) ---
+// --- SÉLECTION DU MODE ---
 function showModeSelection() {
-    // On injecte l'écran de choix directement dans le container du jeu
     ui.screen.innerHTML = `
         <div class="slide-content" style="background:rgba(0,0,0,0.9); max-width:90%;">
-            <h1>Configuration de la Session</h1>
-            <p>Choisissez la durée de l'expérience.</p>
+            <h1>L'Aube du Shogun</h1>
+            <p>Choisissez votre expérience de jeu.</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
                 <button id="btn-mode-std" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; transition:0.2s;">
                     <strong>Mode Standard</strong><br>
-                    <span style="font-size:0.6em">Histoire directe (30 min)</span>
+                    <span style="font-size:0.6em">L'histoire principale (Directe)</span>
                 </button>
                 <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px; transition:0.2s;">
                     <strong>Mode Campagne</strong><br>
-                    <span style="font-size:0.6em">Avec événements aléatoires (45+ min)</span>
+                    <span style="font-size:0.6em">Avec événements imprévus</span>
                 </button>
             </div>
         </div>
     `;
     
-    // On ajoute les écouteurs sur les boutons qu'on vient de créer
     document.getElementById('btn-mode-std').onclick = () => { 
         GAME_MODE = 'standard'; 
         loadScene(GAME_DATA.scenario.start); 
