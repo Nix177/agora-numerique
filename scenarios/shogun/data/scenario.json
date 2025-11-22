@@ -1,185 +1,258 @@
 {
-  "meta": {
-    "title": "L'Aube du Shogun",
-    "theme": "shogun"
-  },
-  "state": {
-    "violence": 0,
-    "richesse": 50,
-    "foi": 50
-  },
-  "start": "intro",
+  "meta": { "title": "L'Aube du Shogun", "theme": "shogun" },
+  "state": { "violence": 0, "richesse": 50, "foi": 50 },
+  "start": "intro_mort_shogun",
   "scenes": {
-    "intro": {
-      "id": "intro",
+    
+    "intro_mort_shogun": {
+      "id": "intro_mort_shogun",
       "type": "intro",
       "background": "assets/bg_trone.png",
       "content": {
-        "title": "Le Trône Vide",
-        "text": "L'an 1603. Le Shogun est mort. Le chaos menace l'archipel."
+        "title": "La Mort du Shogun",
+        "text": "L'an 1603. Le Shogun est mort sans héritier. Les clans s'agitent."
       },
-      "next": "choix_successeur"
+      "next": "votation_succession"
     },
-    "choix_successeur": {
-      "id": "choix_successeur",
+
+    "votation_succession": {
+      "id": "votation_succession",
+      "type": "chat",
+      "background": "assets/bg_conseil.png",
+      "persona": "nobunaga",
+      "prompt": "Tu es Nobunaga. Revendique le pouvoir. Dis que seule ta force peut sauver le pays. Menace ceux qui hésitent.",
+      "teacherNote": "Nobunaga revendique le titre. Faut-il le laisser faire ?",
+      "next": "vote_nobunaga_oui_non"
+    },
+
+    "vote_nobunaga_oui_non": {
+      "id": "vote_nobunaga_oui_non",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": {
-        "title": "Le Grand Vote",
-        "text": "Qui doit devenir le nouveau Shogun ?"
-      },
+      "content": { "title": "Le Premier Choix", "text": "Nobunaga doit-il devenir Shogun ?" },
       "options": [
-        {
-          "label": "Élire le TIGRE (Force)",
-          "target": "regne_tigre_intro",
-          "effect": { "violence": 10 }
-        },
-        {
-          "label": "Élire la GRUE (Paix)",
-          "target": "regne_grue_intro",
-          "effect": { "violence": -10 }
-        },
-        {
-          "label": "Élire la TORTUE (Tradition)",
-          "target": "regne_tortue_intro",
-          "effect": { "foi": 10 }
-        }
+        { "label": "OUI (Accepter Nobunaga)", "target": "nobunaga_elu", "effect": { "violence": 10 } },
+        { "label": "NON (L'empêcher)", "target": "debat_candidats", "effect": { "violence": -5 } }
       ]
     },
-    "regne_tigre_intro": {
-      "id": "regne_tigre_intro",
+
+    "nobunaga_elu": {
+      "id": "nobunaga_elu",
+      "type": "story",
+      "background": "assets/bg_guerre.png",
+      "persona": "nobunaga",
+      "content": { "title": "Le Feu et le Sang", "text": "Nobunaga est Shogun. Les temples brûlent. La guerre civile éclate immédiatement." },
+      "prompt": "Tu es Nobunaga. Annonce que tu vas écraser les opposants.",
+      "next": "fin_guerre_totale"
+    },
+
+    "debat_candidats": {
+      "id": "debat_candidats",
+      "type": "intro",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Le Conseil des Daimyos", "text": "Nobunaga est rejeté. Trois autres candidats se présentent : Kenshin, Hideyoshi, Toshi." },
+      "next": "vote_trois_candidats"
+    },
+
+    "vote_trois_candidats": {
+      "id": "vote_trois_candidats",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "L'Élection", "text": "Qui choisissez-vous ?" },
+      "options": [
+        { "label": "Kenshin (Tradition)", "target": "kenshin_elu_choix", "effect": { "foi": 10 } },
+        { "label": "Hideyoshi (Paix)", "target": "hideyoshi_elu_desarmement", "effect": { "violence": -10 } },
+        { "label": "Toshi (Unité Religieuse)", "target": "toshi_elu_conversion", "effect": { "foi": 5, "violence": 5 } },
+        { "label": "Impasse (Personne)", "target": "empereur_tranche", "effect": { "richesse": -5 } }
+      ]
+    },
+
+    // --- BRANCHE KENSHIN ---
+    "kenshin_elu_choix": {
+      "id": "kenshin_elu_choix",
+      "type": "chat",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "persona": "gozen",
+      "content": { "title": "Le Dilemme de Kenshin", "text": "Kenshin est élu mais l'équilibre est fragile. Il doit choisir une alliance." },
+      "prompt": "Tu es Gozen, la conseillère. Explique à Kenshin (la classe) qu'il a deux choix : s'allier à l'Empereur (Paix) ou à Nobunaga (Force).",
+      "next": "vote_kenshin_alliance"
+    },
+    "vote_kenshin_alliance": {
+      "id": "vote_kenshin_alliance",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "options": [
+        { "label": "Suivre l'Empereur (Paix)", "target": "kenshin_empereur", "effect": { "violence": -5 } },
+        { "label": "Rejoindre Nobunaga (Force)", "target": "kenshin_nobunaga", "effect": { "violence": 10 } }
+      ]
+    },
+    "kenshin_empereur": {
+      "id": "kenshin_empereur",
+      "type": "story",
+      "background": "assets/bg_paix.png",
+      "persona": "kenshin",
+      "content": { "title": "Le Prix de la Paix", "text": "Nobunaga et Toshi se sentent trahis. La guerre est inévitable." },
+      "prompt": "Tu es Kenshin. Dis que tu préfères la paix à la domination, même si cela mène à la guerre.",
+      "next": "conflit_inevitable"
+    },
+    "kenshin_nobunaga": {
+      "id": "kenshin_nobunaga",
       "type": "chat",
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
-      "content": {
-        "title": "L'An 1 du Tigre",
-        "text": "L'ordre règne par le fer. Les bandits ont peur."
-      },
-      "prompt": "Tu es le Shogun Tigre. Tu es fier. Dis aux élèves : 'L'ordre est rétabli grâce à ma force.' Sois bref.",
-      "next": "evt_tigre_revolte"
+      "content": { "title": "L'Alliance de Fer", "text": "Kenshin et Nobunaga s'unissent. Mais Nobunaga exige la conversion religieuse de tous." },
+      "prompt": "Tu es Nobunaga. Exige que Kenshin force ses paysans bouddhistes à devenir shintoïstes.",
+      "next": "vote_kenshin_conversion"
     },
-    "evt_tigre_revolte": {
-      "id": "evt_tigre_revolte",
+    "vote_kenshin_conversion": {
+      "id": "vote_kenshin_conversion",
       "type": "vote",
-      "background": "assets/bg_guerre.png",
-      "content": {
-        "title": "Dilemme : La Révolte",
-        "text": "Des paysans refusent de payer l'impôt de guerre car ils ont faim."
-      },
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Le Dilemme Religieux", "text": "Acceptez-vous de forcer la conversion de votre peuple ?" },
       "options": [
-        {
-          "label": "Les écraser (Cohérent mais cruel)",
-          "target": "fin_tigre_sang",
-          "effect": { "violence": 10 }
-        },
-        {
-          "label": "Leur donner du riz (Clément mais faible)",
-          "target": "fin_tigre_compromis",
-          "effect": { "richesse": -10 }
-        }
+        { "label": "Convertir (Soumission)", "target": "conversion_acceptee", "effect": { "foi": -10 } },
+        { "label": "Refuser (Rupture)", "target": "conversion_refusee", "effect": { "foi": 10, "violence": 5 } }
       ]
     },
-    "regne_grue_intro": {
-      "id": "regne_grue_intro",
+
+    // --- BRANCHE HIDEYOSHI ---
+    "hideyoshi_elu_desarmement": {
+      "id": "hideyoshi_elu_desarmement",
       "type": "chat",
       "background": "assets/bg_paix.png",
       "persona": "hideyoshi",
-      "content": {
-        "title": "L'An 1 de la Grue",
-        "text": "Le commerce fleurit, mais les frontières sont fragiles sans armée."
-      },
-      "prompt": "Tu es le Shogun Grue. Tu es serein. Dis : 'La richesse vaut mieux que la gloire des batailles.'",
-      "next": "evt_grue_invasion"
+      "content": { "title": "La Chasse aux Épées", "text": "Hideyoshi ordonne le désarmement total pour garantir la paix." },
+      "prompt": "Tu es Hideyoshi. Explique que les armes doivent disparaître pour que la paix revienne.",
+      "next": "vote_desarmement"
     },
-    "evt_grue_invasion": {
-      "id": "evt_grue_invasion",
+    "vote_desarmement": {
+      "id": "vote_desarmement",
       "type": "vote",
       "background": "assets/bg_paix_walk.png",
-      "content": {
-        "title": "Dilemme : L'Invasion",
-        "text": "Des pirates attaquent les côtes. Nous n'avons plus d'armée régulière."
-      },
+      "content": { "title": "Réaction des Clans", "text": "Acceptez-vous de rendre vos armes ?" },
       "options": [
-        {
-          "label": "Payer une rançon (Pacifiste mais coûteux)",
-          "target": "fin_grue_pauvre",
-          "effect": { "richesse": -20 }
-        },
-        {
-          "label": "Lever une milice (Trahison de l'idéal ?)",
-          "target": "fin_grue_guerre",
-          "effect": { "violence": 5 }
-        }
+        { "label": "Accepter (Paix Fragile)", "target": "paix_imparfaite", "effect": { "violence": -20 } },
+        { "label": "Refuser (Rébellion)", "target": "tous_contre_un", "effect": { "violence": 10 } }
       ]
     },
-    "regne_tortue_intro": {
-      "id": "regne_tortue_intro",
-      "type": "chat",
-      "background": "assets/bg_shogun_throne_alt.png",
-      "persona": "kenshin",
-      "content": {
-        "title": "L'An 1 de la Tortue",
-        "text": "Les traditions sont respectées, mais le pays s'isole."
-      },
-      "prompt": "Tu es la Tortue. Sois solennel. Dis : 'Nous avons sauvé l'âme du Japon.'",
-      "next": "evt_tortue_etranger"
-    },
-    "evt_tortue_etranger": {
-      "id": "evt_tortue_etranger",
-      "type": "vote",
-      "background": "assets/bg_shogun_throne_alt.png",
-      "content": {
-        "title": "Dilemme : Les Étrangers",
-        "text": "Des navires étrangers apportent des technologies modernes (médecine, armes)."
-      },
-      "options": [
-        {
-          "label": "Les chasser (Préserver la tradition)",
-          "target": "fin_tortue_fermee",
-          "effect": { "foi": 10, "richesse": -10 }
-        },
-        {
-          "label": "Les accueillir (Modernisation)",
-          "target": "fin_tortue_moderne",
-          "effect": { "richesse": 10, "foi": -10 }
-        }
-      ]
-    },
-    "fin_tigre_sang": {
-      "id": "fin_tigre_sang",
-      "type": "intro",
-      "background": "assets/bg_guerre_alt.png",
-      "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais le peuple vous hait." }
-    },
-    "fin_tigre_compromis": {
-      "id": "fin_tigre_compromis",
-      "type": "intro",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité. Les clans complotent." }
-    },
-    "fin_grue_pauvre": {
-      "id": "fin_grue_pauvre",
+    "paix_imparfaite": {
+      "id": "paix_imparfaite",
       "type": "intro",
       "background": "assets/bg_paix.png",
-      "content": { "title": "Fin Ruinée", "text": "La paix est sauve, mais les caisses de l'État sont vides." }
+      "content": { "title": "Une Paix Imparfaite", "text": "Les armes se taisent. Ce n'est pas parfait, mais c'est une paix choisie." },
+      "next": "fin_reflexion"
     },
-    "fin_grue_guerre": {
-      "id": "fin_grue_guerre",
-      "type": "intro",
+    "tous_contre_un": {
+      "id": "tous_contre_un",
+      "type": "story",
       "background": "assets/bg_guerre.png",
-      "content": { "title": "Fin Réaliste", "text": "Vous avez dû reprendre les armes pour survivre." }
+      "persona": "nobunaga",
+      "content": { "title": "L'Alliance Rebelle", "text": "Nobunaga, Kenshin et Toshi s'unissent contre le désarmement." },
+      "prompt": "Tu es Nobunaga. Dis qu'un samouraï sans épée n'est rien. Appelle à la révolte.",
+      "next": "alliance_fragile"
     },
-    "fin_tortue_fermee": {
-      "id": "fin_tortue_fermee",
+
+    // --- BRANCHE TOSHI ---
+    "toshi_elu_conversion": {
+      "id": "toshi_elu_conversion",
+      "type": "chat",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "persona": "toshi",
+      "content": { "title": "L'Unité par la Foi", "text": "Toshi impose le Shintoïsme comme seule religion." },
+      "prompt": "Tu es Toshi. Dis calmement que pour unir le pays, il ne doit y avoir qu'une seule croyance.",
+      "next": "vote_toshi_foi"
+    },
+    "vote_toshi_foi": {
+      "id": "vote_toshi_foi",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Le Choix de la Foi", "text": "Acceptez-vous de renier vos croyances bouddhistes ?" },
+      "options": [
+        { "label": "Se convertir (Ordre)", "target": "ordre_peur", "effect": { "foi": -10 } },
+        { "label": "Refuser (Exil)", "target": "guerre_totale", "effect": { "violence": 20 } }
+      ]
+    },
+
+    // --- BRANCHES COMMUNES / FINS ---
+    "empereur_tranche": {
+      "id": "empereur_tranche",
+      "type": "story",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "persona": "oracle",
+      "content": { "title": "L'Empereur Tranche", "text": "Face à l'impasse, l'Empereur choisit Hideyoshi." },
+      "prompt": "Tu es l'Esprit. Annonce que la volonté divine a choisi la Paix.",
+      "next": "hideyoshi_elu_desarmement"
+    },
+    "ordre_peur": {
+      "id": "ordre_peur",
       "type": "intro",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "Fin Isolée", "text": "Le Japon reste pur mais prend du retard sur le monde." }
+      "content": { "title": "L'Ordre par la Peur", "text": "Le pays est uni, mais les esprits sont brisés." },
+      "next": "fin_reflexion"
     },
-    "fin_tortue_moderne": {
-      "id": "fin_tortue_moderne",
+    "conversion_acceptee": {
+      "id": "conversion_acceptee",
+      "type": "story",
+      "background": "assets/bg_conseil.png",
+      "persona": "kenshin",
+      "content": { "title": "La Trahison", "text": "Kenshin a trahi ses propres valeurs pour le pouvoir." },
+      "prompt": "Tu es Kenshin. Tu es triste. Dis : 'J'ai sauvé mon clan, mais j'ai perdu mon âme.'",
+      "next": "fin_reflexion"
+    },
+    "conversion_refusee": {
+      "id": "conversion_refusee",
+      "type": "story",
+      "background": "assets/bg_guerre.png",
+      "persona": "kenshin",
+      "content": { "title": "La Rupture", "text": "Kenshin refuse. Ses troupes rejoignent l'Empereur." },
+      "prompt": "Tu es Kenshin. Dis fièrement : 'On ne commande pas aux âmes.'",
+      "next": "conflit_inevitable"
+    },
+    "conflit_inevitable": {
+      "id": "conflit_inevitable",
+      "type": "vote",
+      "background": "assets/bg_guerre.png",
+      "content": { "title": "L'Ultime Décision", "text": "La guerre est là. Faut-il se rendre ou se battre jusqu'au bout ?" },
+      "options": [
+        { "label": "Se Rendre (Survie)", "target": "fin_paix_surveiller", "effect": { "violence": -5 } },
+        { "label": "Guerre Totale (Sacrifice)", "target": "fin_guerre_totale", "effect": { "violence": 50 } }
+      ]
+    },
+    "alliance_fragile": {
+      "id": "alliance_fragile",
+      "type": "story",
+      "background": "assets/bg_conseil.png",
+      "persona": "toshi",
+      "content": { "title": "L'Alliance Fragile", "text": "Les rebelles s'unissent, mais leurs visions s'opposent." },
+      "prompt": "Tu es Toshi. Dis que cette alliance ne tiendra pas longtemps.",
+      "next": "guerre_totale"
+    },
+    "guerre_totale": {
+      "id": "guerre_totale",
       "type": "intro",
-      "background": "assets/bg_shogun_throne_alt.png",
-      "content": { "title": "Fin Hybride", "text": "Les traditions survivent difficilement face à la nouveauté." }
+      "background": "assets/bg_guerre_alt.png",
+      "content": { "title": "La Guerre Totale", "text": "Le Japon s'effondre dans le chaos. Il n'y a plus de vainqueurs, que des survivants." },
+      "next": "fin_reflexion"
+    },
+    "fin_paix_surveiller": {
+      "id": "fin_paix_surveiller",
+      "type": "intro",
+      "background": "assets/bg_paix.png",
+      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste." },
+      "next": "fin_reflexion"
+    },
+    "fin_guerre_totale": {
+      "id": "fin_guerre_totale",
+      "type": "intro",
+      "background": "assets/bg_guerre_alt.png",
+      "content": { "title": "Le Chaos", "text": "La guerre a tout détruit." },
+      "next": "fin_reflexion"
+    },
+    "fin_reflexion": {
+      "id": "fin_reflexion",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": { "title": "Réflexion", "text": "Le jeu s'arrête. Quelles leçons en tirez-vous sur le pouvoir et la liberté ?" }
     }
   }
 }
