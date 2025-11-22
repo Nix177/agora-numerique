@@ -27,7 +27,7 @@
     },
     "evt_tigre_revolte": {
       "id": "evt_tigre_revolte",
-      "type": "vote", // Événement spécifique au Tigre
+      "type": "vote", 
       "background": "assets/bg_war_camp.png",
       "content": { 
         "title": "Dilemme : La Révolte", 
@@ -50,7 +50,7 @@
     },
     "evt_grue_invasion": {
       "id": "evt_grue_invasion",
-      "type": "vote", // Événement spécifique à la Grue
+      "type": "vote", 
       "background": "assets/bg_paix_walk.png",
       "content": { 
         "title": "Dilemme : L'Invasion", 
