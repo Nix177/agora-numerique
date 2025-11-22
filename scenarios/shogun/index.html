@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L'Aube du Shogun - Maquette</title>
+    <style>
+        /* --- Style global sombre et immersif --- */
+        body { 
+            margin: 0; 
+            background: #1a1a1a; 
+            color: white; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow: hidden; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            background-size: cover; 
+            background-position: center; 
+            transition: background 1s ease; 
+        }
+        
+        /* --- Zone principale (Écran Élèves / Beamer) --- */
+        #game-container { 
+            flex-grow: 1; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center; 
+            backdrop-filter: brightness(0.6); 
+            flex-direction: column;
+        }
+        
+        /* Styles des Slides (Narration) */
+        .slide-content {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 80%;
+        }
+        .slide-content h1 { 
+            font-size: 4em; 
+            text-shadow: 0 0 20px black; 
+            margin-bottom: 0.2em; 
+            color: #fff;
+        }
+        .slide-content p { 
+            font-size: 2em; 
+            font-style: italic; 
+            color: #ddd; 
+        }
+
+        /* Styles du Chat (Bot) */
+        .chat-box { 
+            width: 80%; 
+            max-width: 900px; 
+            background: rgba(0,0,0,0.85); 
+            border-radius: 15px; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            height: 75vh; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        .avatar-container {
+            padding: 15px;
+            background: rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .avatar-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff8800;
+        }
+        .avatar-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff8800;
+        }
+        .chat-messages { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding: 20px; 
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .msg { 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            max-width: 80%;
+            font-size: 1.2em;
+            line-height: 1.4;
+        }
+        .msg.user { 
+            background: #333; 
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            color: #ddd;
+        }
+        .msg.bot { 
+            background: #4a3b2a; 
+            border-left: 4px solid #ff8800; 
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+
+        /* Styles du Vote */
+        .vote-container h1 {
+            font-size: 3.5em;
+            text-shadow: 0 4px 10px black;
+            background: rgba(0,0,0,0.7);
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+
+        /* --- COCKPIT ENSEIGNANT (Bas de l'écran) --- */
+        #teacher-ui {
+            height: 90px;
+            background: #222;
+            border-top: 4px solid #ff8800;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            justify-content: space-between;
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Zone Gauche : Système */
+        .system-controls {
+            display: flex;
+            align-items: center;
+            min-width: 200px;
+        }
+        .btn-fullscreen { 
+            background: #000; 
+            border: 1px solid #ff8800; 
+            color: #ff8800; 
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-fullscreen:hover { background: #333; }
+
+        /* Zone Milieu : Chat Prof */
+        #teacher-input-zone { 
+            flex-grow: 1; 
+            margin: 0 30px; 
+            display: flex; 
+            gap: 10px;
+        }
+        #prof-chat-input { 
+            flex-grow: 1; 
+            padding: 12px; 
+            border-radius: 5px; 
+            border: 1px solid #555; 
+            background: #333; 
+            color: white; 
+            font-size: 1rem;
+        }
+        #prof-chat-input:focus { outline: 2px solid #ff8800; }
+        .btn-send {
+            background: #444;
+            color: white;
+            border: none;
+            padding: 0 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-send:hover { background: #555; }
+
+        /* Zone Droite : Actions Scénario */
+        .scenario-controls-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            min-width: 300px;
+        }
+        #teacher-note-area { 
+            color: #ffd700; 
+            font-weight: bold; 
+            font-size: 0.85em; 
+            margin-bottom: 8px; 
+            text-align: right;
+        }
+        #teacher-controls { 
+            display: flex; 
+            gap: 10px; 
+        }
+        
+        /* Boutons Dynamiques */
+        button.btn-next { 
+            background: #28a745; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 1em;
+            box-shadow: 0 4px 0 #1e7e34;
+        }
+        button.btn-next:active { transform: translateY(4px); box-shadow: none; }
+        
+        button.btn-choice { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 0.9em;
+            box-shadow: 0 4px 0 #0056b3;
+        }
+        button.btn-choice:active { transform: translateY(4px); box-shadow: none; }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        </div>
+
+    <div id="teacher-ui">
+        
+        <div class="system-controls">
+            <button class="btn-fullscreen" onclick="toggleFullScreen()">⛶ Plein Écran</button>
+            <div style="margin-left: 15px; font-size: 0.8em; color: #888;">Maquette 8-11H</div>
+        </div>
+
+        <div id="teacher-input-zone">
+            <input type="text" id="prof-chat-input" placeholder="Taper la question d'un élève..." onkeydown="if(event.key==='Enter') document.getElementById('btn-send-chat').click()">
+            <button id="btn-send-chat" class="btn-send" onclick="window.sendUserMessage(document.getElementById('prof-chat-input').value); document.getElementById('prof-chat-input').value=''">Envoyer</button>
+        </div>
+
+        <div class="scenario-controls-wrapper">
+            <div id="teacher-note-area">Chargement...</div>
+            <div id="teacher-controls">
+                </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="js/engine.js"></script>
+</body>
+</html>

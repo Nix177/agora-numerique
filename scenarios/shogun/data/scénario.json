@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "title": "L'Aube du Shogun",
+    "version": "1.0",
+    "theme": "shogun"
+  },
+  "state": {
+    "violence": 0,
+    "richesse": 0
+  },
+  "start": "scene_01",
+  "scenes": {
+    "scene_01": {
+      "id": "scene_01",
+      "type": "intro",
+      "background": "assets/bg_shogun_throne.png",
+      "audio": "assets/musique_intro.mp3",
+      "content": {
+        "title": "Le Conseil des Clans",
+        "text": "Le Shogun est mort. Le trône est vide. Les clans s'observent."
+      },
+      "next": "choix_initial"
+    },
+    "choix_initial": {
+      "id": "choix_initial",
+      "type": "vote",
+      "background": "assets/bg_council_room.png",
+      "persona": "oracle",
+      "prompt": "Tu es l'Esprit du Temple. Demande aux élèves quelle vertu doit guider le nouveau chef : la Force ou la Sagesse ?",
+      "options": [
+        {
+          "label": "Choisir la FORCE (Tigre)",
+          "target": "branche_guerre",
+          "icon": "assets/ui_btn_force.png",
+          "effect": { "violence": 1 }
+        },
+        {
+          "label": "Choisir la PAIX (Grue)",
+          "target": "branche_paix",
+          "icon": "assets/ui_btn_paix.png",
+          "effect": { "violence": -1 }
+        }
+      ]
+    },
+    "branche_guerre": {
+      "id": "branche_guerre",
+      "type": "story",
+      "background": "assets/bg_war_camp.png",
+      "persona": "nobunaga",
+      "content": {
+        "title": "L'Ère du Feu",
+        "text": "Les armées marchent sur la capitale. L'ordre règne, mais à quel prix ?"
+      },
+      "prompt": "Tu es Nobunaga. Félicite les élèves pour leur courage. Annonce que les faibles devront se soumettre.",
+      "next": "consequence_guerre"
+    },
+    "branche_paix": {
+      "id": "branche_paix",
+      "type": "story",
+      "background": "assets/bg_peace_temple.png",
+      "persona": "hideyoshi",
+      "content": {
+        "title": "L'Ère de la Rosée",
+        "text": "Les épées sont fondues pour faire des charrues. Le peuple respire."
+      },
+      "prompt": "Tu es Hideyoshi. Remercie les élèves pour leur sagesse. Avertis-les que la paix est fragile.",
+      "next": "consequence_paix"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+[
+  {
+    "id": "nobunaga",
+    "displayName": "Le Clan du Tigre",
+    "bio": "Autoritaire et puissant.",
+    "openaiVoice": "onyx",
+    "openaiStyle": "angry",
+    "avatar": "assets/img_tigre.png"
+  },
+  {
+    "id": "hideyoshi",
+    "displayName": "L'Alliance de la Grue",
+    "bio": "Sage et pacifiste.",
+    "openaiVoice": "alloy",
+    "openaiStyle": "calm",
+    "avatar": "assets/img_grue.png"
+  },
+  {
+    "id": "oracle",
+    "displayName": "L'Esprit du Temple",
+    "bio": "Neutre et mystérieux. Il aide à réfléchir.",
+    "openaiVoice": "echo",
+    "avatar": "assets/img_oracle.png"
+  }
+]
