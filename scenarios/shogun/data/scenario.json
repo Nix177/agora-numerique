@@ -5,72 +5,150 @@
   },
   "state": {
     "violence": 0,
-    "richesse": 0
+    "richesse": 0,
+    "foi": 0
   },
-  "start": "scene_01",
+  "start": "scene_intro",
   "scenes": {
-    "scene_01": {
-      "id": "scene_01",
+    
+    "scene_intro": {
+      "id": "scene_intro",
       "type": "intro",
-      "background": "assets/bg_trone.png",
+      "background": "assets/bg_shogun_throne.png",
       "content": {
-        "title": "Le Conseil des Clans",
-        "text": "Le Shogun est mort. Le trône est vide. Les clans s'observent."
+        "title": "L'Aube du Shogun",
+        "text": "L'an 1603. Le grand Shogun Tokugawa est mort sans héritier. Le trône est vide. Trois clans s'affrontent pour l'avenir de l'Archipel."
       },
-      "next": "choix_initial"
+      "next": "phase_1_succession"
     },
-    "choix_initial": {
-      "id": "choix_initial",
+
+    "phase_1_succession": {
+      "id": "phase_1_succession",
+      "type": "chat",
+      "background": "assets/bg_conseil.png",
+      "persona": "nobunaga",
+      "teacherNote": "Laissez Nobunaga présenter ses arguments (Force/Unité). Demandez aux élèves s'ils acceptent son autorité immédiate.",
+      "prompt": "Tu es le Général Tigre (Nobunaga). Tu es arrogant et puissant. Dis aux élèves que l'Empereur est faible et que seule ta force militaire peut empêcher le chaos. Tu veux le pouvoir tout de suite.",
+      "next": "vote_1_nobunaga"
+    },
+
+    "vote_1_nobunaga": {
+      "id": "vote_1_nobunaga",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "persona": "oracle",
-      "prompt": "Tu es l'Esprit du Temple. Demande aux élèves de choisir entre la Force (Tigre) ou la Paix (Grue).",
-      "teacherNote": "Faites voter la classe à main levée.",
+      "content": {
+        "title": "Le Choix de la Succession",
+        "text": "Le Général Tigre réclame le titre de Shogun. Acceptez-vous sa domination pour garantir la sécurité ?"
+      },
       "options": [
         {
-          "label": "Choisir la FORCE (Tigre)",
-          "target": "branche_guerre",
-          "effect": { "violence": 1 }
+          "label": "OUI : Accepter le Tigre (Ordre)",
+          "target": "branche_tigre_guerre",
+          "icon": "assets/ui_btn_force.png",
+          "effect": { "violence": 10, "richesse": 5 }
         },
         {
-          "label": "Choisir la PAIX (Grue)",
-          "target": "branche_paix",
-          "effect": { "violence": -1 }
+          "label": "NON : Rejeter le Tigre (Débat)",
+          "target": "phase_2_election",
+          "icon": "assets/ui_btn_paix.png",
+          "effect": { "violence": -2 }
         }
       ]
     },
-    "branche_guerre": {
-      "id": "branche_guerre",
+
+    "branche_tigre_guerre": {
+      "id": "branche_tigre_guerre",
       "type": "story",
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
       "content": {
         "title": "L'Ère du Feu",
-        "text": "Les armées marchent sur la capitale."
+        "text": "Vous avez choisi la sécurité au prix de la liberté. Nobunaga écrase les moines et unifie le pays par le sang."
       },
-      "prompt": "Tu es le général Tigre. Félicite-les pour ce choix courageux.",
-      "next": "fin"
+      "prompt": "Tu es le Shogun Tigre. Félicite les élèves d'avoir choisi la force. Annonce que les temples seront brûlés pour éviter les rébellions.",
+      "teacherNote": "Question Philo : La sécurité vaut-elle la suppression des libertés ?",
+      "next": "fin_guerre"
     },
-    "branche_paix": {
-      "id": "branche_paix",
+
+    "phase_2_election": {
+      "id": "phase_2_election",
+      "type": "chat",
+      "background": "assets/bg_conseil.png",
+      "persona": "oracle",
+      "teacherNote": "Le Tigre est rejeté. Il faut élire un nouveau chef. Présentez la Grue (Paix) et la Tortue (Tradition).",
+      "prompt": "Tu es l'Esprit du Temple. Le Tigre a été rejeté. Présente maintenant les deux autres candidats : La Grue (Hideyoshi) qui veut la paix par le désarmement, et La Tortue (Kenshin) qui veut respecter les anciennes traditions et l'Empereur.",
+      "next": "vote_2_election"
+    },
+
+    "vote_2_election": {
+      "id": "vote_2_election",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "content": {
+        "title": "L'Élection du Shogun",
+        "text": "Qui doit guider l'Archipel vers l'avenir ?"
+      },
+      "options": [
+        {
+          "label": "La Grue (Paix & Désarmement)",
+          "target": "branche_grue_paix",
+          "icon": "assets/ui_btn_paix.png",
+          "effect": { "violence": -10, "richesse": 5 }
+        },
+        {
+          "label": "La Tortue (Tradition & Religion)",
+          "target": "branche_tortue_tradition",
+          "icon": "assets/ui_btn_force.png",
+          "effect": { "foi": 10 }
+        }
+      ]
+    },
+
+    "branche_grue_paix": {
+      "id": "branche_grue_paix",
       "type": "story",
-      "background": "assets/bg_paix.png",
+      "background": "assets/bg_paix_walk.png",
       "persona": "hideyoshi",
       "content": {
-        "title": "L'Ère de la Rosée",
-        "text": "Les épées sont fondues pour faire des outils."
+        "title": "La Chasse aux Épées",
+        "text": "Hideyoshi est Shogun. Il ordonne que tous les paysans rendent leurs armes pour qu'elles soient fondues en outils agricoles."
       },
-      "prompt": "Tu es le sage Grue. Remercie-les pour leur sagesse.",
-      "next": "fin"
+      "prompt": "Tu es la Grue (Hideyoshi). Explique calmement que pour avoir la paix, personne ne doit pouvoir se battre. C'est la 'Chasse aux Épées'.",
+      "teacherNote": "Dilemme : Si on désarme les gentils, comment se défendent-ils contre les méchants ?",
+      "next": "fin_paix"
     },
-    "fin": {
-      "id": "fin",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
+
+    "branche_tortue_tradition": {
+      "id": "branche_tortue_tradition",
+      "type": "story",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "persona": "kenshin",
       "content": {
-        "title": "Fin de la maquette",
-        "text": "Merci d'avoir joué."
-      }
+        "title": "L'Alliance Sacrée",
+        "text": "Kenshin est Shogun. Il restaure le pouvoir des Temples et de l'Empereur. Les rituels reprennent."
+      },
+      "prompt": "Tu es la Tortue (Kenshin). Tu es très solennel. Dis que le respect des ancêtres et des dieux est la seule voie. Mais cela impose des règles strictes.",
+      "teacherNote": "Question Philo : Faut-il toujours respecter la tradition même quand elle semble injuste ?",
+      "next": "fin_tradition"
+    },
+
+    "fin_guerre": {
+      "id": "fin_guerre",
+      "type": "intro",
+      "background": "assets/bg_guerre_alt.png",
+      "content": { "title": "Fin : Le Japon Unifié", "text": "Le pays est fort, mais le peuple vit dans la peur." }
+    },
+    "fin_paix": {
+      "id": "fin_paix",
+      "type": "intro",
+      "background": "assets/bg_paix.png",
+      "content": { "title": "Fin : La Prospérité", "text": "Les champs sont fertiles, mais les bandits rôdent parfois." }
+    },
+    "fin_tradition": {
+      "id": "fin_tradition",
+      "type": "intro",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Fin : L'Harmonie", "text": "L'ordre moral est sauf, mais le progrès est lent." }
     }
   }
 }
