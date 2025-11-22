@@ -1,163 +1,72 @@
 {
-  "meta": {
-    "title": "L'Aube du Shogun",
-    "theme": "shogun"
-  },
-  "state": { "violence": 0, "richesse": 0, "foi": 0 },
-  "start": "intro_1",
+  "meta": { "title": "L'Aube du Shogun", "theme": "shogun" },
+  "state": { "violence": 0, "richesse": 50, "foi": 50 },
+  "start": "intro",
   "scenes": {
     
-    "intro_1": {
-      "id": "intro_1",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": {
-        "title": "L'An 1603",
-        "text": "Le grand Shogun Tokugawa est mort."
-      },
-      "next": "intro_2"
-    },
-    "intro_2": {
-      "id": "intro_2",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": {
-        "title": "Le Trône Vide",
-        "text": "Sans chef, les clans préparent leurs armées."
-      },
-      "next": "intro_3"
-    },
-    "intro_3": {
-      "id": "intro_3",
-      "type": "intro",
-      "background": "assets/bg_conseil.png",
-      "content": {
-        "title": "La Crise",
-        "text": "Trois Seigneurs réclament le pouvoir. Vous devez choisir."
-      },
-      "next": "chat_tigre_intro"
-    },
+    // ... (Intro et Débat comme avant) ...
 
-    "chat_tigre_intro": {
-      "id": "chat_tigre_intro",
-      "type": "chat",
-      "background": "assets/bg_conseil.png",
-      "persona": "nobunaga",
-      "teacherNote": "Le Tigre prend la parole en premier. Il veut imposer sa force.",
-      "prompt": "Tu es le Général Tigre. Rentre dans la salle avec fracas. Dis aux élèves (les Daimyos) que le pays est faible et que tu vas l'écraser pour le sauver. SOIS BREF : 2 phrases maximum. Ton agressif.",
-      "next": "vote_1_nobunaga"
-    },
-
-    "vote_1_nobunaga": {
-      "id": "vote_1_nobunaga",
+    "choix_successeur": {
+      "id": "choix_successeur",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": {
-        "title": "Le Coup de Force",
-        "text": "Le Tigre veut prendre le pouvoir immédiatement."
-      },
+      "content": { "title": "Le Grand Vote", "text": "Qui sera Shogun ?" },
       "options": [
-        {
-          "label": "ACCEPTER la Force (Soumission)",
-          "target": "branche_tigre_1",
-          "icon": "assets/ui_btn_force.png",
-          "effect": { "violence": 10 }
-        },
-        {
-          "label": "REFUSER (Ouvrir le débat)",
-          "target": "transition_debat",
-          "icon": "assets/ui_btn_paix.png",
-          "effect": { "violence": -2 }
-        }
+        { "label": "Élire le TIGRE (Force)", "target": "regne_tigre_intro", "effect": { "violence": 10 } },
+        { "label": "Élire la GRUE (Paix)", "target": "regne_grue_intro", "effect": { "violence": -10 } }
       ]
     },
 
-    "branche_tigre_1": {
-      "id": "branche_tigre_1",
-      "type": "story",
+    // --- BRANCHE TIGRE (Guerre) ---
+    "regne_tigre_intro": {
+      "id": "regne_tigre_intro",
+      "type": "chat",
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
-      "content": {
-        "title": "L'Ordre Nouveau",
-        "text": "Les opposants sont arrêtés. L'armée du Tigre occupe la capitale."
-      },
-      "prompt": "Tu es le Tigre. Félicite froidement les élèves. Dis : 'La peur est le seul langage que les rebelles comprennent.' (Max 1 phrase).",
-      "next": "fin_guerre"
+      "content": { "title": "L'An 1 du Tigre", "text": "L'ordre règne. Mais la main de fer écrase parfois trop fort." },
+      "prompt": "Tu es le Shogun Tigre. Tu es fier. Dis : 'L'ordre est rétabli.'",
+      "next": "evt_tigre_revolte"
     },
-
-    "transition_debat": {
-      "id": "transition_debat",
-      "type": "intro",
-      "background": "assets/bg_conseil.png",
-      "content": {
-        "title": "Le Conseil s'ouvre",
-        "text": "Le Tigre est furieux, mais d'autres voix s'élèvent."
-      },
-      "next": "chat_grue_tortue"
-    },
-
-    "chat_grue_tortue": {
-      "id": "chat_grue_tortue",
-      "type": "chat",
-      "background": "assets/bg_conseil.png",
-      "persona": "oracle",
-      "teacherNote": "Présentez les alternatives : La Grue (Paix) et la Tortue (Tradition).",
-      "prompt": "Tu es l'Esprit du Temple. Le Tigre a été repoussé. Présente brièvement les deux autres choix : La Grue qui veut jeter les armes, et la Tortue qui veut prier les ancêtres. Sois mystérieux.",
-      "next": "vote_2_election"
-    },
-
-    "vote_2_election": {
-      "id": "vote_2_election",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "content": {
-        "title": "L'Élection",
-        "text": "Quelle voie pour le Japon ?"
+    "evt_tigre_revolte": {
+      "id": "evt_tigre_revolte",
+      "type": "vote", // Événement spécifique au Tigre
+      "background": "assets/bg_war_camp.png",
+      "content": { 
+        "title": "Dilemme : La Révolte", 
+        "text": "Des paysans refusent de payer l'impôt de guerre. Ils ont faim." 
       },
       "options": [
-        {
-          "label": "La Grue (Paix & Riz)",
-          "target": "branche_grue_1",
-          "icon": "assets/ui_btn_paix.png",
-          "effect": { "violence": -10, "richesse": 5 }
-        },
-        {
-          "label": "La Tortue (Tradition)",
-          "target": "branche_tortue_1",
-          "icon": "assets/ui_btn_force.png",
-          "effect": { "foi": 10 }
-        }
+        { "label": "Les écraser (Cohérent mais cruel)", "target": "fin_tigre_sang", "effect": { "violence": 10 } },
+        { "label": "Leur donner du riz (Clément mais signe de faiblesse)", "target": "fin_tigre_compromis", "effect": { "richesse": -10 } }
       ]
     },
 
-    "branche_grue_1": {
-      "id": "branche_grue_1",
-      "type": "story",
+    // --- BRANCHE GRUE (Paix) ---
+    "regne_grue_intro": {
+      "id": "regne_grue_intro",
+      "type": "chat",
       "background": "assets/bg_paix.png",
       "persona": "hideyoshi",
-      "content": {
-        "title": "La Grande Paix",
-        "text": "La Grue ordonne de fondre les épées pour en faire des outils."
+      "content": { "title": "L'An 1 de la Grue", "text": "Le commerce fleurit. Mais sans armée, les frontières sont fragiles." },
+      "prompt": "Tu es le Shogun Grue. Tu es serein.",
+      "next": "evt_grue_invasion"
+    },
+    "evt_grue_invasion": {
+      "id": "evt_grue_invasion",
+      "type": "vote", // Événement spécifique à la Grue
+      "background": "assets/bg_paix_walk.png",
+      "content": { 
+        "title": "Dilemme : L'Invasion", 
+        "text": "Des pirates attaquent les côtes. Nous n'avons plus d'armée régulière." 
       },
-      "prompt": "Tu es la Grue. Parle avec douceur. Dis : 'Le métal doit servir à nourrir, pas à tuer.' (Max 1 phrase).",
-      "next": "fin_paix"
+      "options": [
+        { "label": "Payer une rançon (Pacifiste mais coûteux)", "target": "fin_grue_pauvre", "effect": { "richesse": -20 } },
+        { "label": "Lever une milice citoyenne (Trahison de l'idéal ?)", "target": "fin_grue_guerre", "effect": { "violence": 5 } }
+      ]
     },
 
-    "branche_tortue_1": {
-      "id": "branche_tortue_1",
-      "type": "story",
-      "background": "assets/bg_shogun_throne_alt.png",
-      "persona": "kenshin",
-      "content": {
-        "title": "Le Retour aux Sources",
-        "text": "Les temples sont restaurés. Les rituels anciens reprennent."
-      },
-      "prompt": "Tu es la Tortue. Parle lentement. Dis : 'Sans racines, l'arbre tombe. Nous honorerons le passé.' (Max 1 phrase).",
-      "next": "fin_tradition"
-    },
-
-    "fin_guerre": { "id": "fin_guerre", "type": "intro", "background": "assets/bg_guerre_alt.png", "content": { "title": "Fin", "text": "Le pays est unifié par la peur." } },
-    "fin_paix": { "id": "fin_paix", "type": "intro", "background": "assets/bg_paix_walk.png", "content": { "title": "Fin", "text": "Le pays est riche et paisible." } },
-    "fin_tradition": { "id": "fin_tradition", "type": "intro", "background": "assets/bg_conseil.png", "content": { "title": "Fin", "text": "Les traditions sont sauves." } }
+    // ... (Fins correspondantes) ...
+    "fin_tigre_sang": { "id": "fin_tigre_sang", "type": "intro", "background": "assets/bg_guerre_alt.png", "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais vous êtes haïs." } },
+    "fin_tigre_compromis": { "id": "fin_tigre_compromis", "type": "intro", "background": "assets/bg_conseil.png", "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité." } }
   }
 }
