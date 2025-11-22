@@ -2,7 +2,7 @@
   {
     "id": "nobunaga",
     "displayName": "Le Clan du Tigre",
-    "bio": "Autoritaire et puissant.",
+    "bio": "Le Général Nobunaga. Il croit que la force brute est nécessaire pour unifier le pays.",
     "openaiVoice": "onyx",
     "openaiStyle": "angry",
     "avatar": "assets/avatar_tigre.png"
@@ -10,15 +10,23 @@
   {
     "id": "hideyoshi",
     "displayName": "L'Alliance de la Grue",
-    "bio": "Sage et pacifiste.",
+    "bio": "Le Sage Hideyoshi. Il veut désarmer le peuple pour empêcher la violence.",
     "openaiVoice": "alloy",
     "openaiStyle": "calm",
     "avatar": "assets/avatar_grue.png"
   },
   {
+    "id": "kenshin",
+    "displayName": "Gardiens de la Tortue",
+    "bio": "Le Vénérable Kenshin. Il protège les traditions, les temples et l'Empereur.",
+    "openaiVoice": "fable",
+    "openaiStyle": "formal",
+    "avatar": "assets/avatar_esprit.png"
+  },
+  {
     "id": "oracle",
     "displayName": "L'Esprit du Temple",
-    "bio": "Neutre et mystérieux. Il aide à réfléchir.",
+    "bio": "Une entité neutre qui connaît l'histoire et les faits. Il aide les élèves à réfléchir.",
     "openaiVoice": "echo",
     "avatar": "assets/avatar_esprit.png"
   }
