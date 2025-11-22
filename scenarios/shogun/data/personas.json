@@ -1,24 +1,24 @@
 [
   {
     "id": "nobunaga",
-    "displayName": "Le Clan du Tigre (Nobunaga)",
-    "bio": "Chef militaire impitoyable. Il déteste les sectes religieuses qui divisent le pays.",
+    "displayName": "Le Clan du Tigre",
+    "bio": "Le Général Nobunaga. Il croit que la force brute est nécessaire pour unifier le pays.",
     "openaiVoice": "onyx",
     "openaiStyle": "angry",
     "avatar": "assets/avatar_tigre.png"
   },
   {
     "id": "hideyoshi",
-    "displayName": "L'Alliance de la Grue (Hideyoshi)",
-    "bio": "Ancien paysan devenu général. Il veut protéger le peuple des ravages de la guerre.",
+    "displayName": "L'Alliance de la Grue",
+    "bio": "Le Sage Hideyoshi. Il veut désarmer le peuple pour empêcher la violence.",
     "openaiVoice": "alloy",
     "openaiStyle": "calm",
     "avatar": "assets/avatar_grue.png"
   },
   {
     "id": "kenshin",
-    "displayName": "Gardiens de la Tortue (Kenshin)",
-    "bio": "Moine-guerrier respecté. Il défend l'Empereur et les traditions bouddhistes/shinto.",
+    "displayName": "Gardiens de la Tortue",
+    "bio": "Le Vénérable Kenshin. Il protège les traditions, les temples et l'Empereur.",
     "openaiVoice": "fable",
     "openaiStyle": "formal",
     "avatar": "assets/avatar_esprit.png"
@@ -26,7 +26,7 @@
   {
     "id": "oracle",
     "displayName": "L'Esprit du Temple",
-    "bio": "Neutre. Il connaît toute l'histoire et pose les questions éthiques.",
+    "bio": "Une entité neutre qui connaît l'histoire et les faits. Il aide les élèves à réfléchir.",
     "openaiVoice": "echo",
     "avatar": "assets/avatar_esprit.png"
   }
