@@ -1,4 +1,3 @@
-init();
 import { API_BASE } from "../assets/config.js";
 
 // --- ÉTAT DU JEU ---
@@ -59,7 +58,7 @@ function showModeSelection() {
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
                 <button id="btn-mode-std" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; transition:0.2s;">
                     <strong>Mode Standard</strong><br>
-                    <span style="font-size:0.6em">L'histoire principale (Directe)</span>
+                    <span style="font-size:0.6em">Histoire principale (Directe)</span>
                 </button>
                 <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px; transition:0.2s;">
                     <strong>Mode Campagne</strong><br>
@@ -84,6 +83,33 @@ function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
 
+    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Mode Campagne) ---
+    if (GAME_MODE === 'extended' && sceneId !== GAME_DATA.scenario.start && !sceneId.startsWith('evt_') && Math.random() > 0.7) {
+        const events = GAME_DATA.world.randomEvents;
+        if (events && events.length > 0) {
+            const randomEvt = events[Math.floor(Math.random() * events.length)];
+            
+            const evtScene = {
+                id: randomEvt.id,
+                type: "chat",
+                background: "assets/bg_conseil.png", // Fond par défaut
+                video: "assets/vid_evt_revolte.mp4", // Vidéo générique chaos si dispo
+                persona: "oracle",
+                prompt: randomEvt.prompt,
+                teacherNote: "⚠️ ÉVÉNEMENT IMPRÉVU ! Faites réagir la classe.",
+                content: { title: "⚠️ " + randomEvt.title, text: randomEvt.text },
+                next: sceneId
+            };
+            
+            GAME_DATA.world.randomEvents = events.filter(e => e !== randomEvt);
+            CURRENT_SCENE = evtScene;
+            updateScreen(evtScene);
+            updateTeacherInterface(evtScene);
+            initChat(evtScene);
+            return;
+        }
+    }
+
     CURRENT_SCENE = scene;
     updateScreen(scene);
     updateTeacherInterface(scene);
@@ -99,7 +125,6 @@ function updateScreen(scene) {
     const videoContainer = document.getElementById('video-bg-container');
     
     if (scene.video) {
-        // Si la scène a une vidéo, on l'affiche
         if (!videoContainer) {
             document.body.insertAdjacentHTML('afterbegin', `
                 <div id="video-bg-container" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden; background:black;">
@@ -110,7 +135,6 @@ function updateScreen(scene) {
             `);
         } else {
             const videoElement = videoContainer.querySelector('video');
-            // On ne recharge que si la source change pour éviter le clignotement
             if (!videoElement.querySelector('source').src.includes(scene.video)) {
                 videoElement.querySelector('source').src = scene.video;
                 videoElement.load();
@@ -118,7 +142,6 @@ function updateScreen(scene) {
         }
         document.body.style.backgroundImage = 'none';
     } else {
-        // Pas de vidéo : on nettoie et on met l'image
         if (videoContainer) videoContainer.remove();
         if (scene.background) document.body.style.backgroundImage = `url('${scene.background}')`;
     }
