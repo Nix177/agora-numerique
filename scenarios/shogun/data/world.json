@@ -1,9 +1,12 @@
 {
-  "lieu": "Archipel de Yamato, Ère féodale fantastique",
+  "lieu": "Archipel de Yamato (Japon Fantastique)",
   "factsBank": [
-    "Le Shogun est mort sans héritier désigné.",
-    "Le Clan du Tigre possède la force militaire.",
-    "Les paysans souffrent de la guerre.",
-    "L'Esprit du Temple ne peut pas mentir."
+    "Le Shogun est le chef militaire suprême, plus puissant que l'Empereur.",
+    "L'Empereur est un chef symbolique et religieux.",
+    "Nobunaga déteste les moines guerriers qui contestent son pouvoir.",
+    "Hideyoshi a été un simple paysan avant de devenir général.",
+    "La 'Chasse aux Épées' est une loi pour confisquer les armes des civils.",
+    "Le pays sort d'une guerre civile de 100 ans (Sengoku).",
+    "Les paysans veulent surtout la stabilité pour cultiver le riz."
   ]
 }
