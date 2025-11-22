@@ -4,6 +4,7 @@
   "start": "intro",
   "scenes": {
     
+    // ... (Intro et Débat comme avant) ...
 
     "choix_successeur": {
       "id": "choix_successeur",
@@ -16,6 +17,7 @@
       ]
     },
 
+    // --- BRANCHE TIGRE (Guerre) ---
     "regne_tigre_intro": {
       "id": "regne_tigre_intro",
       "type": "chat",
@@ -27,7 +29,7 @@
     },
     "evt_tigre_revolte": {
       "id": "evt_tigre_revolte",
-      "type": "vote", 
+      "type": "vote", // Événement spécifique au Tigre
       "background": "assets/bg_war_camp.png",
       "content": { 
         "title": "Dilemme : La Révolte", 
@@ -39,6 +41,7 @@
       ]
     },
 
+    // --- BRANCHE GRUE (Paix) ---
     "regne_grue_intro": {
       "id": "regne_grue_intro",
       "type": "chat",
@@ -50,7 +53,7 @@
     },
     "evt_grue_invasion": {
       "id": "evt_grue_invasion",
-      "type": "vote", 
+      "type": "vote", // Événement spécifique à la Grue
       "background": "assets/bg_paix_walk.png",
       "content": { 
         "title": "Dilemme : L'Invasion", 
@@ -62,6 +65,7 @@
       ]
     },
 
+    // ... (Fins correspondantes) ...
     "fin_tigre_sang": { "id": "fin_tigre_sang", "type": "intro", "background": "assets/bg_guerre_alt.png", "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais vous êtes haïs." } },
     "fin_tigre_compromis": { "id": "fin_tigre_compromis", "type": "intro", "background": "assets/bg_conseil.png", "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité." } }
   }
