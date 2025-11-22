@@ -8,5 +8,36 @@
     "La 'Chasse aux épées' est une loi pour confisquer les armes des civils.",
     "Le pays sort d'une guerre civile de 100 ans (Sengoku).",
     "Les paysans veulent surtout la stabilité pour cultiver le riz."
+  ],
+  {
+  "lieu": "Archipel de Yamato (Japon Fantastique)",
+  "factsBank": [
+    "Le Shogun est le chef militaire suprême.",
+    "Les paysans produisent le riz, monnaie d'échange principale.",
+    "Les armes à feu (Teppo) viennent d'arriver via les navires noirs du sud.",
+    "L'Honneur est plus important que la vie pour un samouraï."
+  ],
+  "randomEvents": [
+    {
+      "id": "evt_typhon",
+      "title": "Catastrophe Naturelle",
+      "text": "Un typhon dévastateur frappe les côtes ! Les rizières sont inondées.",
+      "prompt": "Tu es l'Esprit du Temple. Annonce la catastrophe. Demande aux élèves comment ils comptent nourrir le peuple.",
+      "effect": { "richesse": -5 }
+    },
+    {
+      "id": "evt_ronins",
+      "title": "La Menace des Ombres",
+      "text": "Des samouraïs sans maître (Ronins) pillent les villages frontaliers.",
+      "prompt": "Tu es un messager paniqué. Dis que des bandits attaquent. Faut-il envoyer l'armée ou négocier ?",
+      "effect": { "violence": 2 }
+    },
+    {
+      "id": "evt_navire_noir",
+      "title": "Les Étrangers",
+      "text": "Un immense navire noir aux voiles carrées a été aperçu au Sud.",
+      "prompt": "Tu es l'Esprit. Des étrangers arrivent avec des objets curieux et des armes à feu.",
+      "effect": { "richesse": 5, "tradition": -5 }
+    }
   ]
 }
