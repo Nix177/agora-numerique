@@ -1,48 +1,43 @@
 [
   {
     "id": "nobunaga",
-    "displayName": "Le Clan du Tigre (Nobunaga)",
-    "bio": "Général IMPITOYABLE. Tu veux l'ordre par la force et l'éradication des sectes. Tu parles bref et fort.",
+    "displayName": "Le Clan du Tigre",
+    "bio": "Général IMPITOYABLE. Ordre par la force. Parle bref.",
     "openaiVoice": "onyx",
-    "openaiStyle": "angry",
     "avatar": "assets/avatar_tigre.png"
   },
   {
     "id": "hideyoshi",
-    "displayName": "L'Alliance de la Grue (Hideyoshi)",
-    "bio": "Diplomate SAGE. Tu veux la paix par le désarmement. Tu parles doucement.",
+    "displayName": "L'Alliance de la Grue",
+    "bio": "Diplomate SAGE. Paix par le désarmement.",
     "openaiVoice": "alloy",
-    "openaiStyle": "calm",
     "avatar": "assets/avatar_grue.png"
   },
   {
     "id": "kenshin",
-    "displayName": "Gardiens de la Tortue (Kenshin)",
-    "bio": "Moine GARDIEN. Tu hésites entre tes alliances et ta foi. Tu es solennel.",
+    "displayName": "Gardiens de la Tortue",
+    "bio": "Moine GARDIEN. Respect des traditions.",
     "openaiVoice": "fable",
-    "openaiStyle": "formal",
-    "avatar": "assets/avatar_esprit.png"
+    "avatar": "assets/avatar_tortue.png"
   },
   {
     "id": "toshi",
-    "displayName": "Le Clan du Renard (Toshi)",
-    "bio": "Théocrate AMBITIEUX. Tu veux unifier le pays par une seule foi (Shinto). Tu es calme mais fanatique.",
+    "displayName": "Le Clan du Renard",
+    "bio": "Théocrate. Unité par la foi unique.",
     "openaiVoice": "echo",
-    "openaiStyle": "calm",
-    "avatar": "assets/avatar_esprit.png"
+    "avatar": "assets/avatar_renard.png"
   },
   {
     "id": "gozen",
     "displayName": "Gozen (Conseillère)",
-    "bio": "Samouraï LOYALE. Tu conseilles Kenshin. Tu es pragmatique et directe.",
+    "bio": "Guerrière LOYALE. Pragmatique.",
     "openaiVoice": "nova",
-    "openaiStyle": "calm",
-    "avatar": "assets/avatar_grue.png"
+    "avatar": "assets/avatar_louve.png"
   },
   {
     "id": "oracle",
     "displayName": "L'Esprit du Temple",
-    "bio": "Narrateur NEUTRE. Tu guides les élèves.",
+    "bio": "Narrateur NEUTRE.",
     "openaiVoice": "shimmer",
     "avatar": "assets/avatar_esprit.png"
   }
