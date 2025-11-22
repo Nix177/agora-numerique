@@ -1,3 +1,4 @@
+init();
 import { API_BASE } from "../assets/config.js";
 
 // --- ÉTAT DU JEU ---
@@ -5,7 +6,7 @@ let GAME_DATA = {};
 let CURRENT_SCENE = null;
 let CHAT_HISTORY = [];
 let GAME_STATE = {};
-let GAME_MODE = 'standard'; // Par défaut
+let GAME_MODE = 'standard';
 
 // --- DOM ELEMENTS ---
 const ui = {
@@ -35,7 +36,6 @@ async function init() {
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
         
-        // Affiche l'écran de sélection de mode au lieu de lancer direct
         showModeSelection();
 
     } catch (e) {
@@ -84,40 +84,6 @@ function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
 
-    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Seulement en mode Extended) ---
-    // Si on est en mode "Campagne", pas au début, et que la scène n'est pas déjà un événement
-    if (GAME_MODE === 'extended' && sceneId !== GAME_DATA.scenario.start && !sceneId.startsWith('evt_') && Math.random() > 0.7) {
-        console.log("Tentative d'événement aléatoire...");
-        const events = GAME_DATA.world.randomEvents;
-        
-        // S'il y a des événements disponibles dans world.json
-        if (events && events.length > 0) {
-            const randomEvt = events[Math.floor(Math.random() * events.length)];
-            
-            // On construit une scène temporaire
-            const evtScene = {
-                id: randomEvt.id,
-                type: "chat", // On utilise le chat pour présenter l'événement
-                background: "assets/bg_conseil.png", 
-                persona: "oracle",
-                prompt: randomEvt.prompt,
-                teacherNote: "⚠️ ÉVÉNEMENT IMPRÉVU ! Faites réagir la classe.",
-                content: { title: "⚠️ " + randomEvt.title, text: randomEvt.text },
-                next: sceneId // IMPORTANT : Après l'événement, on revient à la scène prévue
-            };
-            
-            // On retire l'événement pour ne pas le rejouer
-            GAME_DATA.world.randomEvents = events.filter(e => e !== randomEvt);
-            
-            // On charge cette scène spéciale
-            CURRENT_SCENE = evtScene;
-            updateScreen(evtScene);
-            updateTeacherInterface(evtScene);
-            initChat(evtScene);
-            return; // On arrête le chargement normal pour l'instant
-        }
-    }
-
     CURRENT_SCENE = scene;
     updateScreen(scene);
     updateTeacherInterface(scene);
@@ -127,9 +93,35 @@ function loadScene(sceneId) {
     }
 }
 
-// 3. AFFICHAGE ÉLÈVES
+// 3. AFFICHAGE (VIDÉO + IMAGES)
 function updateScreen(scene) {
-    if (scene.background) document.body.style.backgroundImage = `url('${scene.background}')`;
+    // Gestion Vidéo (Théâtre d'images)
+    const videoContainer = document.getElementById('video-bg-container');
+    
+    if (scene.video) {
+        // Si la scène a une vidéo, on l'affiche
+        if (!videoContainer) {
+            document.body.insertAdjacentHTML('afterbegin', `
+                <div id="video-bg-container" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden; background:black;">
+                    <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
+                        <source src="${scene.video}" type="video/mp4">
+                    </video>
+                </div>
+            `);
+        } else {
+            const videoElement = videoContainer.querySelector('video');
+            // On ne recharge que si la source change pour éviter le clignotement
+            if (!videoElement.querySelector('source').src.includes(scene.video)) {
+                videoElement.querySelector('source').src = scene.video;
+                videoElement.load();
+            }
+        }
+        document.body.style.backgroundImage = 'none';
+    } else {
+        // Pas de vidéo : on nettoie et on met l'image
+        if (videoContainer) videoContainer.remove();
+        if (scene.background) document.body.style.backgroundImage = `url('${scene.background}')`;
+    }
     
     let html = '';
     if (scene.content) {
@@ -162,7 +154,6 @@ function updateScreen(scene) {
 // 4. INTERFACE PROFESSEUR
 function updateTeacherInterface(scene) {
     ui.teacherPanel.innerHTML = ''; 
-    
     if(ui.teacherNote) ui.teacherNote.innerText = scene.teacherNote || "Phase narrative.";
 
     if (scene.options) {
