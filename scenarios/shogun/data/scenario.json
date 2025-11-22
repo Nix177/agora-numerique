@@ -4,7 +4,6 @@
   "start": "intro",
   "scenes": {
     
-    // ... (Intro et Débat comme avant) ...
 
     "choix_successeur": {
       "id": "choix_successeur",
@@ -17,7 +16,6 @@
       ]
     },
 
-    // --- BRANCHE TIGRE (Guerre) ---
     "regne_tigre_intro": {
       "id": "regne_tigre_intro",
       "type": "chat",
@@ -41,7 +39,6 @@
       ]
     },
 
-    // --- BRANCHE GRUE (Paix) ---
     "regne_grue_intro": {
       "id": "regne_grue_intro",
       "type": "chat",
@@ -65,7 +62,6 @@
       ]
     },
 
-    // ... (Fins correspondantes) ...
     "fin_tigre_sang": { "id": "fin_tigre_sang", "type": "intro", "background": "assets/bg_guerre_alt.png", "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais vous êtes haïs." } },
     "fin_tigre_compromis": { "id": "fin_tigre_compromis", "type": "intro", "background": "assets/bg_conseil.png", "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité." } }
   }
