@@ -1,72 +1,185 @@
 {
-  "meta": { "title": "L'Aube du Shogun", "theme": "shogun" },
-  "state": { "violence": 0, "richesse": 50, "foi": 50 },
+  "meta": {
+    "title": "L'Aube du Shogun",
+    "theme": "shogun"
+  },
+  "state": {
+    "violence": 0,
+    "richesse": 50,
+    "foi": 50
+  },
   "start": "intro",
   "scenes": {
-    
-    // ... (Intro et Débat comme avant) ...
-
+    "intro": {
+      "id": "intro",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": {
+        "title": "Le Trône Vide",
+        "text": "L'an 1603. Le Shogun est mort. Le chaos menace l'archipel."
+      },
+      "next": "choix_successeur"
+    },
     "choix_successeur": {
       "id": "choix_successeur",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Grand Vote", "text": "Qui sera Shogun ?" },
+      "content": {
+        "title": "Le Grand Vote",
+        "text": "Qui doit devenir le nouveau Shogun ?"
+      },
       "options": [
-        { "label": "Élire le TIGRE (Force)", "target": "regne_tigre_intro", "effect": { "violence": 10 } },
-        { "label": "Élire la GRUE (Paix)", "target": "regne_grue_intro", "effect": { "violence": -10 } }
+        {
+          "label": "Élire le TIGRE (Force)",
+          "target": "regne_tigre_intro",
+          "effect": { "violence": 10 }
+        },
+        {
+          "label": "Élire la GRUE (Paix)",
+          "target": "regne_grue_intro",
+          "effect": { "violence": -10 }
+        },
+        {
+          "label": "Élire la TORTUE (Tradition)",
+          "target": "regne_tortue_intro",
+          "effect": { "foi": 10 }
+        }
       ]
     },
-
-    // --- BRANCHE TIGRE (Guerre) ---
     "regne_tigre_intro": {
       "id": "regne_tigre_intro",
       "type": "chat",
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
-      "content": { "title": "L'An 1 du Tigre", "text": "L'ordre règne. Mais la main de fer écrase parfois trop fort." },
-      "prompt": "Tu es le Shogun Tigre. Tu es fier. Dis : 'L'ordre est rétabli.'",
+      "content": {
+        "title": "L'An 1 du Tigre",
+        "text": "L'ordre règne par le fer. Les bandits ont peur."
+      },
+      "prompt": "Tu es le Shogun Tigre. Tu es fier. Dis aux élèves : 'L'ordre est rétabli grâce à ma force.' Sois bref.",
       "next": "evt_tigre_revolte"
     },
     "evt_tigre_revolte": {
       "id": "evt_tigre_revolte",
-      "type": "vote", // Événement spécifique au Tigre
-      "background": "assets/bg_war_camp.png",
-      "content": { 
-        "title": "Dilemme : La Révolte", 
-        "text": "Des paysans refusent de payer l'impôt de guerre. Ils ont faim." 
+      "type": "vote",
+      "background": "assets/bg_guerre.png",
+      "content": {
+        "title": "Dilemme : La Révolte",
+        "text": "Des paysans refusent de payer l'impôt de guerre car ils ont faim."
       },
       "options": [
-        { "label": "Les écraser (Cohérent mais cruel)", "target": "fin_tigre_sang", "effect": { "violence": 10 } },
-        { "label": "Leur donner du riz (Clément mais signe de faiblesse)", "target": "fin_tigre_compromis", "effect": { "richesse": -10 } }
+        {
+          "label": "Les écraser (Cohérent mais cruel)",
+          "target": "fin_tigre_sang",
+          "effect": { "violence": 10 }
+        },
+        {
+          "label": "Leur donner du riz (Clément mais faible)",
+          "target": "fin_tigre_compromis",
+          "effect": { "richesse": -10 }
+        }
       ]
     },
-
-    // --- BRANCHE GRUE (Paix) ---
     "regne_grue_intro": {
       "id": "regne_grue_intro",
       "type": "chat",
       "background": "assets/bg_paix.png",
       "persona": "hideyoshi",
-      "content": { "title": "L'An 1 de la Grue", "text": "Le commerce fleurit. Mais sans armée, les frontières sont fragiles." },
-      "prompt": "Tu es le Shogun Grue. Tu es serein.",
+      "content": {
+        "title": "L'An 1 de la Grue",
+        "text": "Le commerce fleurit, mais les frontières sont fragiles sans armée."
+      },
+      "prompt": "Tu es le Shogun Grue. Tu es serein. Dis : 'La richesse vaut mieux que la gloire des batailles.'",
       "next": "evt_grue_invasion"
     },
     "evt_grue_invasion": {
       "id": "evt_grue_invasion",
-      "type": "vote", // Événement spécifique à la Grue
+      "type": "vote",
       "background": "assets/bg_paix_walk.png",
-      "content": { 
-        "title": "Dilemme : L'Invasion", 
-        "text": "Des pirates attaquent les côtes. Nous n'avons plus d'armée régulière." 
+      "content": {
+        "title": "Dilemme : L'Invasion",
+        "text": "Des pirates attaquent les côtes. Nous n'avons plus d'armée régulière."
       },
       "options": [
-        { "label": "Payer une rançon (Pacifiste mais coûteux)", "target": "fin_grue_pauvre", "effect": { "richesse": -20 } },
-        { "label": "Lever une milice citoyenne (Trahison de l'idéal ?)", "target": "fin_grue_guerre", "effect": { "violence": 5 } }
+        {
+          "label": "Payer une rançon (Pacifiste mais coûteux)",
+          "target": "fin_grue_pauvre",
+          "effect": { "richesse": -20 }
+        },
+        {
+          "label": "Lever une milice (Trahison de l'idéal ?)",
+          "target": "fin_grue_guerre",
+          "effect": { "violence": 5 }
+        }
       ]
     },
-
-    // ... (Fins correspondantes) ...
-    "fin_tigre_sang": { "id": "fin_tigre_sang", "type": "intro", "background": "assets/bg_guerre_alt.png", "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais vous êtes haïs." } },
-    "fin_tigre_compromis": { "id": "fin_tigre_compromis", "type": "intro", "background": "assets/bg_conseil.png", "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité." } }
+    "regne_tortue_intro": {
+      "id": "regne_tortue_intro",
+      "type": "chat",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "persona": "kenshin",
+      "content": {
+        "title": "L'An 1 de la Tortue",
+        "text": "Les traditions sont respectées, mais le pays s'isole."
+      },
+      "prompt": "Tu es la Tortue. Sois solennel. Dis : 'Nous avons sauvé l'âme du Japon.'",
+      "next": "evt_tortue_etranger"
+    },
+    "evt_tortue_etranger": {
+      "id": "evt_tortue_etranger",
+      "type": "vote",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "content": {
+        "title": "Dilemme : Les Étrangers",
+        "text": "Des navires étrangers apportent des technologies modernes (médecine, armes)."
+      },
+      "options": [
+        {
+          "label": "Les chasser (Préserver la tradition)",
+          "target": "fin_tortue_fermee",
+          "effect": { "foi": 10, "richesse": -10 }
+        },
+        {
+          "label": "Les accueillir (Modernisation)",
+          "target": "fin_tortue_moderne",
+          "effect": { "richesse": 10, "foi": -10 }
+        }
+      ]
+    },
+    "fin_tigre_sang": {
+      "id": "fin_tigre_sang",
+      "type": "intro",
+      "background": "assets/bg_guerre_alt.png",
+      "content": { "title": "Fin Tyrannique", "text": "Vous avez maintenu l'ordre, mais le peuple vous hait." }
+    },
+    "fin_tigre_compromis": {
+      "id": "fin_tigre_compromis",
+      "type": "intro",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Fin Instable", "text": "Votre hésitation a affaibli votre autorité. Les clans complotent." }
+    },
+    "fin_grue_pauvre": {
+      "id": "fin_grue_pauvre",
+      "type": "intro",
+      "background": "assets/bg_paix.png",
+      "content": { "title": "Fin Ruinée", "text": "La paix est sauve, mais les caisses de l'État sont vides." }
+    },
+    "fin_grue_guerre": {
+      "id": "fin_grue_guerre",
+      "type": "intro",
+      "background": "assets/bg_guerre.png",
+      "content": { "title": "Fin Réaliste", "text": "Vous avez dû reprendre les armes pour survivre." }
+    },
+    "fin_tortue_fermee": {
+      "id": "fin_tortue_fermee",
+      "type": "intro",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Fin Isolée", "text": "Le Japon reste pur mais prend du retard sur le monde." }
+    },
+    "fin_tortue_moderne": {
+      "id": "fin_tortue_moderne",
+      "type": "intro",
+      "background": "assets/bg_shogun_throne_alt.png",
+      "content": { "title": "Fin Hybride", "text": "Les traditions survivent difficilement face à la nouveauté." }
+    }
   }
 }
