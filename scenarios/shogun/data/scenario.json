@@ -10,18 +10,16 @@
   },
   "start": "scene_intro",
   "scenes": {
-    
     "scene_intro": {
       "id": "scene_intro",
       "type": "intro",
-      "background": "assets/bg_shogun_throne.png",
+      "background": "assets/bg_trone.png",
       "content": {
         "title": "L'Aube du Shogun",
         "text": "L'an 1603. Le grand Shogun Tokugawa est mort sans héritier. Le trône est vide. Trois clans s'affrontent pour l'avenir de l'Archipel."
       },
       "next": "phase_1_succession"
     },
-
     "phase_1_succession": {
       "id": "phase_1_succession",
       "type": "chat",
@@ -31,7 +29,6 @@
       "prompt": "Tu es le Général Tigre (Nobunaga). Tu es arrogant et puissant. Dis aux élèves que l'Empereur est faible et que seule ta force militaire peut empêcher le chaos. Tu veux le pouvoir tout de suite.",
       "next": "vote_1_nobunaga"
     },
-
     "vote_1_nobunaga": {
       "id": "vote_1_nobunaga",
       "type": "vote",
@@ -55,7 +52,6 @@
         }
       ]
     },
-
     "branche_tigre_guerre": {
       "id": "branche_tigre_guerre",
       "type": "story",
@@ -69,7 +65,6 @@
       "teacherNote": "Question Philo : La sécurité vaut-elle la suppression des libertés ?",
       "next": "fin_guerre"
     },
-
     "phase_2_election": {
       "id": "phase_2_election",
       "type": "chat",
@@ -79,7 +74,6 @@
       "prompt": "Tu es l'Esprit du Temple. Le Tigre a été rejeté. Présente maintenant les deux autres candidats : La Grue (Hideyoshi) qui veut la paix par le désarmement, et La Tortue (Kenshin) qui veut respecter les anciennes traditions et l'Empereur.",
       "next": "vote_2_election"
     },
-
     "vote_2_election": {
       "id": "vote_2_election",
       "type": "vote",
@@ -103,7 +97,6 @@
         }
       ]
     },
-
     "branche_grue_paix": {
       "id": "branche_grue_paix",
       "type": "story",
@@ -117,7 +110,6 @@
       "teacherNote": "Dilemme : Si on désarme les gentils, comment se défendent-ils contre les méchants ?",
       "next": "fin_paix"
     },
-
     "branche_tortue_tradition": {
       "id": "branche_tortue_tradition",
       "type": "story",
@@ -131,7 +123,6 @@
       "teacherNote": "Question Philo : Faut-il toujours respecter la tradition même quand elle semble injuste ?",
       "next": "fin_tradition"
     },
-
     "fin_guerre": {
       "id": "fin_guerre",
       "type": "intro",
