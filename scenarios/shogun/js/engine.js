@@ -4,7 +4,8 @@ import { API_BASE } from "../assets/config.js";
 let GAME_DATA = {};
 let CURRENT_SCENE = null;
 let CHAT_HISTORY = [];
-let GAME_STATE = {}; 
+let GAME_STATE = {};
+let GAME_MODE = 'standard'; // Par défaut
 
 // --- DOM ELEMENTS ---
 const ui = {
@@ -13,45 +14,33 @@ const ui = {
     teacherNote: document.getElementById('teacher-note-area')
 };
 
-// 1. INITIALISATION ROBUSTE
+// 1. INITIALISATION
 async function init() {
     console.log("Démarrage du moteur Shogun...");
-    ui.teacherNote.innerText = "Initialisation en cours..."; // Feedback visuel
+    ui.teacherNote.innerText = "Initialisation...";
 
     try {
-        // Fonction utilitaire pour charger un fichier avec vérification
         const loadFile = async (path) => {
             const res = await fetch(path);
-            if (!res.ok) throw new Error(`Fichier introuvable (${res.status}): ${path}`);
-            // Vérifie que c'est bien du JSON et pas une page d'erreur HTML (le piège classique)
-            const contentType = res.headers.get("content-type");
-            if (contentType && contentType.indexOf("application/json") === -1) {
-               // On tente quand même de parser, mais on prévient si ça casse
-            }
+            if (!res.ok) throw new Error(`Fichier manquant: ${path}`);
             return await res.json();
         };
 
-        // Chargement séquentiel pour identifier l'erreur exacte
-        ui.teacherNote.innerText = "Chargement du scénario...";
-        const scenario = await loadFile('data/scenario.json');
-        
-        ui.teacherNote.innerText = "Chargement des personnages...";
-        const personas = await loadFile('data/personas.json');
-        
-        ui.teacherNote.innerText = "Chargement du monde...";
-        const world = await loadFile('data/world.json');
+        const [scenario, personas, world] = await Promise.all([
+            loadFile('data/scenario.json'),
+            loadFile('data/personas.json'),
+            loadFile('data/world.json')
+        ]);
 
-        console.log("Données chargées avec succès !");
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
         
-        loadScene(GAME_DATA.scenario.start);
+        // Affiche l'écran de sélection de mode au lieu de lancer direct
+        showModeSelection();
 
     } catch (e) {
-        console.error("Erreur critique:", e);
-        // Affiche l'erreur en GROS sur l'écran du prof
-        ui.teacherNote.innerHTML = `<span style="color:red; background:white; padding:5px;">ERREUR: ${e.message}</span>`;
-        alert("Le jeu n'a pas pu démarrer.\n" + e.message);
+        console.error("Erreur:", e);
+        ui.teacherNote.innerHTML = `<span style="color:red">ERREUR: ${e.message}</span>`;
     }
 }
 
@@ -61,10 +50,75 @@ function mapPersonas(list) {
     return map;
 }
 
+// --- SÉLECTION DU MODE (NOUVEAU) ---
+function showModeSelection() {
+    // On injecte l'écran de choix directement dans le container du jeu
+    ui.screen.innerHTML = `
+        <div class="slide-content" style="background:rgba(0,0,0,0.9); max-width:90%;">
+            <h1>Configuration de la Session</h1>
+            <p>Choisissez la durée de l'expérience.</p>
+            <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
+                <button id="btn-mode-std" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; transition:0.2s;">
+                    <strong>Mode Standard</strong><br>
+                    <span style="font-size:0.6em">Histoire directe (30 min)</span>
+                </button>
+                <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px; transition:0.2s;">
+                    <strong>Mode Campagne</strong><br>
+                    <span style="font-size:0.6em">Avec événements aléatoires (45+ min)</span>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    // On ajoute les écouteurs sur les boutons qu'on vient de créer
+    document.getElementById('btn-mode-std').onclick = () => { 
+        GAME_MODE = 'standard'; 
+        loadScene(GAME_DATA.scenario.start); 
+    };
+    document.getElementById('btn-mode-ext').onclick = () => { 
+        GAME_MODE = 'extended'; 
+        loadScene(GAME_DATA.scenario.start); 
+    };
+}
+
 // 2. MOTEUR DE SCÈNE
 function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
-    if (!scene) return alert("ERREUR SCÉNARIO : La scène '" + sceneId + "' n'existe pas dans le fichier JSON.");
+    if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
+
+    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Seulement en mode Extended) ---
+    // Si on est en mode "Campagne", pas au début, et que la scène n'est pas déjà un événement
+    if (GAME_MODE === 'extended' && sceneId !== GAME_DATA.scenario.start && !sceneId.startsWith('evt_') && Math.random() > 0.7) {
+        console.log("Tentative d'événement aléatoire...");
+        const events = GAME_DATA.world.randomEvents;
+        
+        // S'il y a des événements disponibles dans world.json
+        if (events && events.length > 0) {
+            const randomEvt = events[Math.floor(Math.random() * events.length)];
+            
+            // On construit une scène temporaire
+            const evtScene = {
+                id: randomEvt.id,
+                type: "chat", // On utilise le chat pour présenter l'événement
+                background: "assets/bg_conseil.png", 
+                persona: "oracle",
+                prompt: randomEvt.prompt,
+                teacherNote: "⚠️ ÉVÉNEMENT IMPRÉVU ! Faites réagir la classe.",
+                content: { title: "⚠️ " + randomEvt.title, text: randomEvt.text },
+                next: sceneId // IMPORTANT : Après l'événement, on revient à la scène prévue
+            };
+            
+            // On retire l'événement pour ne pas le rejouer
+            GAME_DATA.world.randomEvents = events.filter(e => e !== randomEvt);
+            
+            // On charge cette scène spéciale
+            CURRENT_SCENE = evtScene;
+            updateScreen(evtScene);
+            updateTeacherInterface(evtScene);
+            initChat(evtScene);
+            return; // On arrête le chargement normal pour l'instant
+        }
+    }
 
     CURRENT_SCENE = scene;
     updateScreen(scene);
@@ -77,10 +131,9 @@ function loadScene(sceneId) {
 
 // 3. AFFICHAGE ÉLÈVES
 function updateScreen(scene) {
-    document.body.style.backgroundImage = `url('${scene.background}')`;
+    if (scene.background) document.body.style.backgroundImage = `url('${scene.background}')`;
     
     let html = '';
-    
     if (scene.content) {
         html += `
             <div class="slide-content">
@@ -92,7 +145,6 @@ function updateScreen(scene) {
 
     if (scene.persona) {
         const p = GAME_DATA.personas[scene.persona];
-        // Sécurité image
         const avatarUrl = p ? p.avatar : 'assets/avatar_esprit.png';
         const name = p ? p.displayName : 'Inconnu';
 
@@ -106,7 +158,6 @@ function updateScreen(scene) {
             </div>
         `;
     }
-
     ui.screen.innerHTML = html;
 }
 
@@ -114,26 +165,21 @@ function updateScreen(scene) {
 function updateTeacherInterface(scene) {
     ui.teacherPanel.innerHTML = ''; 
     
-    if(ui.teacherNote) {
-        ui.teacherNote.innerText = scene.teacherNote || "Phase narrative. Cliquez sur Suivant.";
-    }
+    if(ui.teacherNote) ui.teacherNote.innerText = scene.teacherNote || "Phase narrative.";
 
     if (scene.options) {
         scene.options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'btn-choice';
-            btn.innerHTML = `${opt.label}`;
-            btn.onclick = () => {
-                applyEffects(opt.effect);
-                loadScene(opt.target);
-            };
+            btn.innerHTML = opt.label;
+            btn.onclick = () => { applyEffects(opt.effect); loadScene(opt.target); };
             ui.teacherPanel.appendChild(btn);
         });
     } 
     else if (scene.next) {
         const btn = document.createElement('button');
         btn.className = 'btn-next';
-        btn.innerText = "Étape Suivante >>";
+        btn.innerText = "Suite >>";
         btn.onclick = () => loadScene(scene.next);
         ui.teacherPanel.appendChild(btn);
     }
@@ -148,34 +194,22 @@ function applyEffects(effects) {
     }
 }
 
-// 6. LE CHATBOT
+// 6. CHATBOT
 async function initChat(scene) {
     CHAT_HISTORY = [];
-    // Sécurité si le persona n'existe pas dans le JSON
-    if (!GAME_DATA.personas[scene.persona]) {
-        console.warn(`Persona '${scene.persona}' introuvable.`);
-        return;
-    }
+    if (!GAME_DATA.personas[scene.persona]) return;
     await callBot(scene.prompt, true);
 }
 
 window.sendUserMessage = async function(text) {
     const chatDiv = document.getElementById('chat-scroll');
-    if(!chatDiv) return; // Sécurité
+    if(!chatDiv) return;
     
     chatDiv.innerHTML += `<div class="msg user">${text}</div>`;
     CHAT_HISTORY.push({ role: "user", content: text });
     
-    // Sécurité persona
-    const currentPersona = GAME_DATA.personas[CURRENT_SCENE.persona];
-    const bio = currentPersona ? currentPersona.bio : "Tu es un assistant neutre.";
-
-    const systemContext = `
-        CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}.
-        SCENE ACTUELLE: ${JSON.stringify(CURRENT_SCENE.content)}.
-        PERSONNAGE: ${bio}.
-        CONSIGNE: ${CURRENT_SCENE.prompt}.
-    `;
+    const bio = GAME_DATA.personas[CURRENT_SCENE.persona]?.bio || "Tu es neutre.";
+    const systemContext = `CONTEXTE: ${JSON.stringify(GAME_STATE)}. PERSO: ${bio}. CONSIGNE: ${CURRENT_SCENE.prompt}`;
     
     await callBot(systemContext);
 }
@@ -197,21 +231,18 @@ async function callBot(systemPrompt, isIntro = false) {
                 model: "gpt-4o-mini"
             })
         });
-        
         const data = await res.json();
-        const loader = document.getElementById(loadingId);
-        if(loader) loader.remove();
+        document.getElementById(loadingId).remove();
         
         const reply = data.reply;
         chatDiv.innerHTML += `<div class="msg bot">${reply}</div>`;
         CHAT_HISTORY.push({ role: "assistant", content: reply });
-        
         chatDiv.scrollTop = chatDiv.scrollHeight;
 
     } catch (e) {
         console.error(e);
         const loader = document.getElementById(loadingId);
-        if(loader) loader.innerText = "Erreur connexion IA.";
+        if(loader) loader.innerText = "Erreur IA.";
     }
 }
 
@@ -220,5 +251,4 @@ window.toggleFullScreen = function() {
     else if (document.exitFullscreen) document.exitFullscreen();
 }
 
-// Lancement
 init();
