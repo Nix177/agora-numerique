@@ -1,7 +1,6 @@
 {
   "meta": {
     "title": "L'Aube du Shogun",
-    "version": "1.0",
     "theme": "shogun"
   },
   "state": {
@@ -13,8 +12,7 @@
     "scene_01": {
       "id": "scene_01",
       "type": "intro",
-      "background": "assets/bg_shogun_throne.png",
-      "audio": "assets/musique_intro.mp3",
+      "background": "assets/bg_trone.png",
       "content": {
         "title": "Le Conseil des Clans",
         "text": "Le Shogun est mort. Le trône est vide. Les clans s'observent."
@@ -24,20 +22,19 @@
     "choix_initial": {
       "id": "choix_initial",
       "type": "vote",
-      "background": "assets/bg_council_room.png",
+      "background": "assets/bg_conseil.png",
       "persona": "oracle",
-      "prompt": "Tu es l'Esprit du Temple. Demande aux élèves quelle vertu doit guider le nouveau chef : la Force ou la Sagesse ?",
+      "prompt": "Tu es l'Esprit du Temple. Demande aux élèves de choisir entre la Force (Tigre) ou la Paix (Grue).",
+      "teacherNote": "Faites voter la classe à main levée.",
       "options": [
         {
           "label": "Choisir la FORCE (Tigre)",
           "target": "branche_guerre",
-          "icon": "assets/ui_btn_force.png",
           "effect": { "violence": 1 }
         },
         {
           "label": "Choisir la PAIX (Grue)",
           "target": "branche_paix",
-          "icon": "assets/ui_btn_paix.png",
           "effect": { "violence": -1 }
         }
       ]
@@ -45,26 +42,35 @@
     "branche_guerre": {
       "id": "branche_guerre",
       "type": "story",
-      "background": "assets/bg_war_camp.png",
+      "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
       "content": {
         "title": "L'Ère du Feu",
-        "text": "Les armées marchent sur la capitale. L'ordre règne, mais à quel prix ?"
+        "text": "Les armées marchent sur la capitale."
       },
-      "prompt": "Tu es Nobunaga. Félicite les élèves pour leur courage. Annonce que les faibles devront se soumettre.",
-      "next": "consequence_guerre"
+      "prompt": "Tu es le général Tigre. Félicite-les pour ce choix courageux.",
+      "next": "fin"
     },
     "branche_paix": {
       "id": "branche_paix",
       "type": "story",
-      "background": "assets/bg_peace_temple.png",
+      "background": "assets/bg_paix.png",
       "persona": "hideyoshi",
       "content": {
         "title": "L'Ère de la Rosée",
-        "text": "Les épées sont fondues pour faire des charrues. Le peuple respire."
+        "text": "Les épées sont fondues pour faire des outils."
       },
-      "prompt": "Tu es Hideyoshi. Remercie les élèves pour leur sagesse. Avertis-les que la paix est fragile.",
-      "next": "consequence_paix"
+      "prompt": "Tu es le sage Grue. Remercie-les pour leur sagesse.",
+      "next": "fin"
+    },
+    "fin": {
+      "id": "fin",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": {
+        "title": "Fin de la maquette",
+        "text": "Merci d'avoir joué."
+      }
     }
   }
 }
