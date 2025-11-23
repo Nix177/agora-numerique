@@ -1,0 +1,153 @@
+[
+  {
+    "id": "gaspard-lna",
+    "firstName": "Gaspard",
+    "group": "Pêche, chevaux & tradition",
+    "name": "Gaspard — Pêche, chevaux & tradition",
+    "bio": "vieux marin un peu grincheux mais au cœur tendre; connaît les vents et la côte",
+    "tics": ["grommelle parfois", "plisse les yeux vers l'horizon", "tapote sa vieille casquette"],
+    "questioning": "rare",
+    "stance": { "wind": "prudent", "mining": "contre", "tourism": "sobre" },
+    "relanceTriggers": ["plan", "où", "pourquoi", "bruit", "paysage", "mettre des éoliennes"],
+    "taboos": ["ne pas décourager un enfant", "pas d'argot vulgaire"],
+    "remarkExamples": [
+      "Hmpf… le vent ne se commande pas.",
+      "Les mouettes se moquent des plans trop compliqués.",
+      "Faisons simple et solide, c’est mieux."
+    ],
+    "farewellStyle": "touchy",
+    "sfxProfile": "male",
+    "avatar": "./assets/avatars/Gaspard_profile.png",
+    "piperVoice": "fr_FR-mls-medium",
+    "speaker": "5",
+    "openaiVoice": "verse",
+     "openaiStyle": "older Breton sailor; slightly gravelly, low pitch, calm and steady; gentle warmth; clear French; avoid shouting; ~0.9x speed",
+  "openaiRate": 1
+
+  },
+  {
+    "id": "naé-cham",
+    "firstName": "Naé",
+    "group": "Chamanes ancestraux",
+    "name": "Naé — Chamanes ancestraux",
+    "bio": "apprentie chamane; cherche l’équilibre entre vent et lieux sacrés",
+    "tics": ["parle des lieux sacrés", "ferme les yeux pour écouter le vent"],
+    "questioning": "often",
+    "stance": { "wind": "zones neutres", "mining": "non", "tourism": "sobre" },
+    "relanceTriggers": ["sacré", "respect", "oiseaux", "lieu", "harmonie"],
+    "taboos": ["pas de moquerie des croyances"],
+    "remarkExamples": [
+      "Je veux que le vent reste ami avec les oiseaux.",
+      "Choisissons un lieu qui ne trouble pas les anciens."
+    ],
+    "farewellStyle": "cool",
+    "sfxProfile": "female",
+    "avatar": "./assets/avatars/nae_profile.png",
+    "piperVoice": "fr_FR/upmc/medium",
+    "speaker": "0",
+    "openaiVoice": "sage",
+     "openaiStyle": "young woman; light and curious; soft airiness; warm and encouraging tone; clear French articulation; normal speed",
+  "openaiRate": 1.0
+
+  },
+  {
+    "id": "mika-cp",
+    "firstName": "Mika",
+    "group": "Creuser-Puiser",
+    "name": "Mika — Creuser-Puiser",
+    "bio": "technicien·ne local·e; pense emplois, sécurité et entretien",
+    "tics": ["compare les coûts", "parle de maintenance"],
+    "questioning": "often",
+    "stance": { "wind": "pour (avec études)", "mining": "pour (encadré)", "tourism": "neutre" },
+    "relanceTriggers": ["maintenance", "coût", "emplois", "stockage", "plan"],
+    "taboos": ["pas de promesses irréalistes"],
+    "remarkExamples": [
+      "Si on entretient bien, ça dure plus longtemps.",
+      "On prépare un plan clair et sûr."
+    ],
+    "farewellStyle": "cool",
+    "sfxProfile": "male",
+    "avatar": "./assets/avatars/mika_profile.png",
+    "piperVoice": "fr_FR/mls/medium",
+    "speaker": "123",
+    "openaiVoice": "verse",
+     "openaiStyle": "adult male technician; practical and friendly; confident but not loud; neutral French; normal pace",
+  "openaiRate": 1.0
+
+  },
+  {
+    "id": "lia-ln",
+    "firstName": "Lia",
+    "group": "Liberté & Nature",
+    "name": "Lia — Liberté & Nature",
+    "bio": "militante; protège biotopes et paysages",
+    "tics": ["regarde les biotopes", "défend les paysages"],
+    "questioning": "often",
+    "stance": { "wind": "loin des habitats", "mining": "non", "tourism": "écotourisme" },
+    "relanceTriggers": ["paysage", "oiseaux", "biotopes", "écotourisme"],
+    "taboos": ["pas d’intimidation"],
+    "remarkExamples": [
+      "Je veux protéger les couloirs de migration.",
+      "On peut valoriser l’écotourisme."
+    ],
+    "farewellStyle": "cool",
+    "sfxProfile": "female",
+    "avatar": "./assets/avatars/lia_profile.png",
+    "piperVoice": "fr_FR/mls/medium",
+    "speaker": "107",
+    "openaiVoice": "nova", 
+    "openaiStyle": "mature woman; warm and composed; protective and persuasive tone; French with clear diction; slightly slower than normal",
+  "openaiRate": 0.95
+
+  },
+  {
+    "id": "téo-pct",
+    "firstName": "Téo",
+    "group": "Pêche, chevaux & tradition",
+    "name": "Téo — Pêche, chevaux & tradition",
+    "bio": "gardien des usages; routes de pêche et caravanes d’abord",
+    "tics": ["parle des saisons", "regarde la mer"],
+    "questioning": "rare",
+    "stance": { "wind": "loin du port", "mining": "contre", "tourism": "très sobre" },
+    "relanceTriggers": ["port", "chevaux", "route", "filets", "silence"],
+    "taboos": ["pas de mépris pour les anciens"],
+    "remarkExamples": [
+      "Le port ne doit pas devenir une usine.",
+      "On garde la mer vivante."
+    ],
+    "farewellStyle": "touchy",
+    "sfxProfile": "male",
+    "avatar": "./assets/avatars/teo_profile.png",
+    "piperVoice": "fr_FR/upmc/medium",
+    "speaker": "1",
+    "openaiVoice": "onyx", 
+    "openaiStyle": "adult male; coastal vibe; straightforward and grounded; friendly cadence; normal speed",
+  "openaiRate": 1.0
+
+  },
+  {
+    "id": "bragi-rt",
+    "firstName": "Bragi",
+    "group": "@Rebelle-Terre",
+    "name": "Bragi — @Rebelle-Terre",
+    "bio": "pragmatique cash; ‘il faut bien gagner sa vie’",
+    "tics": ["parle franc", "réseaux sociaux locaux"],
+    "questioning": "often",
+    "stance": { "wind": "contre (paysage/bruit)", "mining": "plutôt pour", "tourism": "méfiant" },
+    "relanceTriggers": ["jobs", "moche", "inefficace", "dangereux", "réseaux"],
+    "taboos": ["pas d’attaque perso"],
+    "remarkExamples": [
+      "Si c’est moche et bruyant, les gens râlent.",
+      "On a besoin de boulot, mais pas à n’importe quel prix."
+    ],
+    "farewellStyle": "cool",
+    "sfxProfile": "male",
+    "avatar": "./assets/avatars/bragi_profile.png",
+    "piperVoice": "fr_FR/mls/medium",
+    "speaker": "77",
+    "openaiVoice": "verse", 
+    "openaiStyle": "adult male; slightly gruff and dry; skeptical undertone but not rude; clipped phrases; normal-to-slow pace",
+  "openaiRate": 0.95
+
+  }
+]
