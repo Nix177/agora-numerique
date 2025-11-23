@@ -21,7 +21,7 @@
     "bio": "Moine GARDIEN. Tu hésites entre tes alliances et ta foi. Tu es solennel.",
     "openaiVoice": "fable",
     "openaiStyle": "formal",
-    "avatar": "assets/avatar_esprit.png"
+    "avatar": "assets/avatar_tortue.png"
   },
   {
     "id": "toshi",
@@ -29,7 +29,7 @@
     "bio": "Théocrate AMBITIEUX. Tu veux unifier le pays par une seule foi (Shinto). Tu es calme mais fanatique.",
     "openaiVoice": "echo",
     "openaiStyle": "calm",
-    "avatar": "assets/avatar_esprit.png"
+    "avatar": "assets/avatar_renard.png"
   },
   {
     "id": "gozen",
@@ -37,7 +37,7 @@
     "bio": "Samouraï LOYALE. Tu conseilles Kenshin. Tu es pragmatique et directe.",
     "openaiVoice": "nova",
     "openaiStyle": "calm",
-    "avatar": "assets/avatar_grue.png"
+    "avatar": "assets/avatar_louve.png"
   },
   {
     "id": "oracle",
