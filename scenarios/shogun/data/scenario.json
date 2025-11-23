@@ -11,7 +11,7 @@
       "background": "assets/bg_trone.png",
       "content": {
         "title": "La Mort du Shogun",
-        "text": "L'an 1603. Le Shogun est mort sans héritier. Les clans s'agitent."
+        "text": "L'an 1603. Le Shogun est mort sans héritier. Les clans s'agitent. Le destin de l'archipel est entre vos mains."
       },
       "next": "votation_succession"
     },
@@ -21,8 +21,8 @@
       "type": "chat",
       "background": "assets/bg_conseil.png",
       "persona": "nobunaga",
-      "prompt": "Tu es Nobunaga. Revendique le pouvoir. Dis que seule ta force peut sauver le pays. Menace ceux qui hésitent.",
-      "teacherNote": "Nobunaga revendique le titre. Faut-il le laisser faire ?",
+      "prompt": "Tu es Nobunaga. Revendique le pouvoir brutalement. Dis que seule ta force peut sauver le pays. Menace ceux qui hésitent.",
+      "teacherNote": "Nobunaga revendique le titre par la force. Faut-il le laisser faire ?",
       "next": "vote_nobunaga_oui_non"
     },
 
@@ -30,21 +30,22 @@
       "id": "vote_nobunaga_oui_non",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Premier Choix", "text": "Nobunaga doit-il devenir Shogun ?" },
+      "content": { "title": "Le Premier Choix", "text": "Nobunaga doit-il devenir Shogun immédiatement ?" },
       "options": [
-        { "label": "OUI (Accepter Nobunaga)", "target": "nobunaga_elu", "effect": { "violence": 10 } },
-        { "label": "NON (L'empêcher)", "target": "debat_candidats", "effect": { "violence": -5 } }
+        { "label": "OUI (Accepter la Force)", "target": "nobunaga_elu", "effect": { "violence": 10 } },
+        { "label": "NON (Débat Démocratique)", "target": "debat_candidats", "effect": { "violence": -5 } }
       ]
     },
 
     "nobunaga_elu": {
       "id": "nobunaga_elu",
       "type": "story",
+      "allowEvents": true,
       "video": "assets/vid_evt_revolte.mp4",
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
       "content": { "title": "Le Feu et le Sang", "text": "Nobunaga est Shogun. Les temples brûlent. La guerre civile éclate immédiatement." },
-      "prompt": "Tu es Nobunaga. Annonce que tu vas écraser les opposants.",
+      "prompt": "Tu es Nobunaga. Annonce que tu vas écraser les opposants sans pitié.",
       "next": "fin_guerre_totale"
     },
 
@@ -52,7 +53,21 @@
       "id": "debat_candidats",
       "type": "intro",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Conseil des Daimyos", "text": "Nobunaga est rejeté. Trois autres candidats se présentent : Kenshin, Hideyoshi, Toshi." },
+      "content": { "title": "Le Conseil des Daimyos", "text": "Nobunaga est rejeté (pour l'instant). Trois autres voies s'ouvrent : Kenshin, Hideyoshi, Toshi." },
+      "next": "phase_discours"
+    },
+
+    "phase_discours": {
+      "id": "phase_discours",
+      "type": "chat",
+      "background": "assets/bg_conseil.png",
+      "persona": "oracle",
+      "content": { 
+          "title": "À la Tribune !", 
+          "text": "Les candidats doivent convaincre les indécis. Préparez vos arguments." 
+      },
+      "prompt": "Tu es l'Esprit. Invite la classe à se diviser en 3 groupes (Tortue, Grue, Renard). Dis-leur qu'ils ont 2 minutes pour préparer un discours pour leur candidat.",
+      "teacherNote": "Laissez les élèves débattre 2 min, puis cliquez sur Suite pour voter.",
       "next": "vote_trois_candidats"
     },
 
@@ -60,11 +75,11 @@
       "id": "vote_trois_candidats",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Élection", "text": "Qui choisissez-vous ?" },
+      "content": { "title": "L'Élection", "text": "Qui choisissez-vous pour guider le Japon ?" },
       "options": [
         { "label": "Kenshin (Tradition)", "target": "kenshin_elu_choix", "effect": { "foi": 10 } },
         { "label": "Hideyoshi (Paix)", "target": "hideyoshi_elu_desarmement", "effect": { "violence": -10 } },
-        { "label": "Toshi (Unité Religieuse)", "target": "toshi_elu_conversion", "effect": { "foi": 5, "violence": 5 } },
+        { "label": "Toshi (Religion Unique)", "target": "toshi_elu_conversion", "effect": { "foi": 5, "violence": 5 } },
         { "label": "Impasse (Personne)", "target": "empereur_tranche", "effect": { "richesse": -5 } }
       ]
     },
@@ -72,10 +87,11 @@
     "kenshin_elu_choix": {
       "id": "kenshin_elu_choix",
       "type": "chat",
+      "allowEvents": true,
       "background": "assets/bg_shogun_throne_alt.png",
       "persona": "gozen",
       "content": { "title": "Le Dilemme de Kenshin", "text": "Kenshin est élu mais l'équilibre est fragile. Il doit choisir une alliance." },
-      "prompt": "Tu es Gozen, la conseillère. Explique à Kenshin (la classe) qu'il a deux choix : s'allier à l'Empereur (Paix) ou à Nobunaga (Force).",
+      "prompt": "Tu es Gozen, la conseillère fidèle. Explique à Kenshin (la classe) qu'il a deux choix : s'allier à l'Empereur (Paix) ou à Nobunaga (Force).",
       "next": "vote_kenshin_alliance"
     },
     "vote_kenshin_alliance": {
@@ -90,9 +106,10 @@
     "kenshin_empereur": {
       "id": "kenshin_empereur",
       "type": "story",
+      "allowEvents": true,
       "background": "assets/bg_paix.png",
       "persona": "kenshin",
-      "content": { "title": "Le Prix de la Paix", "text": "Nobunaga et Toshi se sentent trahis. La guerre est inévitable." },
+      "content": { "title": "Le Prix de la Paix", "text": "Nobunaga et Toshi se sentent trahis. Ils lèvent une armée. La guerre est inévitable." },
       "prompt": "Tu es Kenshin. Dis que tu préfères la paix à la domination, même si cela mène à la guerre.",
       "next": "conflit_inevitable"
     },
@@ -102,7 +119,7 @@
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
       "content": { "title": "L'Alliance de Fer", "text": "Kenshin et Nobunaga s'unissent. Mais Nobunaga exige la conversion religieuse de tous." },
-      "prompt": "Tu es Nobunaga. Exige que Kenshin force ses paysans bouddhistes à devenir shintoïstes.",
+      "prompt": "Tu es Nobunaga. Exige que Kenshin force ses paysans bouddhistes à devenir shintoïstes ou à mourir.",
       "next": "vote_kenshin_conversion"
     },
     "vote_kenshin_conversion": {
@@ -119,17 +136,18 @@
     "hideyoshi_elu_desarmement": {
       "id": "hideyoshi_elu_desarmement",
       "type": "chat",
+      "allowEvents": true,
       "background": "assets/bg_paix.png",
       "persona": "hideyoshi",
       "content": { "title": "La Chasse aux Épées", "text": "Hideyoshi ordonne le désarmement total pour garantir la paix." },
-      "prompt": "Tu es Hideyoshi. Explique que les armes doivent disparaître pour que la paix revienne.",
+      "prompt": "Tu es Hideyoshi. Explique que les armes doivent disparaître pour que la paix revienne. C'est impopulaire mais nécessaire.",
       "next": "vote_desarmement"
     },
     "vote_desarmement": {
       "id": "vote_desarmement",
       "type": "vote",
       "background": "assets/bg_paix_walk.png",
-      "content": { "title": "Réaction des Clans", "text": "Acceptez-vous de rendre vos armes ?" },
+      "content": { "title": "Réaction des Clans", "text": "Acceptez-vous de rendre vos armes pour la paix ?" },
       "options": [
         { "label": "Accepter (Paix Fragile)", "target": "paix_imparfaite", "effect": { "violence": -20 } },
         { "label": "Refuser (Rébellion)", "target": "tous_contre_un", "effect": { "violence": 10 } }
@@ -138,9 +156,10 @@
     "paix_imparfaite": {
       "id": "paix_imparfaite",
       "type": "intro",
+      "allowEvents": true,
       "background": "assets/bg_paix.png",
-      "content": { "title": "Une Paix Imparfaite", "text": "Les armes se taisent. Ce n'est pas parfait, mais c'est une paix choisie." },
-      "next": "fin_reflexion"
+      "content": { "title": "Une Paix Imparfaite", "text": "Les armes se taisent. Ce n'est pas parfait, mais c'est une paix choisie sans effusion de sang." },
+      "next": "reflexion_compromis"
     },
     "tous_contre_un": {
       "id": "tous_contre_un",
@@ -148,17 +167,18 @@
       "background": "assets/bg_guerre.png",
       "persona": "nobunaga",
       "content": { "title": "L'Alliance Rebelle", "text": "Nobunaga, Kenshin et Toshi s'unissent contre le désarmement." },
-      "prompt": "Tu es Nobunaga. Dis qu'un samouraï sans épée n'est rien. Appelle à la révolte.",
+      "prompt": "Tu es Nobunaga. Dis qu'un samouraï sans épée n'est rien. Appelle à la révolte générale.",
       "next": "alliance_fragile"
     },
 
     "toshi_elu_conversion": {
       "id": "toshi_elu_conversion",
       "type": "chat",
+      "allowEvents": true,
       "background": "assets/bg_shogun_throne_alt.png",
       "persona": "toshi",
-      "content": { "title": "L'Unité par la Foi", "text": "Toshi impose le Shintoïsme comme seule religion." },
-      "prompt": "Tu es Toshi. Dis calmement que pour unir le pays, il ne doit y avoir qu'une seule croyance.",
+      "content": { "title": "L'Unité par la Foi", "text": "Surprise : Toshi révèle sa vraie nature et impose le Shintoïsme." },
+      "prompt": "Tu es Toshi. Dis calmement que pour unir le pays, il ne doit y avoir qu'une seule croyance. Les autres sont interdites.",
       "next": "vote_toshi_foi"
     },
     "vote_toshi_foi": {
@@ -178,24 +198,26 @@
       "background": "assets/bg_shogun_throne_alt.png",
       "persona": "oracle",
       "content": { "title": "L'Empereur Tranche", "text": "Face à l'impasse, l'Empereur choisit Hideyoshi." },
-      "prompt": "Tu es l'Esprit. Annonce que la volonté divine a choisi la Paix.",
+      "prompt": "Tu es l'Esprit. Annonce que la volonté divine a choisi la Paix de Hideyoshi.",
       "next": "hideyoshi_elu_desarmement"
     },
     "ordre_peur": {
       "id": "ordre_peur",
       "type": "intro",
+      "allowEvents": true,
       "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Ordre par la Peur", "text": "Le pays est uni, mais les esprits sont brisés." },
-      "next": "fin_reflexion"
+      "content": { "title": "L'Ordre par la Peur", "text": "Le pays est uni, mais les esprits sont brisés. La police de la pensée règne." },
+      "next": "reflexion_tyrannie"
     },
     "conversion_acceptee": {
       "id": "conversion_acceptee",
       "type": "story",
+      "allowEvents": true,
       "background": "assets/bg_conseil.png",
       "persona": "kenshin",
       "content": { "title": "La Trahison", "text": "Kenshin a trahi ses propres valeurs pour le pouvoir." },
       "prompt": "Tu es Kenshin. Tu es triste. Dis : 'J'ai sauvé mon clan, mais j'ai perdu mon âme.'",
-      "next": "fin_reflexion"
+      "next": "reflexion_tyrannie"
     },
     "conversion_refusee": {
       "id": "conversion_refusee",
@@ -221,36 +243,61 @@
       "type": "story",
       "background": "assets/bg_conseil.png",
       "persona": "toshi",
-      "content": { "title": "L'Alliance Fragile", "text": "Les rebelles s'unissent, mais leurs visions s'opposent." },
-      "prompt": "Tu es Toshi. Dis que cette alliance ne tiendra pas longtemps.",
+      "content": { "title": "L'Alliance Fragile", "text": "Les rebelles s'unissent contre Hideyoshi, mais leurs visions s'opposent." },
+      "prompt": "Tu es Toshi. Dis à Nobunaga que c'est la Foi qui doit guider la guerre, pas juste la force brute.",
+      "next": "tension_rebelle"
+    },
+    "tension_rebelle": {
+      "id": "tension_rebelle",
+      "type": "chat",
+      "background": "assets/bg_guerre_alt.png",
+      "persona": "nobunaga",
+      "content": { "title": "Visions Irréconciliables", "text": "Nobunaga et Toshi se disputent le commandement." },
+      "prompt": "Tu es Nobunaga. Hurle sur Toshi. Dis que la religion affaiblit l'armée. L'alliance se brise.",
       "next": "guerre_totale"
     },
     "guerre_totale": {
       "id": "guerre_totale",
       "type": "intro",
+      "video": "assets/vid_evt_revolte.mp4",
       "background": "assets/bg_guerre_alt.png",
       "content": { "title": "La Guerre Totale", "text": "Le Japon s'effondre dans le chaos. Il n'y a plus de vainqueurs, que des survivants." },
-      "next": "fin_reflexion"
+      "next": "reflexion_chaos"
     },
     "fin_paix_surveiller": {
       "id": "fin_paix_surveiller",
       "type": "intro",
+      "allowEvents": true,
       "background": "assets/bg_paix.png",
-      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste." },
-      "next": "fin_reflexion"
+      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste. C'est une paix froide." },
+      "next": "reflexion_compromis"
     },
     "fin_guerre_totale": {
       "id": "fin_guerre_totale",
       "type": "intro",
+      "video": "assets/vid_evt_revolte.mp4",
       "background": "assets/bg_guerre_alt.png",
-      "content": { "title": "Le Chaos", "text": "La guerre a tout détruit." },
-      "next": "fin_reflexion"
+      "content": { "title": "Le Chaos", "text": "La guerre a tout détruit. Il faudra des décennies pour reconstruire." },
+      "next": "reflexion_chaos"
     },
-    "fin_reflexion": {
-      "id": "fin_reflexion",
+    
+    "reflexion_tyrannie": {
+      "id": "reflexion_tyrannie",
       "type": "intro",
       "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "Le jeu s'arrête. Quelles leçons en tirez-vous sur le pouvoir et la liberté ?" }
+      "content": { "title": "Réflexion", "text": "L'ordre règne, mais la liberté est morte. Était-ce le bon prix à payer ?" }
+    },
+    "reflexion_chaos": {
+      "id": "reflexion_chaos",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": { "title": "Réflexion", "text": "L'intransigeance a mené à la destruction. Le compromis était-il impossible ?" }
+    },
+    "reflexion_compromis": {
+      "id": "reflexion_compromis",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": { "title": "Réflexion", "text": "La paix est là, mais personne n'est pleinement satisfait. Est-ce cela, la démocratie ?" }
     }
   }
 }
