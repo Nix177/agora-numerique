@@ -26,10 +26,11 @@ async function init() {
             return await res.json();
         };
 
+        // Note: Chemins relatifs depuis la racine index.html
         const [scenario, personas, world] = await Promise.all([
-            loadFile('data/scenario.json'),
-            loadFile('data/personas.json'),
-            loadFile('data/world.json')
+            loadFile('scenarios/shogun/data/scenario.json'),
+            loadFile('scenarios/shogun/data/personas.json'),
+            loadFile('scenarios/shogun/data/world.json')
         ]);
 
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
@@ -39,7 +40,7 @@ async function init() {
 
     } catch (e) {
         console.error("Erreur:", e);
-        ui.teacherNote.innerHTML = `<span style="color:red">ERREUR: ${e.message}</span>`;
+        ui.teacherNote.innerHTML = `<span style="color:red">ERREUR CHARGEMENT</span>`;
     }
 }
 
@@ -52,17 +53,15 @@ function mapPersonas(list) {
 // --- SÉLECTION DU MODE ---
 function showModeSelection() {
     ui.screen.innerHTML = `
-        <div class="slide-content" style="background:rgba(0,0,0,0.9); max-width:90%;">
+        <div class="slide-content" style="background:rgba(0,0,0,0.9);">
             <h1>L'Aube du Shogun</h1>
             <p>Choisissez votre expérience de jeu.</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
-                <button id="btn-mode-std" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px; transition:0.2s;">
-                    <strong>Mode Standard</strong><br>
-                    <span style="font-size:0.6em">Histoire principale (Directe)</span>
+                <button id="btn-mode-std" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px;">
+                    Mode Standard (30min)
                 </button>
-                <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.5em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px; transition:0.2s;">
-                    <strong>Mode Campagne</strong><br>
-                    <span style="font-size:0.6em">Avec événements imprévus</span>
+                <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px;">
+                    Mode Campagne (45min+)
                 </button>
             </div>
         </div>
@@ -83,25 +82,30 @@ function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
 
-    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Mode Campagne) ---
-    if (GAME_MODE === 'extended' && sceneId !== GAME_DATA.scenario.start && !sceneId.startsWith('evt_') && Math.random() > 0.7) {
+    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Mode Campagne UNIQUEMENT) ---
+    // Condition : Mode Etendu + La scène autorise les événements + Pas déjà dans un event + Random
+    if (GAME_MODE === 'extended' && scene.allowEvents && !sceneId.startsWith('evt_') && Math.random() > 0.6) {
         const events = GAME_DATA.world.randomEvents;
         if (events && events.length > 0) {
             const randomEvt = events[Math.floor(Math.random() * events.length)];
             
+            // On crée une scène temporaire pour l'événement
             const evtScene = {
                 id: randomEvt.id,
-                type: "chat",
-                background: "assets/bg_conseil.png", // Fond par défaut
-                video: "assets/vid_evt_revolte.mp4", // Vidéo générique chaos si dispo
+                type: "chat", // Affiché comme un dialogue avec l'Oracle
+                background: randomEvt.background || "assets/bg_conseil.png",
+                video: "assets/vid_evt_revolte.mp4", // Ambiance chaos par défaut
                 persona: "oracle",
                 prompt: randomEvt.prompt,
-                teacherNote: "⚠️ ÉVÉNEMENT IMPRÉVU ! Faites réagir la classe.",
+                teacherNote: "⚠️ ÉVÉNEMENT ! Demandez aux élèves de réagir selon leur Shogun.",
                 content: { title: "⚠️ " + randomEvt.title, text: randomEvt.text },
-                next: sceneId
+                next: sceneId, // On revient à la scène prévue après l'événement
+                allowEvents: false // Pas d'événement dans un événement
             };
             
+            // On retire l'événement pour ne pas l'avoir 2 fois
             GAME_DATA.world.randomEvents = events.filter(e => e !== randomEvt);
+            
             CURRENT_SCENE = evtScene;
             updateScreen(evtScene);
             updateTeacherInterface(evtScene);
@@ -119,25 +123,25 @@ function loadScene(sceneId) {
     }
 }
 
-// 3. AFFICHAGE (VIDÉO + IMAGES)
+// 3. AFFICHAGE
 function updateScreen(scene) {
-    // Gestion Vidéo (Théâtre d'images)
     const videoContainer = document.getElementById('video-bg-container');
     
+    // Gestion du fond (Vidéo ou Image)
     if (scene.video) {
         if (!videoContainer) {
             document.body.insertAdjacentHTML('afterbegin', `
                 <div id="video-bg-container" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden; background:black;">
-                    <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; opacity:0.8;">
+                    <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; opacity:0.6;">
                         <source src="${scene.video}" type="video/mp4">
                     </video>
                 </div>
             `);
         } else {
-            const videoElement = videoContainer.querySelector('video');
-            if (!videoElement.querySelector('source').src.includes(scene.video)) {
-                videoElement.querySelector('source').src = scene.video;
-                videoElement.load();
+            const v = videoContainer.querySelector('video source');
+            if (!v.src.includes(scene.video)) {
+                v.src = scene.video;
+                videoContainer.querySelector('video').load();
             }
         }
         document.body.style.backgroundImage = 'none';
@@ -147,6 +151,8 @@ function updateScreen(scene) {
     }
     
     let html = '';
+    
+    // Si c'est une scène narrative (Intro, Story, Vote)
     if (scene.content) {
         html += `
             <div class="slide-content">
@@ -156,6 +162,7 @@ function updateScreen(scene) {
         `;
     }
 
+    // Si c'est une scène de dialogue (Chat)
     if (scene.persona) {
         const p = GAME_DATA.personas[scene.persona];
         const avatarUrl = p ? p.avatar : 'assets/avatar_esprit.png';
@@ -214,14 +221,16 @@ async function initChat(scene) {
 }
 
 window.sendUserMessage = async function(text) {
+    if(!text) return;
     const chatDiv = document.getElementById('chat-scroll');
     if(!chatDiv) return;
     
     chatDiv.innerHTML += `<div class="msg user">${text}</div>`;
+    chatDiv.scrollTop = chatDiv.scrollHeight;
     CHAT_HISTORY.push({ role: "user", content: text });
     
     const bio = GAME_DATA.personas[CURRENT_SCENE.persona]?.bio || "Tu es neutre.";
-    const systemContext = `CONTEXTE: ${JSON.stringify(GAME_STATE)}. PERSO: ${bio}. CONSIGNE: ${CURRENT_SCENE.prompt}`;
+    const systemContext = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. TON RÔLE: ${bio}. CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}`;
     
     await callBot(systemContext);
 }
@@ -232,6 +241,7 @@ async function callBot(systemPrompt, isIntro = false) {
 
     const loadingId = 'loading-' + Date.now();
     chatDiv.innerHTML += `<div id="${loadingId}" class="msg bot">...</div>`;
+    chatDiv.scrollTop = chatDiv.scrollHeight;
 
     try {
         const res = await fetch(`${API_BASE}/chat`, {
@@ -254,7 +264,7 @@ async function callBot(systemPrompt, isIntro = false) {
     } catch (e) {
         console.error(e);
         const loader = document.getElementById(loadingId);
-        if(loader) loader.innerText = "Erreur IA.";
+        if(loader) loader.innerText = "Erreur de connexion IA.";
     }
 }
 
