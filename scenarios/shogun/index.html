@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L'Aube du Shogun - Maquette</title>
+    <title>L'Aube du Shogun</title>
     <style>
         /* --- Style global sombre et immersif --- */
         body { 
@@ -11,7 +11,7 @@
             background: #1a1a1a; 
             color: white; 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            overflow: hidden; 
+            overflow: hidden; /* Empêche le scroll global */
             height: 100vh; 
             display: flex; 
             flex-direction: column; 
@@ -29,25 +29,40 @@
             text-align: center; 
             backdrop-filter: brightness(0.6); 
             flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
+            position: relative;
         }
         
-        /* Styles des Slides (Narration) */
+        /* Styles des Slides (Narration) - CORRIGÉ POUR SCROLL */
         .slide-content {
-            background: rgba(0, 0, 0, 0.6);
-            padding: 40px;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            max-width: 80%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 80%;
+            max-width: 1000px;
+            /* Empêche de dépasser de l'écran */
+            max-height: 70vh; 
+            overflow-y: auto; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
+
+        /* Scrollbar custom pour être discret */
+        .slide-content::-webkit-scrollbar { width: 8px; }
+        .slide-content::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        .slide-content::-webkit-scrollbar-thumb { background: #ff8800; border-radius: 4px; }
+
         .slide-content h1 { 
-            font-size: 4em; 
+            font-size: 3em; /* Réduit légèrement pour gagner de la place */
             text-shadow: 0 0 20px black; 
+            margin-top: 0;
             margin-bottom: 0.2em; 
-            color: #fff;
+            color: #ffaa00;
         }
         .slide-content p { 
-            font-size: 2em; 
-            font-style: italic; 
+            font-size: 1.5em; 
+            line-height: 1.4;
             color: #ddd; 
         }
 
@@ -57,10 +72,9 @@
             max-width: 900px; 
             background: rgba(0,0,0,0.85); 
             border-radius: 15px; 
-            padding: 0; 
             display: flex; 
             flex-direction: column; 
-            height: 75vh; 
+            height: 70vh; /* Hauteur fixe pour laisser la place au prof */
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
         }
@@ -71,6 +85,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            flex-shrink: 0;
         }
         .avatar-img {
             width: 60px;
@@ -96,7 +111,7 @@
             padding: 15px 20px; 
             border-radius: 12px; 
             max-width: 80%;
-            font-size: 1.2em;
+            font-size: 1.1em;
             line-height: 1.4;
         }
         .msg.user { 
@@ -112,18 +127,9 @@
             border-bottom-left-radius: 2px;
         }
 
-        /* Styles du Vote */
-        .vote-container h1 {
-            font-size: 3.5em;
-            text-shadow: 0 4px 10px black;
-            background: rgba(0,0,0,0.7);
-            padding: 20px 40px;
-            border-radius: 10px;
-        }
-
         /* --- COCKPIT ENSEIGNANT (Bas de l'écran) --- */
         #teacher-ui {
-            height: 90px;
+            height: 80px;
             background: #222;
             border-top: 4px solid #ff8800;
             display: flex;
@@ -132,13 +138,14 @@
             justify-content: space-between;
             z-index: 1000;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+            flex-shrink: 0; /* Empêche d'être écrasé */
         }
 
         /* Zone Gauche : Système */
         .system-controls {
             display: flex;
             align-items: center;
-            min-width: 200px;
+            min-width: 150px;
         }
         .btn-fullscreen { 
             background: #000; 
@@ -148,31 +155,32 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.8em;
         }
         .btn-fullscreen:hover { background: #333; }
 
         /* Zone Milieu : Chat Prof */
         #teacher-input-zone { 
             flex-grow: 1; 
-            margin: 0 30px; 
+            margin: 0 20px; 
             display: flex; 
             gap: 10px;
         }
         #prof-chat-input { 
             flex-grow: 1; 
-            padding: 12px; 
+            padding: 10px; 
             border-radius: 5px; 
             border: 1px solid #555; 
             background: #333; 
             color: white; 
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         #prof-chat-input:focus { outline: 2px solid #ff8800; }
         .btn-send {
             background: #444;
             color: white;
             border: none;
-            padding: 0 20px;
+            padding: 0 15px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -184,44 +192,36 @@
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            min-width: 300px;
+            min-width: 250px;
         }
         #teacher-note-area { 
             color: #ffd700; 
             font-weight: bold; 
-            font-size: 0.85em; 
-            margin-bottom: 8px; 
+            font-size: 0.8em; 
+            margin-bottom: 5px; 
             text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 400px;
         }
         #teacher-controls { 
             display: flex; 
-            gap: 10px; 
+            gap: 5px; 
         }
         
-        /* Boutons Dynamiques */
-        button.btn-next { 
-            background: #28a745; 
-            color: white; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-size: 1em;
-            box-shadow: 0 4px 0 #1e7e34;
-        }
-        button.btn-next:active { transform: translateY(4px); box-shadow: none; }
-        
-        button.btn-choice { 
-            background: #007bff; 
-            color: white; 
-            border: none; 
-            padding: 10px 15px; 
+        button.btn-next, button.btn-choice { 
+            padding: 8px 15px; 
             border-radius: 5px; 
             cursor: pointer; 
             font-size: 0.9em;
-            box-shadow: 0 4px 0 #0056b3;
+            border: none;
+            color: white;
         }
-        button.btn-choice:active { transform: translateY(4px); box-shadow: none; }
+        button.btn-next { background: #28a745; box-shadow: 0 3px 0 #1e7e34; }
+        button.btn-choice { background: #007bff; box-shadow: 0 3px 0 #0056b3; }
+        
+        button:active { transform: translateY(3px); box-shadow: none; }
 
     </style>
 </head>
@@ -234,11 +234,10 @@
         
         <div class="system-controls">
             <button class="btn-fullscreen" onclick="toggleFullScreen()">⛶ Plein Écran</button>
-            <div style="margin-left: 15px; font-size: 0.8em; color: #888;">Maquette 8-11H</div>
         </div>
 
         <div id="teacher-input-zone">
-            <input type="text" id="prof-chat-input" placeholder="Taper la question d'un élève..." onkeydown="if(event.key==='Enter') document.getElementById('btn-send-chat').click()">
+            <input type="text" id="prof-chat-input" placeholder="Parler au personnage..." onkeydown="if(event.key==='Enter') document.getElementById('btn-send-chat').click()">
             <button id="btn-send-chat" class="btn-send" onclick="window.sendUserMessage(document.getElementById('prof-chat-input').value); document.getElementById('prof-chat-input').value=''">Envoyer</button>
         </div>
 
@@ -250,6 +249,6 @@
 
     </div>
 
-    <script type="module" src="js/engine.js"></script>
+    <script type="module" src="scenarios/shogun/js/engine.js"></script>
 </body>
 </html>
