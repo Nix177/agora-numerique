@@ -28,10 +28,10 @@ async function init() {
 
         // Note: Chemins relatifs depuis la racine index.html
         const [scenario, personas, world] = await Promise.all([
-            loadFile('scenarios/shogun/data/scenario.json'),
-            loadFile('scenarios/shogun/data/personas.json'),
-            loadFile('scenarios/shogun/data/world.json')
-        ]);
+    loadFile('data/scenario.json'),
+    loadFile('data/personas.json'),
+    loadFile('data/world.json')
+]);
 
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
