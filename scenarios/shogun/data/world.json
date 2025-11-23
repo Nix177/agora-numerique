@@ -25,6 +25,7 @@
       "id": "evt_navire_noir",
       "title": "Les Étrangers",
       "text": "Un immense navire noir aux voiles carrées a été aperçu au Sud.",
+      "background": "assets/bg_navire_noir.png",
       "prompt": "Tu es l'Esprit. Des étrangers arrivent avec des objets curieux et des armes à feu.",
       "effect": { "richesse": 5, "tradition": -5 }
     }
