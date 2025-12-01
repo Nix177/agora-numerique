@@ -13,7 +13,7 @@
             background-size: cover; background-position: center; transition: background 1s ease; 
         }
         
-        /* Zone de Jeu */
+        /* Zone de Jeu (Panneaux Scénario) */
         #game-container { 
             flex-grow: 1; display: flex; justify-content: center; align-items: center; 
             flex-direction: column; padding: 20px; position: relative; z-index: 1;
@@ -37,7 +37,7 @@
         .avatar-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; border-bottom: 1px solid #555; padding-bottom: 10px; }
         .avatar-img { width: 50px; height: 50px; border-radius: 50%; border: 2px solid #ff8800; object-fit: cover;}
 
-        /* --- BARRE DES PERSONNAGES (NOUVEAU) --- */
+        /* --- BARRE DES PERSONNAGES (ROSTER) --- */
         #roster-bar {
             position: absolute; top: 20px; right: 20px; z-index: 100;
             display: flex; flex-direction: column; gap: 10px;
@@ -55,7 +55,7 @@
         }
         .roster-btn:hover .roster-tooltip { opacity: 1; }
 
-        /* --- MODAL DE DIALOGUE (NOUVEAU) --- */
+        /* --- MODAL DE DIALOGUE (CHAT PARALLÈLE) --- */
         #side-chat-modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
@@ -105,5 +105,6 @@
     </div>
 
     <script type="module" src="../../scenarios/shogun/js/engine.js"></script>
+
 </body>
 </html>
