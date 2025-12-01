@@ -70,10 +70,10 @@ function showModeSelection() {
             <p>Choisissez votre expérience de jeu.</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
                 <button id="btn-mode-std" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px;">
-                    Mode Standard (30min)
+                    Mode Standard (court)
                 </button>
                 <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px;">
-                    Mode Campagne (45min+)
+                    Mode Campagne (plusieurs séances)
                 </button>
             </div>
         </div>
