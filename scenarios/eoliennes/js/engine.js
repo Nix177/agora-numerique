@@ -70,8 +70,8 @@ function showModeSelection() {
             <h1>${GAME_DATA.scenario.meta?.title || "Belles-Terres"}</h1>
             <p>Choisissez le mode de session :</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
-                <button id="btn-std" style="padding:20px; font-size:1.2em; background:#28a745; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Standard</button>
-                <button id="btn-ext" style="padding:20px; font-size:1.2em; background:#ff8800; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Prolongé</button>
+                <button id="btn-std" style="padding:20px; font-size:1.2em; background:#28a745; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Standard (30min)</button>
+                <button id="btn-ext" style="padding:20px; font-size:1.2em; background:#ff8800; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Campagne (45min+)</button>
             </div>
         </div>`;
     
@@ -239,8 +239,8 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
     }
 
     try {
-        // --- C'EST ICI QUE LE MODÈLE EST CHOISI ---
-        const chosenModel = ui.modelSelect ? ui.modelSelect.value : "gpt-4o-mini";
+        // --- MODIFICATION : Default = gpt-4o ---
+        const chosenModel = ui.modelSelect ? ui.modelSelect.value : "gpt-4o";
         
         const res = await fetch(`${API_BASE}/chat`, {
             method: "POST", headers: { "Content-Type": "application/json" },
@@ -262,7 +262,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         if(!CHAT_SESSIONS[targetId]) CHAT_SESSIONS[targetId] = [];
         CHAT_SESSIONS[targetId].push({ role: 'assistant', content: reply });
 
-        // TTS si coché
+        // TTS
         if (ui.ttsCheck && ui.ttsCheck.checked && reply) {
             playTTS(reply, GAME_DATA.personas[targetId]);
         }
@@ -310,4 +310,4 @@ window.saveGameLog = async function() {
     } catch(e) { alert("Erreur sauvegarde: " + e); }
 }
 
-init();4
+init();
