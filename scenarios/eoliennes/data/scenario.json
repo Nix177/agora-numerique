@@ -1,0 +1,113 @@
+{
+  "meta": { "title": "Le Dilemme des Terres Rares", "theme": "eoliennes" },
+  "state": { "nature": 50, "richesse": 50, "social": 50 },
+  "start": "intro_decouverte",
+  "scenes": {
+    
+    "intro_decouverte": {
+      "id": "intro_decouverte",
+      "type": "intro",
+      "background": "assets/bg_menu.png",
+      "content": {
+        "title": "Une Découverte Bouleversante",
+        "text": "Un gisement géant de Néodyme a été trouvé sous les Terres Sacrées. Ce métal est indispensable pour fabriquer des éoliennes et sortir des énergies fossiles. Mais creuser ici détruira un sanctuaire millénaire."
+      },
+      "next": "debat_initial"
+    },
+
+    "debat_initial": {
+      "id": "debat_initial",
+      "type": "chat",
+      "background": "assets/bg_village.png",
+      "persona": "mika-cp",
+      "prompt": "Tu es Mika. Explique avec passion que ce n'est pas juste une mine : c'est la transition énergétique du pays ! Grâce à nous, on fermera des centrales à charbon. Et l'argent paiera enfin un hôpital digne de ce nom.",
+      "teacherNote": "Mika pose l'enjeu : sacrifier un lieu pour sauver le climat global ?",
+      "next": "choix_urgence"
+    },
+
+    "choix_urgence": {
+      "id": "choix_urgence",
+      "type": "vote",
+      "background": "assets/bg_village.png",
+      "content": { "title": "Le Blocage", "text": "Les militants bloquent l'accès pour protéger le site. Le gouvernement doit agir." },
+      "options": [
+        { "label": "Forcer l'accès (Urgence Climatique)", "target": "tension_force", "effect": { "social": -5, "richesse": 10 } },
+        { "label": "Suspendre pour discuter", "target": "tension_dialogue", "effect": { "social": 10, "richesse": -5 } }
+      ]
+    },
+
+    "tension_force": {
+      "id": "tension_force",
+      "type": "story",
+      "background": "assets/bg_mine_blocked.png",
+      "persona": "bragi-rt",
+      "content": { "title": "Le Choix du Réalisme", "text": "Les travaux commencent. C'est brutal, mais nécessaire pour l'indépendance énergétique." },
+      "prompt": "Tu es Bragi. Dis que tu comprends la tristesse, mais qu'on ne chauffe pas les maisons avec des prières. Il faut avancer.",
+      "next": "phase_negociation"
+    },
+
+    "tension_dialogue": {
+      "id": "tension_dialogue",
+      "type": "story",
+      "background": "assets/bg_foret.png",
+      "persona": "lia-ln",
+      "content": { "title": "Le Temps de la Réflexion", "text": "On prend le temps d'écouter la terre, quitte à retarder le progrès." },
+      "prompt": "Tu es Lia. Dis que détruire la nature pour sauver le climat est un non-sens. Il faut trouver une autre voie, plus sobre.",
+      "next": "phase_negociation"
+    },
+
+    "phase_negociation": {
+      "id": "phase_negociation",
+      "type": "chat",
+      "background": "assets/bg_conseil.png",
+      "persona": "nae-cham",
+      "content": { 
+          "title": "La Voix des Esprits", 
+          "text": "Le conseil se réunit pour la décision finale." 
+      },
+      "prompt": "Tu es Naé. Rappelle que le sacré n'a pas de prix. Mais demande aux autres : si on ne creuse pas ici, continuera-t-on à brûler du pétrole ailleurs ?",
+      "teacherNote": "Le dilemme est posé : Pureté locale vs Efficacité globale.",
+      "next": "vote_final"
+    },
+
+    "vote_final": {
+      "id": "vote_final",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "L'Avenir des Belles-Terres", "text": "Quel sacrifice êtes-vous prêts à faire ?" },
+      "options": [
+        { "label": "La Transition Totale (Mine+Éolien)", "target": "fin_transition", "effect": { "richesse": 20, "nature": -20 } },
+        { "label": "Le Sanctuaire Intact (Refus)", "target": "fin_preservation", "effect": { "nature": 20, "richesse": -10 } },
+        { "label": "Le Compromis (Éolien seul)", "target": "fin_equilibre", "effect": { "nature": 0, "richesse": 5 } }
+      ]
+    },
+
+    "fin_transition": {
+      "id": "fin_transition",
+      "type": "intro",
+      "background": "assets/bg_mine_active.png",
+      "content": { 
+        "title": "La Région Modèle", 
+        "text": "Les Belles-Terres sont devenues le poumon vert du pays. Les écoles et l'hôpital sont flambant neufs. Mais le sol sacré est perdu à jamais. Nous avons sacrifié notre passé pour assurer l'avenir de tous." 
+      }
+    },
+    "fin_preservation": {
+      "id": "fin_preservation",
+      "type": "intro",
+      "background": "assets/bg_foret.png",
+      "content": { 
+        "title": "Le Gardien du Temps", 
+        "text": "Le sanctuaire est sauf, la biodiversité rayonne. C'est une victoire pour l'âme. Mais la région reste modeste et le pays doit continuer à importer de l'énergie fossile. Notre pureté a un coût." 
+      }
+    },
+    "fin_equilibre": {
+      "id": "fin_equilibre",
+      "type": "intro",
+      "background": "assets/bg_eolienne_future.png",
+      "content": { 
+        "title": "La Voie Médiane", 
+        "text": "Pas de mine, mais quelques éoliennes tournent en zone neutre. On ne roule pas sur l'or, mais l'essentiel est préservé. C'est une paix imparfaite, faite de petites concessions quotidiennes." 
+      }
+    }
+  }
+}
