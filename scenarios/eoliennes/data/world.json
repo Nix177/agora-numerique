@@ -1,102 +1,47 @@
 {
-  "lieu": "Forum de la Côte-Nord (vents forts)",
+  "lieu": "Forum de la Côte-Nord (Belles-Terres)",
   "places": [
-    { "id": "falaises-auri", "name": "Falaises d’Auri", "note": "couloir de migration des oiseaux" },
-    { "id": "anse-bleue", "name": "Anse-Bleue", "note": "petit port de pêche; route des chevaux" },
-    { "id": "plateau-neutre", "name": "Plateau Neutre", "note": "zone ventée, loin des habitats" }
+    { "id": "terres-sacrees", "name": "Terres Sacrées des Ancêtres", "note": "Sous-sol riche en Néodyme; zone inviolable pour les Chamanes." },
+    { "id": "falaises-auri", "name": "Falaises d’Auri", "note": "Couloir de migration des oiseaux; site potentiel pour éoliennes." },
+    { "id": "anse-bleue", "name": "Anse-Bleue", "note": "Port de pêche traditionnel; zone de calme." },
+    { "id": "plateau-neutre", "name": "Plateau Neutre", "note": "Zone sans enjeu spirituel, loin des habitations." }
   ],
   "factions": [
-    "Chamanes (pas de mines; éoliennes seulement en zone neutre)",
-    "Liberté & Nature (pas de mines, pas d'éoliennes près des paysages)",
-    "Creuser-Puiser (pro mines + éoliennes; emplois)",
-    "Pêche & Chevaux (prudence : routes de pêche, caravanes)"
+    "Chamanes (Non aux mines; Éoliennes OK en zone neutre)",
+    "Liberté & Nature (Non à tout; Oui à l'écotourisme)",
+    "Creuser-Puiser (Oui aux mines de Néodyme + Éoliennes)",
+    "Pêche & Tradition (Prudence; Non au bruit et à l'invasion)",
+    "@Rebelle-Terre (Oui aux mines; Non aux éoliennes moches)"
   ],
   "constraints": [
-    "couloirs d'oiseaux sur Falaises d’Auri",
-    "nuisances sonores possibles près des hameaux",
-    "routes de pêche à préserver",
-    "paysages emblématiques à protéger"
+    "Gisements de Néodyme situés sous les Terres Sacrées",
+    "Couloirs migratoires des oiseaux à protéger",
+    "Besoin urgent de financement pour écoles et soins",
+    "Respect des croyances vs. besoin économique"
   ],
   "dilemmas": [
-    "L'énergie propre vs. protection des oiseaux",
-    "Emplois locaux vs. tranquillité des villages",
-    "Production régulière vs. jours sans vent (stockage)"
+    "Sacrifier le sacré pour financer le social (Hôpitaux) ?",
+    "Détruire un paysage pour produire de l'énergie verte ?",
+    "Emplois industriels immédiats vs. revenus écotouristiques incertains"
   ],
   "factsBank": [
-    "Le vent varie selon les saisons; on peut compléter par d'autres sources d'énergie.",
-    "Choisir un site éloigné des couloirs d'oiseaux limite les collisions.",
-    "Un parc éolien nécessite de l'entretien régulier et une concertation locale."
+    "Le Néodyme est indispensable aux aimants des éoliennes performantes.",
+    "Les Terres Sacrées abritent les sépultures des ancêtres chamanes.",
+    "La région manque cruellement d'infrastructures médicales.",
+    "L'écotourisme demande des années pour devenir rentable."
   ],
-    "recentEvents": [
-    "Un panneau explicatif installé à l’Anse-Bleue sur les migrations d’automne.",
-    "Le conseil du village a ouvert une consultation publique pour le Plateau Neutre."
+  "recentEvents": [
+    "Découverte officielle du gisement géant de Néodyme.",
+    "Occupation pacifique du site minier par 'Liberté & Nature'.",
+    "Proposition de 'migration spirituelle' faite par Creuser-Puiser.",
+    "Consultation populaire lancée par le gouvernement régional."
   ],
-
   "lore": {
-    "headline": "Découverte de terres rares sur les territoires sacrés des Ancêtres.",
-    "background": "Les géologues de Creuser-Puiser ont identifié des gisements rentables (dont du néodyme) sous des terres considérées comme sacrées. La nouvelle bouleverse les Belles-Terres.",
-    "industryProposal": "Creuser-Puiser propose des usines au néodyme et le développement d’un parc d’éoliennes sur la côte ventée (solution locale et durable, création d’emplois).",
-    "publicDebate": "La région est partagée entre traditions (pêche artisanale, élevage de chevaux) et modernisation économique. Le gouvernement régional, à majorité progressiste, lance une consultation populaire pour apaiser la situation.",
-    "invitation": "Vous êtes convié·e à défendre votre point de vue dans un forum ouvert (‘tables de paroles’)."
+    "headline": "Terres Rares ou Terres Sacrées ? Le Dilemme du Néodyme.",
+    "background": "Des géologues ont trouvé un gisement exceptionnel de terres rares sous le sanctuaire des Chamanes. C'est une fortune potentielle pour la région, mais un sacrilège pour les locaux.",
+    "industryProposal": "La société 'Creuser-Puiser' veut extraire ce minerai pour fabriquer des éoliennes sur place. Promesse : emplois, hôpitaux, écoles.",
+    "publicDebate": "Le débat fait rage. Faut-il profaner le sacré pour le bien commun ? L'écologie justifie-t-elle la mine ? Les traditions doivent-elles s'effacer devant le progrès ?",
+    "invitation": "Vous participez à une 'Table de Paroles' citoyenne pour décider de l'avenir de la région."
   },
-
-  "factionsProfiles": [
-    {
-      "id": "chamanes-ancestraux",
-      "displayName": "Société des chamanes ancestraux",
-      "position": { "mining": "non (sacré)", "wind": "oui (zones spirituellement neutres)", "tourism": "sobre" },
-      "summary": "Opposés à toute exploitation minière sur terres sacrées; respect inconditionnel des croyances; le profit ‘corrompt l’Esprit de tous les esprits’.",
-      "talkingPoints": [
-        "La paix spirituelle entre tous les êtres (toutes dimensions) prime.",
-        "Pas de mines sur les lieux sacrés; dialogue possible ailleurs.",
-        "Les éoliennes ne posent pas de problème si implantées en zones neutres."
-      ]
-    },
-    {
-      "id": "creuser-puiser",
-      "displayName": "Employés de Creuser-Puiser",
-      "position": { "mining": "oui (encadré)", "wind": "oui", "tourism": "neutre" },
-      "summary": "Habitant·e·s de la région, favorables aux mines et aux éoliennes pour l’essor économique et social (emplois, montée en gamme des écoles/soins).",
-      "talkingPoints": [
-        "Occasion de doter la région d’écoles supérieures et d’un meilleur système de soins.",
-        "Proposent aux chamanes une ‘migration spirituelle’ vers une zone protégée, sans enjeu économique.",
-        "Chaîne de valeur locale (du néodyme aux moteurs d’éoliennes)."
-      ]
-    },
-    {
-      "id": "liberte-nature",
-      "displayName": "Association Liberté & Nature",
-      "position": { "mining": "non", "wind": "non (protection paysages/biotopes)", "tourism": "écotourisme" },
-      "summary": "Opposés aux mines et aux éoliennes au nom du paysage et des biotopes rares; actions choc mais pacifiques; plaident pour une protection stricte.",
-      "talkingPoints": [
-        "Occupation pacifique du site minier pour alerter sans violence.",
-        "Plan de préservation stricte de l’environnement.",
-        "Écotourisme comme modèle sobre et viable pour la région."
-      ]
-    },
-    {
-      "id": "rebelle-terre",
-      "displayName": "Réseau @Rebelle-Terre",
-      "position": { "mining": "plutôt oui", "wind": "non (moche/inefficace/dangereux oiseaux)", "tourism": "mitigé" },
-      "summary": "Pragmatiques: ‘il faut bien gagner sa vie’. Peu sensibles aux arguments spirituels; refus des éoliennes; sceptiques quant à l’écotourisme.",
-      "talkingPoints": [
-        "La paix spirituelle est une croyance personnelle, pas un fait public.",
-        "Les éoliennes ‘défigurent’ et nuisent aux oiseaux.",
-        "Écotourisme: bénéfices incertains, risques de nuisances."
-      ]
-    },
-    {
-      "id": "peche-chevaux-tradition",
-      "displayName": "Pêche, chevaux & tradition",
-      "position": { "mining": "très prudent", "wind": "loin des routes/ports", "tourism": "très sobre" },
-      "summary": "Mouvement conservateur autour de la pêche artisanale et de l’élevage de chevaux. Méfiance envers l’afflux de touristes et de techniques.",
-      "talkingPoints": [
-        "Respect des méthodes traditionnelles ‘pour tous les êtres vivants’.",
-        "Population plutôt âgée, rejointe par des jeunes anti-consuméristes.",
-        "Préserver le silence des ports et les routes de chevaux."
-      ]
-    }
-  ],
-
-  "rappels": ["Rester respectueux", "Écouter les autres", "Poser des questions courtes"]
+  "rappels": ["Respectez la parole de chacun", "Pas d'attaques personnelles", "Cherchez le compromis si possible"]
 }
