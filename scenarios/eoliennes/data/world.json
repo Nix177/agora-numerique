@@ -13,6 +13,11 @@
     "Pêche & Tradition (Prudence; Non au bruit et à l'invasion)",
     "@Rebelle-Terre (Oui aux mines; Non aux éoliennes moches)"
   ],
+  "factsBank": [
+    "Le Néodyme est indispensable aux aimants des éoliennes.",
+    "Les Terres Sacrées abritent les sépultures des ancêtres.",
+    "La région manque d'infrastructures médicales."
+  ],
   "constraints": [
     "Gisements de Néodyme situés sous les Terres Sacrées",
     "Couloirs migratoires des oiseaux à protéger",
