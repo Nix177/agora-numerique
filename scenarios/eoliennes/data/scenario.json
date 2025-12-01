@@ -12,61 +12,98 @@
         "title": "Une Découverte Bouleversante",
         "text": "Un gisement géant de Néodyme a été trouvé sous les Terres Sacrées. Ce métal est indispensable pour fabriquer des éoliennes et sortir des énergies fossiles. Mais creuser ici détruira un sanctuaire millénaire."
       },
-      "next": "debat_initial"
+      "next": "distribution_roles"
     },
 
-    "debat_initial": {
-      "id": "debat_initial",
+    "distribution_roles": {
+      "id": "distribution_roles",
       "type": "chat",
-      "background": "assets/bg_village.png",
-      "persona": "mika-cp",
-      "prompt": "Tu es Mika. Explique avec passion que ce n'est pas juste une mine : c'est la transition énergétique du pays ! Grâce à nous, on fermera des centrales à charbon. Et l'argent paiera enfin un hôpital digne de ce nom.",
-      "teacherNote": "Mika pose l'enjeu : sacrifier un lieu pour sauver le climat global ?",
-      "next": "choix_urgence"
+      "background": "assets/bg_conseil.png",
+      "persona": "nae-cham",
+      "content": { 
+        "title": "L'Appel des Factions", 
+        "text": "Le destin vous appelle. Vous ne parlerez pas en votre nom, mais au nom de votre Clan." 
+      },
+      "prompt": "Tu es Naé, l'apprentie chamane. Invite solennellement les élèves à tirer une carte 'Rôle'. Dis-leur qu'ils doivent maintenant incarner l'esprit de leur faction, même si c'est difficile.",
+      "teacherNote": "Distribuez les cartes aléatoirement. Formez 5 groupes dans la classe.",
+      "next": "preparation_conseil"
     },
 
-    "choix_urgence": {
-      "id": "choix_urgence",
-      "type": "vote",
+    "preparation_conseil": {
+      "id": "preparation_conseil",
+      "type": "intro",
       "background": "assets/bg_village.png",
-      "content": { "title": "Le Blocage", "text": "Les militants bloquent l'accès pour protéger le site. Le gouvernement doit agir." },
+      "content": { 
+        "title": "Conseil de Guerre", 
+        "text": "Rejoignez votre camp. Étudiez vos arguments. Vous avez 5 minutes pour préparer votre défense avant l'ouverture de la séance." 
+      },
+      "teacherNote": "Laissez 5-10 min de préparation. Les élèves doivent lire leur fiche 'Persona'.",
+      "next": "crise_blocage"
+    },
+
+    "crise_blocage": {
+      "id": "crise_blocage",
+      "type": "story",
+      "background": "assets/bg_mine_blocked.png",
+      "persona": "lia-ln",
+      "content": { "title": "Alerte : Le Blocage", "text": "Coup de théâtre ! Avant même le début des discussions, le groupe 'Liberté & Nature' a bloqué l'accès au site minier avec des chaînes." },
+      "prompt": "Tu es Lia. Crie ta détermination. Dis que vous ne bougerez pas tant que le projet n'est pas annulé.",
+      "next": "debat_urgence"
+    },
+
+    "debat_urgence": {
+      "id": "debat_urgence",
+      "type": "chat",
+      "background": "assets/bg_mine_blocked.png",
+      "persona": "bragi-rt",
+      "content": { "title": "Premier Affrontement", "text": "La tension est palpable. Faut-il envoyer la police ou négocier ?" },
+      "prompt": "Tu es Bragi. Interpelle le groupe 'Liberté & Nature' (les élèves). Demande-leur de quel droit ils bloquent le travail des gens. Demande aux autres groupes s'ils trouvent ça normal.",
+      "teacherNote": "Faites réagir les groupes. Bragi attaque Lia. Demandez l'avis de Gaspard et Mika.",
+      "next": "vote_urgence"
+    },
+
+    "vote_urgence": {
+      "id": "vote_urgence",
+      "type": "vote",
+      "background": "assets/bg_conseil.png",
+      "content": { "title": "Décision d'Urgence", "text": "Le Conseil doit trancher sur la méthode à suivre face au blocage." },
       "options": [
-        { "label": "Forcer l'accès (Urgence Climatique)", "target": "tension_force", "effect": { "social": -5, "richesse": 10 } },
-        { "label": "Suspendre pour discuter", "target": "tension_dialogue", "effect": { "social": 10, "richesse": -5 } }
+        { "label": "Force Publique (Police)", "target": "tension_force", "effect": { "social": -10, "richesse": 5 } },
+        { "label": "Dialogue & Suspension", "target": "tension_dialogue", "effect": { "social": 5, "richesse": -5 } }
       ]
     },
 
     "tension_force": {
       "id": "tension_force",
       "type": "story",
-      "background": "assets/bg_mine_blocked.png",
-      "persona": "bragi-rt",
-      "content": { "title": "Le Choix du Réalisme", "text": "Les travaux commencent. C'est brutal, mais nécessaire pour l'indépendance énergétique." },
-      "prompt": "Tu es Bragi. Dis que tu comprends la tristesse, mais qu'on ne chauffe pas les maisons avec des prières. Il faut avancer.",
-      "next": "phase_negociation"
+      "background": "assets/bg_mine_active.png",
+      "persona": "mika-cp",
+      "content": { "title": "Passage en Force", "text": "Les barricades sont démantelées. Les militants sont évacués. Les travaux commencent sous haute tension." },
+      "prompt": "Tu es Mika. Dis que c'est triste d'en arriver là, mais que l'avenir de la région ne peut pas être pris en otage par une minorité.",
+      "next": "grand_conseil"
     },
 
     "tension_dialogue": {
       "id": "tension_dialogue",
       "type": "story",
       "background": "assets/bg_foret.png",
-      "persona": "lia-ln",
-      "content": { "title": "Le Temps de la Réflexion", "text": "On prend le temps d'écouter la terre, quitte à retarder le progrès." },
-      "prompt": "Tu es Lia. Dis que détruire la nature pour sauver le climat est un non-sens. Il faut trouver une autre voie, plus sobre.",
-      "next": "phase_negociation"
+      "persona": "nae-cham",
+      "content": { "title": "La Trêve", "text": "Les machines s'arrêtent. Le silence revient. Une table ronde exceptionnelle est organisée au cœur du village." },
+      "prompt": "Tu es Naé. Remercie le conseil pour sa sagesse. Dis que le temps de la parole est venu.",
+      "next": "grand_conseil"
     },
 
-    "phase_negociation": {
-      "id": "phase_negociation",
+    "grand_conseil": {
+      "id": "grand_conseil",
       "type": "chat",
       "background": "assets/bg_conseil.png",
-      "persona": "nae-cham",
+      "persona": "gaspard-lna",
       "content": { 
-          "title": "La Voix des Esprits", 
-          "text": "Le conseil se réunit pour la décision finale." 
+          "title": "Le Grand Conseil", 
+          "text": "C'est l'heure de vérité. Chaque camp doit exposer sa vision finale pour les Belles-Terres." 
       },
-      "prompt": "Tu es Naé. Rappelle que le sacré n'a pas de prix. Mais demande aux autres : si on ne creuse pas ici, continuera-t-on à brûler du pétrole ailleurs ?",
-      "teacherNote": "Le dilemme est posé : Pureté locale vs Efficacité globale.",
+      "prompt": "Tu es Gaspard, le doyen. Ouvre la séance. Demande solennellement à chaque groupe de présenter sa solution finale. Interpelle d'abord le groupe 'Creuser-Puiser' pour qu'il défende son projet.",
+      "teacherNote": "Tour de table. Faites parler chaque groupe d'élèves. Utilisez le Bot pour relancer ceux qui sont timides.",
       "next": "vote_final"
     },
 
@@ -74,11 +111,11 @@
       "id": "vote_final",
       "type": "vote",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Avenir des Belles-Terres", "text": "Quel sacrifice êtes-vous prêts à faire ?" },
+      "content": { "title": "Le Vote Final", "text": "Incarnez votre rôle jusqu'au bout. Quel destin choisissez-vous ?" },
       "options": [
-        { "label": "La Transition Totale (Mine+Éolien)", "target": "fin_transition", "effect": { "richesse": 20, "nature": -20 } },
-        { "label": "Le Sanctuaire Intact (Refus)", "target": "fin_preservation", "effect": { "nature": 20, "richesse": -10 } },
-        { "label": "Le Compromis (Éolien seul)", "target": "fin_equilibre", "effect": { "nature": 0, "richesse": 5 } }
+        { "label": "Transition Totale (Mine+Éolien)", "target": "fin_transition", "effect": { "richesse": 20, "nature": -20 } },
+        { "label": "Sanctuaire Intact (Refus)", "target": "fin_preservation", "effect": { "nature": 20, "richesse": -10 } },
+        { "label": "Compromis (Éolien seul)", "target": "fin_equilibre", "effect": { "nature": 0, "richesse": 5 } }
       ]
     },
 
@@ -87,17 +124,17 @@
       "type": "intro",
       "background": "assets/bg_mine_active.png",
       "content": { 
-        "title": "La Région Modèle", 
-        "text": "Les Belles-Terres sont devenues le poumon vert du pays. Les écoles et l'hôpital sont flambant neufs. Mais le sol sacré est perdu à jamais. Nous avons sacrifié notre passé pour assurer l'avenir de tous." 
+        "title": "La Région Modèle... et Blessée", 
+        "text": "Les Belles-Terres sont riches et modernes. Mais le sol sacré est éventré. Les Chamans pleurent leurs ancêtres disparus. Le progrès a un goût de cendre." 
       }
     },
     "fin_preservation": {
       "id": "fin_preservation",
       "type": "intro",
-      "background": "assets/bg_foret.png",
+      "background": "assets/bg_fin_nature.png",
       "content": { 
-        "title": "Le Gardien du Temps", 
-        "text": "Le sanctuaire est sauf, la biodiversité rayonne. C'est une victoire pour l'âme. Mais la région reste modeste et le pays doit continuer à importer de l'énergie fossile. Notre pureté a un coût." 
+        "title": "La Pureté... et la Fumée", 
+        "text": "Le sanctuaire est sauf. Mais regardez l'horizon : les barges de pétrole continuent d'arriver. Nous avons les mains propres, mais nous brûlons l'avenir ailleurs." 
       }
     },
     "fin_equilibre": {
@@ -106,7 +143,7 @@
       "background": "assets/bg_eolienne_future.png",
       "content": { 
         "title": "La Voie Médiane", 
-        "text": "Pas de mine, mais quelques éoliennes tournent en zone neutre. On ne roule pas sur l'or, mais l'essentiel est préservé. C'est une paix imparfaite, faite de petites concessions quotidiennes." 
+        "text": "Quelques éoliennes tournent en zone neutre. Pas de mine. L'argent manque un peu, mais la paix est préservée. C'est une victoire modeste et digne." 
       }
     }
   }
