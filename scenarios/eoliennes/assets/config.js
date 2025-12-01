@@ -1,6 +1,6 @@
 // assets/config.js
-// Base de l’API côté Worker (garde le /api)
-export const API_BASE = "https://dark-rice-25ee.nicolas-tuor.workers.dev/api";
+// On pointe vers la racine du worker (sans /api à la fin)
+export const API_BASE = "https://dark-rice-25ee.nicolas-tuor.workers.dev";
 
 // Active la mémoire R2 si et seulement si /api/memory est déployé
 export const HAS_MEMORY = false;
