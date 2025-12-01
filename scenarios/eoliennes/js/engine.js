@@ -70,8 +70,8 @@ function showModeSelection() {
             <h1>${GAME_DATA.scenario.meta?.title || "Belles-Terres"}</h1>
             <p>Choisissez le mode de session :</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
-                <button id="btn-std" style="padding:20px; font-size:1.2em; background:#28a745; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Standard (30min)</button>
-                <button id="btn-ext" style="padding:20px; font-size:1.2em; background:#ff8800; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Campagne (45min+)</button>
+                <button id="btn-std" style="padding:20px; font-size:1.2em; background:#28a745; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Standard</button>
+                <button id="btn-ext" style="padding:20px; font-size:1.2em; background:#ff8800; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Prolongé</button>
             </div>
         </div>`;
     
