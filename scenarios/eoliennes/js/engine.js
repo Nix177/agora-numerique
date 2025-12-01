@@ -30,7 +30,7 @@ async function init() {
     try {
         const load = async (p) => (await fetch(p)).json();
         
-        // Chargement local (chemins relatifs simples)
+        // Chargement local
         const [scenario, personas, world] = await Promise.all([
             load('data/scenario.json'),
             load('data/personas.json'),
@@ -40,11 +40,11 @@ async function init() {
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
         
-        // Init sessions chat
+        // Init sessions
         Object.keys(GAME_DATA.personas).forEach(id => CHAT_SESSIONS[id] = []);
         renderRoster();
         
-        // Déblocage audio (Autoplay Policy)
+        // Déblocage audio
         document.body.addEventListener('click', () => {
             const a = new Audio(); a.muted=true; a.play().catch(()=>{});
         }, {once:true});
@@ -53,7 +53,7 @@ async function init() {
 
     } catch (e) {
         console.error("Erreur Init:", e);
-        ui.screen.innerHTML = "<h1>Erreur chargement</h1><p>Vérifiez la console (F12) et les fichiers JSON.</p>";
+        ui.screen.innerHTML = "<h1>Erreur chargement</h1><p>Vérifiez les fichiers JSON.</p>";
     }
 }
 
@@ -79,12 +79,12 @@ function showModeSelection() {
     document.getElementById('btn-ext').onclick = () => { GAME_MODE='extended'; loadScene(GAME_DATA.scenario.start); };
 }
 
-// 3. MOTEUR DE SCÈNE
+// 3. MOTEUR SCÈNE
 function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("Scène introuvable: " + sceneId);
 
-    // Gestion Événements Aléatoires (Mode Campagne)
+    // Events
     if (GAME_MODE === 'extended' && scene.allowEvents && !sceneId.startsWith('evt_') && Math.random() > 0.6) {
         const events = GAME_DATA.world.randomEvents;
         if (events && events.length) {
@@ -108,15 +108,13 @@ function loadScene(sceneId) {
     updateScreen(scene);
     updateTeacherInterface(scene);
 
-    // Intro automatique du personnage si c'est la première fois
     if (scene.persona && CHAT_SESSIONS[scene.persona].length === 0 && scene.prompt) {
-        callBot(scene.prompt, scene.persona, 'intro', true);
+        callBot(scene.prompt, scene.persona, 'main', true);
     }
 }
 
-// 4. AFFICHAGE (Images/Vidéos)
+// 4. AFFICHAGE
 function updateScreen(scene) {
-    // Fond Vidéo
     let vidContainer = document.getElementById('video-bg');
     if (scene.video) {
         if (!vidContainer) {
@@ -132,11 +130,8 @@ function updateScreen(scene) {
     }
 
     let html = '';
-    // Panneau Narratif
-    if (scene.content) {
-        html += `<div class="slide-content"><h1>${scene.content.title}</h1><p>${scene.content.text}</p></div>`;
-    }
-    // Boîte de Chat Principale
+    if (scene.content) html += `<div class="slide-content"><h1>${scene.content.title}</h1><p>${scene.content.text}</p></div>`;
+    
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona] || { name: '?', avatar: '' };
         html += `<div class="chat-box">
@@ -146,11 +141,10 @@ function updateScreen(scene) {
     }
     ui.screen.innerHTML = html;
 
-    // Restaurer l'historique
     if (scene.persona) renderChatHistory(scene.persona, document.getElementById('chat-scroll'));
 }
 
-// 5. INTERFACE PROFESSEUR
+// 5. INTERFACE PROF
 function updateTeacherInterface(scene) {
     if(!ui.teacherPanel) return;
     ui.teacherPanel.innerHTML = '';
@@ -176,7 +170,7 @@ function applyEffects(eff) {
     for (let k in eff) GAME_STATE[k] = (GAME_STATE[k] || 0) + eff[k];
 }
 
-// 6. GESTION DU ROSTER (Latéral)
+// 6. ROSTER & MODAL
 function renderRoster() {
     if (!ui.roster) return;
     ui.roster.innerHTML = '';
@@ -200,7 +194,6 @@ window.openSideChat = function(pid) {
 
 window.closeSideChat = function() {
     if(ui.modal) ui.modal.style.display = 'none';
-    // Retour au perso principal de la scène
     CURRENT_CHAT_TARGET = CURRENT_SCENE && CURRENT_SCENE.persona ? CURRENT_SCENE.persona : null;
 }
 
@@ -213,32 +206,24 @@ function renderChatHistory(pid, container) {
     container.scrollTop = container.scrollHeight;
 }
 
-// 7. IA & MESSAGERIE (Unifiée)
-// source = 'main' (bas) ou 'modal' (popup)
+// 7. IA & TTS (Support des modèles)
 window.sendUserMessage = async function(text, source = 'main') {
     if (!text || !CURRENT_CHAT_TARGET) return;
     
-    // Identifier la bonne boîte de dialogue
     const container = (source === 'modal') ? ui.modalScroll : document.getElementById('chat-scroll');
     if (!container) return;
 
-    // Affichage Utilisateur
     container.innerHTML += `<div class="msg user">${text}</div>`;
     container.scrollTop = container.scrollHeight;
     
-    // Historique
     if (!CHAT_SESSIONS[CURRENT_CHAT_TARGET]) CHAT_SESSIONS[CURRENT_CHAT_TARGET] = [];
     CHAT_SESSIONS[CURRENT_CHAT_TARGET].push({ role: 'user', content: text });
     
-    // Reset Input
     if (source === 'modal' && ui.modalInput) ui.modalInput.value = '';
     if (source === 'main' && ui.mainInput) ui.mainInput.value = '';
 
-    // Contexte IA
     const p = GAME_DATA.personas[CURRENT_CHAT_TARGET];
-    let sceneCtx = (CURRENT_SCENE && CURRENT_SCENE.persona === CURRENT_CHAT_TARGET) 
-        ? `CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}` : "";
-    
+    let sceneCtx = (CURRENT_SCENE && CURRENT_SCENE.persona === CURRENT_CHAT_TARGET) ? `CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}` : "";
     const sysPrompt = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. TON RÔLE: ${p.bio}. ${sceneCtx}`;
 
     await callBot(sysPrompt, CURRENT_CHAT_TARGET, source);
@@ -254,7 +239,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
     }
 
     try {
-        // Modèle choisi par le prof (ou défaut)
+        // --- C'EST ICI QUE LE MODÈLE EST CHOISI ---
         const chosenModel = ui.modelSelect ? ui.modelSelect.value : "gpt-4o-mini";
         
         const res = await fetch(`${API_BASE}/chat`, {
@@ -269,8 +254,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         const reply = data.reply;
 
         if (container) {
-            const loader = document.getElementById(loadId);
-            if(loader) loader.remove();
+            document.getElementById(loadId).remove();
             container.innerHTML += `<div class="msg bot">${reply}</div>`;
             container.scrollTop = container.scrollHeight;
         }
@@ -278,7 +262,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         if(!CHAT_SESSIONS[targetId]) CHAT_SESSIONS[targetId] = [];
         CHAT_SESSIONS[targetId].push({ role: 'assistant', content: reply });
 
-        // TTS Automatique si coché
+        // TTS si coché
         if (ui.ttsCheck && ui.ttsCheck.checked && reply) {
             playTTS(reply, GAME_DATA.personas[targetId]);
         }
@@ -289,11 +273,10 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
     }
 }
 
-// Fonction TTS (Cloud)
 async function playTTS(text, persona) {
     try {
         const voiceId = persona.openaiVoice || "alloy";
-        const cleanText = text.replace(/\*[^*]+\*/g, '').trim(); // Enlève les astérisques
+        const cleanText = text.replace(/\*[^*]+\*/g, '').trim(); 
         if(!cleanText) return;
 
         const res = await fetch(`${API_BASE}/tts?voice=${voiceId}&model=gpt-4o-mini-tts&format=mp3`, {
@@ -306,7 +289,6 @@ async function playTTS(text, persona) {
     } catch(e) { console.warn("TTS Error", e); }
 }
 
-// 8. LOG & SAUVEGARDE
 window.saveGameLog = async function() {
     const transcript = JSON.stringify({ 
         date: new Date().toISOString(),
@@ -328,4 +310,4 @@ window.saveGameLog = async function() {
     } catch(e) { alert("Erreur sauvegarde: " + e); }
 }
 
-init();
+init();4
