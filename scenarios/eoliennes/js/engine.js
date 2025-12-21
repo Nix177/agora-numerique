@@ -134,9 +134,12 @@ function updateScreen(scene) {
     
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona] || { name: '?', avatar: '' };
+        // NOTE: On simplifie le header car l'avatar sera maintenant à côté de chaque message
         html += `<div class="chat-box">
-            <div class="avatar-header"><img src="${p.avatar}" class="avatar-img"><h3>${p.name}</h3></div>
-            <div id="chat-scroll" style="display:flex; flex-direction:column;"></div>
+            <div class="avatar-header">
+                <h3>Discussion avec ${p.name}</h3>
+            </div>
+            <div id="chat-scroll" style="display:flex; flex-direction:column; gap:15px; padding:10px;"></div>
         </div>`;
     }
     ui.screen.innerHTML = html;
@@ -197,11 +200,30 @@ window.closeSideChat = function() {
     CURRENT_CHAT_TARGET = CURRENT_SCENE && CURRENT_SCENE.persona ? CURRENT_SCENE.persona : null;
 }
 
+// --- FONCTION UTILITAIRE POUR L'AFFICHAGE DES MESSAGES (AVATAR) ---
+function buildMsgHTML(role, content, personaId) {
+    if (role === 'user') {
+        return `<div class="msg user" style="align-self:flex-end; background:#333; color:#ddd;">${content}</div>`;
+    } else {
+        // C'est le bot : on affiche l'avatar à gauche + la bulle
+        const p = GAME_DATA.personas[personaId] || {};
+        const avatarUrl = p.avatar || 'assets/avatars/default.png';
+        
+        return `
+        <div style="display:flex; align-items:flex-start; gap:10px; max-width:85%;">
+            <img src="${avatarUrl}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #ff8800; flex-shrink:0;">
+            <div class="msg bot" style="background:#4a3b2a; border-left:4px solid #ff8800; color:white; margin:0;">
+                ${content}
+            </div>
+        </div>`;
+    }
+}
+
 function renderChatHistory(pid, container) {
     if(!container) return;
     container.innerHTML = '';
     (CHAT_SESSIONS[pid] || []).forEach(m => {
-        container.innerHTML += `<div class="msg ${m.role==='user'?'user':'bot'}">${m.content}</div>`;
+        container.innerHTML += buildMsgHTML(m.role, m.content, pid);
     });
     container.scrollTop = container.scrollHeight;
 }
@@ -213,7 +235,8 @@ window.sendUserMessage = async function(text, source = 'main') {
     const container = (source === 'modal') ? ui.modalScroll : document.getElementById('chat-scroll');
     if (!container) return;
 
-    container.innerHTML += `<div class="msg user">${text}</div>`;
+    // Affiche message user via le constructeur HTML
+    container.innerHTML += buildMsgHTML('user', text, null);
     container.scrollTop = container.scrollHeight;
     
     if (!CHAT_SESSIONS[CURRENT_CHAT_TARGET]) CHAT_SESSIONS[CURRENT_CHAT_TARGET] = [];
@@ -234,12 +257,13 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
 
     let loadId = 'load-' + Date.now();
     if (container) {
-        container.innerHTML += `<div id="${loadId}" class="msg bot">...</div>`;
+        // Affiche le loader AVEC l'avatar
+        const loadingHTML = buildMsgHTML('assistant', '...', targetId).replace('class="msg bot"', `id="${loadId}" class="msg bot"`);
+        container.innerHTML += loadingHTML;
         container.scrollTop = container.scrollHeight;
     }
 
     try {
-        // --- MODIFICATION : Default = gpt-4o ---
         const chosenModel = ui.modelSelect ? ui.modelSelect.value : "gpt-4o";
         
         const res = await fetch(`${API_BASE}/chat`, {
@@ -254,8 +278,12 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         const reply = data.reply;
 
         if (container) {
-            document.getElementById(loadId).remove();
-            container.innerHTML += `<div class="msg bot">${reply}</div>`;
+            // On supprime le bloc de chargement (le parent flex complet)
+            const loaderEl = document.getElementById(loadId);
+            if(loaderEl) loaderEl.parentElement.remove();
+
+            // On ajoute la réponse finale avec l'avatar
+            container.innerHTML += buildMsgHTML('assistant', reply, targetId);
             container.scrollTop = container.scrollHeight;
         }
         
