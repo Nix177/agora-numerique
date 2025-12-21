@@ -134,10 +134,11 @@ function updateScreen(scene) {
     
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona] || { name: '?', avatar: '' };
-        // NOTE: On simplifie le header car l'avatar sera maintenant à côté de chaque message
+        // --- MISE A JOUR : Header avec Avatar pour le Chat Principal ---
         html += `<div class="chat-box">
-            <div class="avatar-header">
-                <h3>Discussion avec ${p.name}</h3>
+            <div class="avatar-header" style="display:flex; align-items:center; gap:15px; padding:15px; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <img src="${p.avatar}" style="width:60px; height:60px; border-radius:50%; object-fit:cover; border:2px solid #ff8800;">
+                <h3 style="margin:0; color:#ff8800; font-size:1.5em;">${p.name}</h3>
             </div>
             <div id="chat-scroll" style="display:flex; flex-direction:column; gap:15px; padding:10px;"></div>
         </div>`;
@@ -173,7 +174,7 @@ function applyEffects(eff) {
     for (let k in eff) GAME_STATE[k] = (GAME_STATE[k] || 0) + eff[k];
 }
 
-// 6. ROSTER & MODAL
+// 6. ROSTER & MODAL (C'EST ICI QUE SE FAIT LA MODIF POUR LE TITRE)
 function renderRoster() {
     if (!ui.roster) return;
     ui.roster.innerHTML = '';
@@ -190,7 +191,18 @@ function renderRoster() {
 window.openSideChat = function(pid) {
     CURRENT_CHAT_TARGET = pid;
     const p = GAME_DATA.personas[pid];
-    if(ui.modalTitle) ui.modalTitle.innerText = `Discussion avec ${p.name}`;
+    const avatarUrl = p.avatar || 'assets/avatars/default.png';
+
+    // --- MODIFICATION : Injection de l'avatar dans le titre du modal ---
+    if(ui.modalTitle) {
+        ui.modalTitle.innerHTML = `
+            <div style="display:flex; align-items:center; gap:15px;">
+                <img src="${avatarUrl}" style="height:50px; width:50px; border-radius:50%; border:2px solid #ff8800; object-fit:cover;">
+                <span>${p.name}</span>
+            </div>
+        `;
+    }
+
     if(ui.modal) ui.modal.style.display = 'flex';
     renderChatHistory(pid, ui.modalScroll);
 }
@@ -200,7 +212,7 @@ window.closeSideChat = function() {
     CURRENT_CHAT_TARGET = CURRENT_SCENE && CURRENT_SCENE.persona ? CURRENT_SCENE.persona : null;
 }
 
-// --- FONCTION UTILITAIRE POUR L'AFFICHAGE DES MESSAGES (AVATAR) ---
+// --- FONCTION UTILITAIRE POUR L'AFFICHAGE DES MESSAGES (AVEC AVATAR) ---
 function buildMsgHTML(role, content, personaId) {
     if (role === 'user') {
         return `<div class="msg user" style="align-self:flex-end; background:#333; color:#ddd;">${content}</div>`;
@@ -228,14 +240,14 @@ function renderChatHistory(pid, container) {
     container.scrollTop = container.scrollHeight;
 }
 
-// 7. IA & TTS (Support des modèles)
+// 7. IA & TTS
 window.sendUserMessage = async function(text, source = 'main') {
     if (!text || !CURRENT_CHAT_TARGET) return;
     
     const container = (source === 'modal') ? ui.modalScroll : document.getElementById('chat-scroll');
     if (!container) return;
 
-    // Affiche message user via le constructeur HTML
+    // Affiche message user
     container.innerHTML += buildMsgHTML('user', text, null);
     container.scrollTop = container.scrollHeight;
     
@@ -278,11 +290,11 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         const reply = data.reply;
 
         if (container) {
-            // On supprime le bloc de chargement (le parent flex complet)
+            // On supprime le bloc de chargement
             const loaderEl = document.getElementById(loadId);
             if(loaderEl) loaderEl.parentElement.remove();
 
-            // On ajoute la réponse finale avec l'avatar
+            // On ajoute la réponse finale
             container.innerHTML += buildMsgHTML('assistant', reply, targetId);
             container.scrollTop = container.scrollHeight;
         }
