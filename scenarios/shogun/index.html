@@ -34,7 +34,7 @@
             position: relative;
         }
         
-        /* Styles des Slides (Narration) - CORRIGÉ POUR SCROLL */
+        /* Styles des Slides (Narration) */
         .slide-content {
             background: rgba(0, 0, 0, 0.75);
             padding: 30px;
@@ -42,9 +42,10 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             width: 80%;
             max-width: 1000px;
-            /* Empêche de dépasser de l'écran */
             max-height: 70vh; 
             overflow-y: auto; 
+            /* C'est ICI qu'on justifie le texte narratif */
+            text-align: justify;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -54,11 +55,12 @@
         .slide-content::-webkit-scrollbar-thumb { background: #ff8800; border-radius: 4px; }
 
         .slide-content h1 { 
-            font-size: 3em; /* Réduit légèrement pour gagner de la place */
+            font-size: 3em; 
             text-shadow: 0 0 20px black; 
             margin-top: 0;
             margin-bottom: 0.2em; 
             color: #ffaa00;
+            text-align: center; /* Le titre reste centré, c'est plus joli */
         }
         .slide-content p { 
             font-size: 1.5em; 
@@ -74,7 +76,7 @@
             border-radius: 15px; 
             display: flex; 
             flex-direction: column; 
-            height: 70vh; /* Hauteur fixe pour laisser la place au prof */
+            height: 70vh; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             overflow: hidden;
         }
@@ -106,6 +108,7 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            /* Pas de justify ici, on veut que le chat reste naturel (gauche) */
         }
         .msg { 
             padding: 15px 20px; 
@@ -138,7 +141,7 @@
             justify-content: space-between;
             z-index: 1000;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
-            flex-shrink: 0; /* Empêche d'être écrasé */
+            flex-shrink: 0; 
         }
 
         /* Zone Gauche : Système */
@@ -184,6 +187,9 @@
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .btn-send:hover { background: #555; }
 
@@ -228,7 +234,7 @@
 <body>
 
     <div id="game-container">
-        </div>
+    </div>
 
     <div id="teacher-ui">
         
@@ -243,8 +249,18 @@
 
         <div class="scenario-controls-wrapper">
             <div id="teacher-note-area">Chargement...</div>
-            <div id="teacher-controls">
+            
+            <div style="display:flex; align-items:center;">
+                <div id="teacher-controls" style="display:flex; gap:5px;"></div>
+
+                <div style="display:flex; gap:5px; margin-left:15px; border-left:1px solid #555; padding-left:10px;">
+                    <button class="btn-send" onclick="window.undoLastScene()" title="Revenir en arrière" style="padding:10px;">↩</button>
+                    <button class="btn-send" onclick="window.downloadSave()" title="Télécharger la session" style="padding:10px;">💾</button>
+                    <label for="load-file" class="btn-send" style="cursor:pointer; padding:10px;" title="Charger un fichier">📂</label>
+                    <input type="file" id="load-file" style="display:none" onchange="window.uploadSave(this)">
                 </div>
+            </div>
+
         </div>
 
     </div>
