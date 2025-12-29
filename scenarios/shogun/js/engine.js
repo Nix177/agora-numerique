@@ -3,20 +3,19 @@ import { API_BASE } from "../assets/config.js";
 // --- ÉTAT DU JEU ---
 let GAME_DATA = {};
 let CURRENT_SCENE = null;
-// let CHAT_HISTORY = []; // REMPLACÉ PAR CHAT_SESSIONS
+let SCENE_HISTORY = []; // NOUVEAU : Historique pour le bouton Retour
 let GAME_STATE = {};
 let GAME_MODE = 'standard';
 
-// --- NOUVEAU : GESTION MULTI-CHAT ---
-let CHAT_SESSIONS = {}; // Stocke l'historique par persona { 'bragi': [], 'lia': [] }
-let CURRENT_CHAT_TARGET = null; // Avec qui on parle actuellement
+// --- GESTION MULTI-CHAT ---
+let CHAT_SESSIONS = {}; 
+let CURRENT_CHAT_TARGET = null; 
 
 // --- DOM ELEMENTS ---
 const ui = {
     screen: document.getElementById('game-container'),
     teacherPanel: document.getElementById('teacher-controls'),
     teacherNote: document.getElementById('teacher-note-area'),
-    // Nouveaux éléments pour le chat parallèle
     roster: document.getElementById('roster-bar'),
     modal: document.getElementById('side-chat-modal'),
     modalScroll: document.getElementById('modal-chat-scroll'),
@@ -44,9 +43,8 @@ async function init() {
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
         
-        // --- NOUVEAU : Initialiser les sessions de chat vides pour chaque perso ---
         Object.keys(GAME_DATA.personas).forEach(id => CHAT_SESSIONS[id] = []);
-        renderRoster(); // Affiche les visages sur le côté
+        renderRoster(); 
         
         showModeSelection();
 
@@ -62,18 +60,18 @@ function mapPersonas(list) {
     return map;
 }
 
-// --- SÉLECTION DU MODE ---
+// --- SÉLECTION DU MODE (Mise à jour des noms) ---
 function showModeSelection() {
     ui.screen.innerHTML = `
         <div class="slide-content" style="background:rgba(0,0,0,0.9);">
             <h1>L'Aube du Shogun</h1>
-            <p>Choisissez votre expérience de jeu.</p>
+            <p>Configuration de la séance :</p>
             <div style="display:flex; gap:30px; justify-content:center; margin-top:40px;">
                 <button id="btn-mode-std" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#28a745; color:white; border:none; border-radius:10px;">
-                    Mode Standard (court)
+                    Mode Standard (Rapide)
                 </button>
                 <button id="btn-mode-ext" style="padding:20px 40px; font-size:1.2em; cursor:pointer; background:#ff8800; color:white; border:none; border-radius:10px;">
-                    Mode Campagne (plusieurs séances)
+                    Mode Prolongements (Complet)
                 </button>
             </div>
         </div>
@@ -93,6 +91,12 @@ function showModeSelection() {
 function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
+
+    // --- NOUVEAU : Gestion Historique (sauf si on fait "Retour") ---
+    if (CURRENT_SCENE && CURRENT_SCENE.id !== sceneId && !window._isUndoing) {
+        SCENE_HISTORY.push(CURRENT_SCENE.id);
+    }
+    window._isUndoing = false;
 
     // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Mode Campagne) ---
     if (GAME_MODE === 'extended' && scene.allowEvents && !sceneId.startsWith('evt_') && Math.random() > 0.6) {
@@ -116,17 +120,15 @@ function loadScene(sceneId) {
             GAME_DATA.world.randomEvents = events.filter(e => e !== randomEvt);
             
             CURRENT_SCENE = evtScene;
-            CURRENT_CHAT_TARGET = "oracle"; // Cible par défaut pour l'event
+            CURRENT_CHAT_TARGET = "oracle"; 
             updateScreen(evtScene);
             updateTeacherInterface(evtScene);
-            // On ne reset pas l'historique global, on utilise la session
             return;
         }
     }
 
     CURRENT_SCENE = scene;
     
-    // --- NOUVEAU : Définir la cible du chat principal ---
     if (scene.persona) {
         CURRENT_CHAT_TARGET = scene.persona;
     } else {
@@ -136,7 +138,6 @@ function loadScene(sceneId) {
     updateScreen(scene);
     updateTeacherInterface(scene);
     
-    // Si c'est une scène de chat et qu'on n'a jamais parlé à ce perso, on lance l'intro
     if (scene.persona && CHAT_SESSIONS[scene.persona].length === 0 && scene.prompt) {
         callBot(scene.prompt, scene.persona, true);
     }
@@ -146,7 +147,7 @@ function loadScene(sceneId) {
 function updateScreen(scene) {
     const videoContainer = document.getElementById('video-bg-container');
     
-    // Gestion du fond (Vidéo ou Image) - VOTRE CODE INTACT
+    // Gestion du fond (Vidéo ou Image)
     if (scene.video) {
         if (!videoContainer) {
             document.body.insertAdjacentHTML('afterbegin', `
@@ -199,13 +200,12 @@ function updateScreen(scene) {
     }
     ui.screen.innerHTML = html;
 
-    // Restaurer l'historique dans la boîte principale
     if (scene.persona) {
         renderChatHistory(scene.persona, document.getElementById('chat-scroll'));
     }
 }
 
-// 4. INTERFACE PROFESSEUR (VOTRE CODE INTACT)
+// 4. INTERFACE PROFESSEUR
 function updateTeacherInterface(scene) {
     ui.teacherPanel.innerHTML = ''; 
     if(ui.teacherNote) ui.teacherNote.innerText = scene.teacherNote || "Phase narrative.";
@@ -237,7 +237,7 @@ function applyEffects(effects) {
     }
 }
 
-// --- 5. NOUVEAU : GESTION DU ROSTER ET MODAL ---
+// --- 5. GESTION DU ROSTER ET MODAL ---
 
 function renderRoster() {
     if (!ui.roster) return;
@@ -256,16 +256,23 @@ window.openSideChat = function(personaId) {
     const p = GAME_DATA.personas[personaId];
     if (!p) return;
 
-    CURRENT_CHAT_TARGET = personaId; // On parle maintenant à ce perso
-    if(ui.modalTitle) ui.modalTitle.innerText = `Discussion avec ${p.name}`;
-    if(ui.modal) ui.modal.style.display = 'flex';
+    CURRENT_CHAT_TARGET = personaId;
     
+    // NOUVEAU : Injection propre de l'avatar dans le titre du modal
+    if(ui.modalTitle) {
+        ui.modalTitle.innerHTML = `
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="${p.avatar}" style="height:40px; width:40px; border-radius:50%; border:2px solid #ff8800; object-fit:cover;">
+                <span>${p.name}</span>
+            </div>`;
+    }
+    
+    if(ui.modal) ui.modal.style.display = 'flex';
     renderChatHistory(personaId, ui.modalScroll);
 }
 
 window.closeSideChat = function() {
     if(ui.modal) ui.modal.style.display = 'none';
-    // On remet la cible sur le perso de la scène principale (s'il existe)
     if (CURRENT_SCENE && CURRENT_SCENE.persona) {
         CURRENT_CHAT_TARGET = CURRENT_SCENE.persona;
     } else {
@@ -288,39 +295,39 @@ function renderChatHistory(personaId, container) {
 window.sendUserMessage = async function(text) {
     if(!text || !CURRENT_CHAT_TARGET) return;
     
-    // On détermine où afficher le message (Main ou Modal)
     const container = (ui.modal && ui.modal.style.display === 'flex') 
         ? ui.modalScroll 
         : document.getElementById('chat-scroll');
     
-    if(!container) return; // Pas de zone de chat active
+    if(!container) return;
 
     // Affichage local
     container.innerHTML += `<div class="msg user">${text}</div>`;
     container.scrollTop = container.scrollHeight;
     
-    // Sauvegarde dans la session du perso cible
+    // Sauvegarde
     if (!CHAT_SESSIONS[CURRENT_CHAT_TARGET]) CHAT_SESSIONS[CURRENT_CHAT_TARGET] = [];
     CHAT_SESSIONS[CURRENT_CHAT_TARGET].push({ role: "user", content: text });
     
-    // Reset input
     document.getElementById('prof-chat-input').value = '';
 
     // Contextualisation IA
     const p = GAME_DATA.personas[CURRENT_CHAT_TARGET];
-    // On utilise le prompt de la scène SI on est dans la scène principale, sinon juste la bio
     let sceneContext = "";
     if (CURRENT_SCENE && CURRENT_SCENE.persona === CURRENT_CHAT_TARGET) {
         sceneContext = `CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}`;
     }
     
-    const systemPrompt = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. TON RÔLE: ${p.bio}. ${sceneContext}`;
+    // NOUVEAU : Contrainte de concision stricte
+    const systemPrompt = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. 
+    TON RÔLE: ${p.bio}. 
+    RÈGLE ABSOLUE: Tes réponses doivent être COURTES (Max 2 phrases, 40 mots). Tu parles à des enfants de 11 ans. Sois percutant, pas bavard.
+    ${sceneContext}`;
     
     await callBot(systemPrompt, CURRENT_CHAT_TARGET);
 }
 
 async function callBot(systemPrompt, targetId, isIntro = false) {
-    // Trouver le bon conteneur
     const container = (ui.modal && ui.modal.style.display === 'flex' && CURRENT_CHAT_TARGET === targetId) 
         ? ui.modalScroll 
         : (CURRENT_SCENE.persona === targetId ? document.getElementById('chat-scroll') : null);
@@ -344,9 +351,7 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         });
         const data = await res.json();
         
-        // Supprimer loader
         if (container) {
-            // Nettoyage un peu bourrin mais efficace pour la maquette
             const loaders = container.querySelectorAll('.msg.bot');
             loaders.forEach(el => { if(el.innerText === '...') el.remove(); });
         }
@@ -370,5 +375,46 @@ window.toggleFullScreen = function() {
     if (!document.fullscreenElement) document.documentElement.requestFullscreen();
     else if (document.exitFullscreen) document.exitFullscreen();
 }
+
+// --- NOUVEAU : GESTION SAUVEGARDE & RETOUR ---
+
+window.undoLastScene = function() {
+    if (SCENE_HISTORY.length === 0) return alert("Impossible de reculer plus loin.");
+    const prevId = SCENE_HISTORY.pop();
+    window._isUndoing = true; // Flag pour ne pas re-pusher dans l'historique
+    loadScene(prevId);
+};
+
+window.downloadSave = function() {
+    const saveObj = {
+        date: new Date().toISOString(),
+        sceneId: CURRENT_SCENE.id,
+        state: GAME_STATE,
+        history: SCENE_HISTORY,
+        chats: CHAT_SESSIONS
+    };
+    const blob = new Blob([JSON.stringify(saveObj, null, 2)], {type : 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `shogun_save_${new Date().toLocaleTimeString().replace(/:/g,'-')}.json`;
+    a.click();
+};
+
+window.uploadSave = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            GAME_STATE = data.state || {};
+            SCENE_HISTORY = data.history || [];
+            CHAT_SESSIONS = data.chats || {};
+            loadScene(data.sceneId);
+            alert("Partie chargée !");
+        } catch(err) { alert("Fichier invalide"); }
+    };
+    reader.readAsText(file);
+};
 
 init();
