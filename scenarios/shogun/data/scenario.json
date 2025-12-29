@@ -46,7 +46,7 @@
       "persona": "nobunaga",
       "content": { "title": "Le Feu et le Sang", "text": "Nobunaga est Shogun. Les temples brûlent. La guerre civile éclate immédiatement." },
       "prompt": "Tu es Nobunaga. Annonce que tu vas écraser les opposants sans pitié.",
-      "next": "fin_guerre_totale"
+      "next": "ordre_peur"
     },
 
     "debat_candidats": {
@@ -66,7 +66,7 @@
           "title": "À la Tribune !", 
           "text": "Les candidats doivent convaincre les indécis. Préparez vos arguments." 
       },
-      "prompt": "Tu es l'Esprit. Invite la classe à se diviser en 3 groupes (Tortue, Grue, Renard). Dis-leur qu'ils ont 2 minutes pour préparer un discours pour leur candidat.",
+      "prompt": "Tu es l'Esprit. Invite la classe à se diviser en 3 groupes (Tortue, Grue, Renard). Dis-leur qu'ils ont 2 minutes pour préparer un discours.",
       "teacherNote": "Laissez les élèves débattre 2 min, puis cliquez sur Suite pour voter.",
       "next": "vote_trois_candidats"
     },
@@ -153,14 +153,23 @@
         { "label": "Refuser (Rébellion)", "target": "tous_contre_un", "effect": { "violence": 10 } }
       ]
     },
+
     "paix_imparfaite": {
       "id": "paix_imparfaite",
+      "type": "story",
+      "background": "assets/bg_paix.png",
+      "content": { "title": "Le Calme... Trop Calme ?", "text": "Vous avez choisi le désarmement. Les sabres sont fondus pour faire des statues." },
+      "next": "test_pirates"
+    },
+    "fin_paix_surveiller": {
+      "id": "fin_paix_surveiller",
       "type": "intro",
       "allowEvents": true,
       "background": "assets/bg_paix.png",
-      "content": { "title": "Une Paix Imparfaite", "text": "Les armes se taisent. Ce n'est pas parfait, mais c'est une paix choisie sans effusion de sang." },
-      "next": "reflexion_compromis"
+      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste. C'est une paix froide." },
+      "next": "test_pirates"
     },
+
     "tous_contre_un": {
       "id": "tous_contre_un",
       "type": "story",
@@ -201,14 +210,15 @@
       "prompt": "Tu es l'Esprit. Annonce que la volonté divine a choisi la Paix de Hideyoshi.",
       "next": "hideyoshi_elu_desarmement"
     },
+
     "ordre_peur": {
       "id": "ordre_peur",
-      "type": "intro",
-      "allowEvents": true,
+      "type": "story",
       "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Ordre par la Peur", "text": "Le pays est uni, mais les esprits sont brisés. La police de la pensée règne." },
-      "next": "reflexion_tyrannie"
+      "content": { "title": "L'Ordre Absolu", "text": "Le pays est unifié par la force. Personne ne bouge." },
+      "next": "test_famine"
     },
+
     "conversion_acceptee": {
       "id": "conversion_acceptee",
       "type": "story",
@@ -217,7 +227,7 @@
       "persona": "kenshin",
       "content": { "title": "La Trahison", "text": "Kenshin a trahi ses propres valeurs pour le pouvoir." },
       "prompt": "Tu es Kenshin. Tu es triste. Dis : 'J'ai sauvé mon clan, mais j'ai perdu mon âme.'",
-      "next": "reflexion_tyrannie"
+      "next": "ordre_peur"
     },
     "conversion_refusee": {
       "id": "conversion_refusee",
@@ -264,14 +274,6 @@
       "content": { "title": "La Guerre Totale", "text": "Le Japon s'effondre dans le chaos. Il n'y a plus de vainqueurs, que des survivants." },
       "next": "reflexion_chaos"
     },
-    "fin_paix_surveiller": {
-      "id": "fin_paix_surveiller",
-      "type": "intro",
-      "allowEvents": true,
-      "background": "assets/bg_paix.png",
-      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste. C'est une paix froide." },
-      "next": "reflexion_compromis"
-    },
     "fin_guerre_totale": {
       "id": "fin_guerre_totale",
       "type": "intro",
@@ -281,23 +283,127 @@
       "next": "reflexion_chaos"
     },
     
+    
+    "test_pirates": {
+      "id": "test_pirates",
+      "type": "chat",
+      "background": "assets/bg_navire_noir.png",
+      "persona": "hideyoshi",
+      "prompt": "Tu es Hideyoshi. C'est la panique ! Des pirates attaquent la côte. Nous n'avons plus d'armes ! Demande : On paie la rançon avec tout notre riz (famine) ou on se bat avec des bâtons ?",
+      "content": { "title": "Épreuve 1 : Les Pirates", "text": "Des pirates attaquent ! Vous avez choisi la paix, vous n'avez donc plus de sabres pour vous défendre." },
+      "next": "vote_pirates"
+    },
+    "vote_pirates": {
+        "id": "vote_pirates",
+        "type": "vote",
+        "background": "assets/bg_navire_noir.png",
+        "options": [
+            { "label": "Payer la Rançon (Pauvreté)", "target": "res_pirates_rancon", "effect": { "richesse": -30 } },
+            { "label": "Se battre aux bâtons (Sacrifice)", "target": "res_pirates_batons", "effect": { "violence": 10 } }
+        ]
+    },
+    "res_pirates_rancon": {
+        "id": "res_pirates_rancon", "type": "story", "background": "assets/bg_village_pauvre.png", "content": { "title": "La Paix a un Prix", "text": "Les pirates partent riches. Le village est sauf, mais les greniers sont vides." }, "next": "test_voisin"
+    },
+    "res_pirates_batons": {
+        "id": "res_pirates_batons", "type": "story", "background": "assets/bg_guerre.png", "content": { "title": "Le Prix du Sang", "text": "Vous avez repoussé les pirates, mais la moitié du village est blessée. La paix est tachée de sang." }, "next": "test_voisin"
+    },
+
+    "test_voisin": {
+        "id": "test_voisin",
+        "type": "chat",
+        "background": "assets/bg_conseil.png",
+        "persona": "oracle",
+        "prompt": "Tu es un Messager du Clan Voisin. Ton seigneur se moque de leur pacifisme. Il exige qu'ils s'agenouillent pour prouver leur soumission. Demande : Refuser (Guerre) ou Accepter (Humiliation) ?",
+        "content": { "title": "Épreuve 2 : L'Offense", "text": "Le Seigneur voisin profite de votre désarmement. Il exige que vos chefs viennent s'humilier devant lui." },
+        "next": "vote_voisin"
+    },
+    "vote_voisin": {
+        "id": "vote_voisin",
+        "type": "vote",
+        "background": "assets/bg_conseil.png",
+        "options": [
+            { "label": "Refuser (Risque Guerre)", "target": "res_voisin_refuser", "effect": { "violence": 5 } },
+            { "label": "S'agenouiller (Humiliation)", "target": "res_voisin_accepter", "effect": { "foi": -10 } }
+        ]
+    },
+    "res_voisin_refuser": { "id": "res_voisin_refuser", "type": "story", "background": "assets/bg_paix_walk.png", "content": { "title": "La Dignité", "text": "Vous gardez votre honneur, mais la menace d'une invasion plane désormais." }, "next": "reflexion_compromis" },
+    "res_voisin_accepter": { "id": "res_voisin_accepter", "type": "story", "background": "assets/bg_paix.png", "content": { "title": "L'Humiliation", "text": "La paix est sauve, mais vous avez perdu le respect de vos ancêtres." }, "next": "reflexion_compromis" },
+
+
+    "test_famine": {
+      "id": "test_famine",
+      "type": "chat",
+      "background": "assets/bg_village_pauvre.png",
+      "persona": "nobunaga",
+      "prompt": "Tu es Nobunaga. Une famine frappe. L'armée a besoin de riz pour rester forte. Les paysans meurent. Demande : On garde le riz (Armée forte) ou on le donne (Armée faible) ?",
+      "content": { "title": "Épreuve 1 : La Famine", "text": "Votre immense armée consomme tout le riz. Les paysans meurent de faim. L'ordre règne, mais à quel prix ?" },
+      "next": "vote_famine"
+    },
+    "vote_famine": {
+        "id": "vote_famine",
+        "type": "vote",
+        "background": "assets/bg_village_pauvre.png",
+        "options": [
+            { "label": "Nourrir le Peuple (Affaiblir Armée)", "target": "res_famine_aider", "effect": { "violence": -10, "richesse": -20 } },
+            { "label": "Garder pour l'Armée (Cruauté)", "target": "res_famine_laisser", "effect": { "violence": 20 } }
+        ]
+    },
+    "res_famine_aider": { "id": "res_famine_aider", "type": "story", "background": "assets/bg_conseil.png", "content": { "title": "Un Choix Humain", "text": "Les paysans mangent, mais vos soldats grognent. Votre autorité vacille." }, "next": "test_poete" },
+    "res_famine_laisser": { "id": "res_famine_laisser", "type": "story", "background": "assets/bg_shogun_throne_alt.png", "content": { "title": "Un Choix de Fer", "text": "L'armée est forte. Le peuple vous hait en silence. Les tombes se multiplient." }, "next": "test_poete" },
+
+    "test_poete": {
+        "id": "test_poete",
+        "type": "chat",
+        "background": "assets/bg_conseil.png",
+        "persona": "toshi",
+        "prompt": "Tu es Toshi (ou un conseiller). Un poète célèbre se moque du Shogun dans ses chansons. Le peuple l'adore. Demande : On l'exécute (Terreur) ou on l'ignore (Preuve de faiblesse) ?",
+        "content": { "title": "Épreuve 2 : La Voix du Peuple", "text": "Un poète courageux chante des vers qui se moquent de votre cruauté. Tout le pays les fredonne." },
+        "next": "vote_poete"
+    },
+    "vote_poete": {
+        "id": "vote_poete",
+        "type": "vote",
+        "background": "assets/bg_conseil.png",
+        "options": [
+            { "label": "L'Exécuter (Censure)", "target": "res_poete_tuer", "effect": { "violence": 10 } },
+            { "label": "L'Ignorer (Clémence)", "target": "res_poete_exil", "effect": { "violence": -5 } }
+        ]
+    },
+    "res_poete_tuer": { "id": "res_poete_tuer", "type": "story", "background": "assets/bg_trone.png", "content": { "title": "Le Silence", "text": "Le poète est mort. Plus personne n'ose chanter. Le silence de la peur règne." }, "next": "reflexion_tyrannie" },
+    "res_poete_exil": { "id": "res_poete_exil", "type": "story", "background": "assets/bg_conseil.png", "content": { "title": "Le Doute", "text": "Vous l'épargnez. Certains louent votre pitié, d'autres rient de votre manque de courage." }, "next": "reflexion_tyrannie" },
+
+    
     "reflexion_tyrannie": {
       "id": "reflexion_tyrannie",
       "type": "intro",
       "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "L'ordre règne, mais la liberté est morte. Était-ce le bon prix à payer ?" }
+      "content": { "title": "Réflexion", "text": "L'ordre règne, mais la liberté est morte. Était-ce le bon prix à payer ?" },
+      "next": "reflexion_finale"
     },
     "reflexion_chaos": {
       "id": "reflexion_chaos",
       "type": "intro",
       "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "L'intransigeance a mené à la destruction. Le compromis était-il impossible ?" }
+      "content": { "title": "Réflexion", "text": "L'intransigeance a mené à la destruction. Le compromis était-il impossible ?" },
+      "next": "reflexion_finale"
     },
     "reflexion_compromis": {
       "id": "reflexion_compromis",
       "type": "intro",
       "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "La paix est là, mais personne n'est pleinement satisfait. Est-ce cela, la démocratie ?" }
+      "content": { "title": "Réflexion", "text": "La paix est là, mais personne n'est pleinement satisfait. Est-ce cela, la démocratie ?" },
+      "next": "reflexion_finale"
+    },
+
+    "reflexion_finale": {
+      "id": "reflexion_finale",
+      "type": "intro",
+      "background": "assets/bg_trone.png",
+      "content": { 
+          "title": "Conclusion", 
+          "text": "Merci d'avoir participé à l'Aube du Shogun.\nL'Histoire est écrite par vos choix." 
+      }
     }
   }
 }
