@@ -106,9 +106,24 @@
         button.btn-next { background: #28a745; }
         button.btn-choice { background: #007bff; }
 
+        /* --- Bouton Retour Accueil --- */
+        .home-btn {
+            position: fixed; top: 20px; right: 20px; width: 50px; height: 50px;
+            background: rgba(0,0,0,0.6); border: 2px solid #ff8800; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            z-index: 2000; transition: all 0.3s ease; text-decoration: none;
+        }
+        .home-btn:hover { background: #ff8800; transform: scale(1.1); }
+        .home-btn svg { fill: #ff8800; width: 30px; height: 30px; }
+        .home-btn:hover svg { fill: white; }
+
     </style>
 </head>
 <body>
+
+    <a href="../../index.html" class="home-btn" title="Retour au menu principal">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
 
     <div id="roster-bar"></div>
     <div id="game-container"></div>
@@ -156,9 +171,21 @@
             <label for="tts-toggle" style="margin:0; cursor:pointer;">Activer Voix (TTS)</label>
         </div>
 
-        <div class="setting-actions">
-            <button onclick="window.saveGameLog(); document.getElementById('settings-popup').style.display='none'" style="background:#28a745;" class="btn-action">💾 Sauver & Fermer</button>
-            <button onclick="if(confirm('Recharger ?')) location.reload()" style="background:#d9534f;" class="btn-action">🔄 Reset</button>
+        <div style="border-top:1px solid #444; margin-top:15px; padding-top:10px;">
+            <label style="color:#ff8800; font-size:0.9em; margin-bottom:5px; display:block;">Outils Maître du Jeu</label>
+            <div style="display:flex; gap:5px; margin-bottom:5px;">
+                <button onclick="window.undoLastScene()" class="btn-action" style="background:#555;" title="Annuler dernière action">↩ Retour</button>
+                <button onclick="window.downloadSave()" class="btn-action" style="background:#007bff;" title="Télécharger">💾 Sauver</button>
+            </div>
+            <div style="display:flex; gap:5px;">
+                <label for="load-file-eo" class="btn-action" style="background:#17a2b8; text-align:center; display:block; margin:0; cursor:pointer;" title="Charger un fichier">📂 Charger</label>
+                <input type="file" id="load-file-eo" style="display:none" onchange="window.uploadSave(this)">
+                <button onclick="if(confirm('Recharger ?')) location.reload()" class="btn-action" style="background:#d9534f;">🔄 Reset</button>
+            </div>
+        </div>
+
+        <div class="setting-actions" style="margin-top:10px;">
+            <button onclick="document.getElementById('settings-popup').style.display='none'" class="btn-action" style="background:#444;">Fermer</button>
         </div>
     </div>
 
