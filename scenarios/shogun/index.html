@@ -68,66 +68,58 @@
             color: #ddd; 
         }
 
-        /* Styles du Chat (Bot) */
+        /* --- Bouton Retour Accueil (Haut Droite) --- */
+        .home-btn {
+            position: fixed; top: 20px; right: 20px; width: 50px; height: 50px;
+            background: rgba(0,0,0,0.6); border: 2px solid #ff8800; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; cursor: pointer;
+            z-index: 2000; transition: all 0.3s ease; text-decoration: none;
+        }
+        .home-btn:hover { background: #ff8800; transform: scale(1.1); }
+        .home-btn svg { fill: #ff8800; width: 30px; height: 30px; }
+        .home-btn:hover svg { fill: white; }
+
+        /* --- Styles du Chat (Style "Messenger" avec Avatars) --- */
         .chat-box { 
-            width: 80%; 
-            max-width: 900px; 
-            background: rgba(0,0,0,0.85); 
-            border-radius: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            height: 70vh; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            overflow: hidden;
+            width: 80%; max-width: 900px; background: rgba(0,0,0,0.85); 
+            border-radius: 15px; display: flex; flex-direction: column; 
+            height: 70vh; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden; border: 1px solid #444;
         }
-        .avatar-container {
-            padding: 15px;
-            background: rgba(255,255,255,0.05);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-shrink: 0;
+        /* En-tête du chat */
+        .avatar-header {
+            padding: 15px; background: rgba(20, 20, 20, 0.95);
+            border-bottom: 2px solid #ff8800; display: flex; align-items: center; gap: 15px; flex-shrink: 0;
         }
-        .avatar-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #ff8800;
+        .header-avatar-img {
+            width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid #ff8800;
         }
-        .avatar-name {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #ff8800;
+        .header-name {
+            font-size: 1.4em; font-weight: bold; color: #ff8800;
         }
         .chat-messages { 
-            flex-grow: 1; 
-            overflow-y: auto; 
-            padding: 20px; 
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            /* Pas de justify ici, on veut que le chat reste naturel (gauche) */
+            flex-grow: 1; overflow-y: auto; padding: 20px; 
+            display: flex; flex-direction: column; gap: 15px;
         }
-        .msg { 
-            padding: 15px 20px; 
-            border-radius: 12px; 
-            max-width: 80%;
-            font-size: 1.1em;
-            line-height: 1.4;
+        /* LIGNE DE MESSAGE */
+        .msg-row {
+            display: flex; align-items: flex-end; gap: 10px; max-width: 85%;
         }
-        .msg.user { 
-            background: #333; 
-            align-self: flex-end;
-            border-bottom-right-radius: 2px;
-            color: #ddd;
+        .msg-row.bot { align-self: flex-start; }
+        .msg-row.user { align-self: flex-end; flex-direction: row-reverse; }
+
+        .chat-avatar-img {
+            width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+            border: 1px solid #777; flex-shrink: 0; background: black;
         }
-        .msg.bot { 
-            background: #4a3b2a; 
-            border-left: 4px solid #ff8800; 
-            align-self: flex-start;
-            border-bottom-left-radius: 2px;
+        .msg-bubble { 
+            padding: 12px 18px; border-radius: 18px; font-size: 1.1em; line-height: 1.4;
+        }
+        .msg-row.user .msg-bubble { 
+            background: #444; color: #fff; border-bottom-right-radius: 2px; text-align: right;
+        }
+        .msg-row.bot .msg-bubble { 
+            background: #2a2a2a; color: #ddd; border: 1px solid #ff8800; border-bottom-left-radius: 2px;
         }
 
         /* --- COCKPIT ENSEIGNANT (Bas de l'écran) --- */
@@ -232,6 +224,10 @@
     </style>
 </head>
 <body>
+
+    <a href="../../index.html" class="home-btn" title="Retour au menu principal">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+    </a>
 
     <div id="game-container">
     </div>
