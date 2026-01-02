@@ -7,6 +7,7 @@ let GAME_STATE = {};
 let CHAT_SESSIONS = {}; 
 let CURRENT_CHAT_TARGET = null; 
 let GAME_MODE = 'standard';
+let SCENE_HISTORY = []; // Historique pour le bouton Retour
 
 // --- DOM ELEMENTS ---
 const ui = {
@@ -83,6 +84,12 @@ function showModeSelection() {
 function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("Scène introuvable: " + sceneId);
+
+    // --- Gestion Historique ---
+    if (CURRENT_SCENE && CURRENT_SCENE.id !== sceneId && !window._isUndoing) {
+        SCENE_HISTORY.push(CURRENT_SCENE.id);
+    }
+    window._isUndoing = false;
 
     // Events
     if (GAME_MODE === 'extended' && scene.allowEvents && !sceneId.startsWith('evt_') && Math.random() > 0.6) {
@@ -174,7 +181,7 @@ function applyEffects(eff) {
     for (let k in eff) GAME_STATE[k] = (GAME_STATE[k] || 0) + eff[k];
 }
 
-// 6. ROSTER & MODAL (C'EST ICI QUE SE FAIT LA MODIF POUR LE TITRE)
+// 6. ROSTER & MODAL
 function renderRoster() {
     if (!ui.roster) return;
     ui.roster.innerHTML = '';
@@ -193,7 +200,6 @@ window.openSideChat = function(pid) {
     const p = GAME_DATA.personas[pid];
     const avatarUrl = p.avatar || 'assets/avatars/default.png';
 
-    // --- MODIFICATION : Injection de l'avatar dans le titre du modal ---
     if(ui.modalTitle) {
         ui.modalTitle.innerHTML = `
             <div style="display:flex; align-items:center; gap:15px;">
@@ -328,6 +334,51 @@ async function playTTS(text, persona) {
         audio.play();
     } catch(e) { console.warn("TTS Error", e); }
 }
+
+// --- SAUVEGARDE & RETOUR (Version Eoliennes) ---
+
+window.undoLastScene = function() {
+    if (SCENE_HISTORY.length === 0) return alert("Impossible de reculer plus loin.");
+    const prevId = SCENE_HISTORY.pop();
+    window._isUndoing = true;
+    loadScene(prevId);
+    document.getElementById('settings-popup').style.display='none';
+};
+
+window.downloadSave = function() {
+    const saveObj = {
+        date: new Date().toISOString(),
+        sceneId: CURRENT_SCENE.id,
+        state: GAME_STATE,
+        history: SCENE_HISTORY,
+        chats: CHAT_SESSIONS,
+        mode: GAME_MODE
+    };
+    const blob = new Blob([JSON.stringify(saveObj, null, 2)], {type : 'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `eoliennes_save_${new Date().toLocaleTimeString().replace(/:/g,'-')}.json`;
+    a.click();
+};
+
+window.uploadSave = function(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        try {
+            const data = JSON.parse(e.target.result);
+            GAME_STATE = data.state || {};
+            SCENE_HISTORY = data.history || [];
+            CHAT_SESSIONS = data.chats || {};
+            GAME_MODE = data.mode || 'standard';
+            loadScene(data.sceneId);
+            alert("Partie chargée !");
+            document.getElementById('settings-popup').style.display='none';
+        } catch(err) { alert("Fichier invalide"); }
+    };
+    reader.readAsText(file);
+};
 
 window.saveGameLog = async function() {
     const transcript = JSON.stringify({ 
