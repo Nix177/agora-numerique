@@ -3,7 +3,7 @@ import { API_BASE } from "../assets/config.js";
 // --- ÉTAT DU JEU ---
 let GAME_DATA = {};
 let CURRENT_SCENE = null;
-let SCENE_HISTORY = []; // NOUVEAU : Historique pour le bouton Retour
+let SCENE_HISTORY = []; 
 let GAME_STATE = {};
 let GAME_MODE = 'standard';
 
@@ -60,7 +60,7 @@ function mapPersonas(list) {
     return map;
 }
 
-// --- SÉLECTION DU MODE (Mise à jour des noms) ---
+// --- SÉLECTION DU MODE ---
 function showModeSelection() {
     ui.screen.innerHTML = `
         <div class="slide-content" style="background:rgba(0,0,0,0.9);">
@@ -92,13 +92,13 @@ function loadScene(sceneId) {
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
 
-    // --- NOUVEAU : Gestion Historique (sauf si on fait "Retour") ---
+    // --- Gestion Historique ---
     if (CURRENT_SCENE && CURRENT_SCENE.id !== sceneId && !window._isUndoing) {
         SCENE_HISTORY.push(CURRENT_SCENE.id);
     }
     window._isUndoing = false;
 
-    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE (Mode Campagne) ---
+    // --- LOGIQUE ÉVÉNEMENT ALÉATOIRE ---
     if (GAME_MODE === 'extended' && scene.allowEvents && !sceneId.startsWith('evt_') && Math.random() > 0.6) {
         const events = GAME_DATA.world.randomEvents;
         if (events && events.length > 0) {
@@ -147,7 +147,6 @@ function loadScene(sceneId) {
 function updateScreen(scene) {
     const videoContainer = document.getElementById('video-bg-container');
     
-    // Gestion du fond (Vidéo ou Image)
     if (scene.video) {
         if (!videoContainer) {
             document.body.insertAdjacentHTML('afterbegin', `
@@ -172,7 +171,6 @@ function updateScreen(scene) {
     
     let html = '';
     
-    // Scène narrative
     if (scene.content) {
         html += `
             <div class="slide-content">
@@ -182,17 +180,17 @@ function updateScreen(scene) {
         `;
     }
 
-    // Scène de Chat (Principale)
+    // Scène de Chat (Principale) avec Avatars
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona];
-        const avatarUrl = p ? p.avatar : 'assets/avatar_esprit.png';
+        const avatarUrl = (p && p.avatar) ? p.avatar : 'assets/avatar_esprit.png';
         const name = p ? p.displayName : 'Inconnu';
 
         html += `
             <div class="chat-box">
                 <div class="avatar-header">
-                    <img src="${avatarUrl}" class="avatar-img" onerror="this.style.display='none'">
-                    <div class="avatar-name">${name}</div>
+                    <img src="${avatarUrl}" class="header-avatar-img" onerror="this.style.display='none'">
+                    <div class="header-name">${name}</div>
                 </div>
                 <div id="chat-scroll" class="chat-messages"></div>
             </div>
@@ -258,7 +256,6 @@ window.openSideChat = function(personaId) {
 
     CURRENT_CHAT_TARGET = personaId;
     
-    // NOUVEAU : Injection propre de l'avatar dans le titre du modal
     if(ui.modalTitle) {
         ui.modalTitle.innerHTML = `
             <div style="display:flex; align-items:center; gap:10px;">
@@ -280,17 +277,35 @@ window.closeSideChat = function() {
     }
 }
 
+// --- FONCTION D'AFFICHAGE UNIFIÉE ---
+function buildMsgHTML(role, text, personaId) {
+    const isUser = role === 'user';
+    let avatarImg = '';
+    
+    if (!isUser) {
+        const p = GAME_DATA.personas[personaId];
+        const url = (p && p.avatar) ? p.avatar : 'assets/avatar_esprit.png'; 
+        avatarImg = `<img src="${url}" class="chat-avatar-img" alt="${personaId}">`;
+    }
+
+    return `
+    <div class="msg-row ${isUser ? 'user' : 'bot'}">
+        ${!isUser ? avatarImg : ''} 
+        <div class="msg-bubble">${text}</div>
+    </div>`;
+}
+
 function renderChatHistory(personaId, container) {
     if(!container) return;
     container.innerHTML = '';
     const history = CHAT_SESSIONS[personaId] || [];
     history.forEach(msg => {
-        container.innerHTML += `<div class="msg ${msg.role === 'user' ? 'user' : 'bot'}">${msg.content}</div>`;
+        container.innerHTML += buildMsgHTML(msg.role, msg.content, personaId);
     });
     container.scrollTop = container.scrollHeight;
 }
 
-// --- 6. GESTION DES MESSAGES (UNIFIÉE) ---
+// --- 6. GESTION DES MESSAGES ---
 
 window.sendUserMessage = async function(text) {
     if(!text || !CURRENT_CHAT_TARGET) return;
@@ -301,24 +316,21 @@ window.sendUserMessage = async function(text) {
     
     if(!container) return;
 
-    // Affichage local
-    container.innerHTML += `<div class="msg user">${text}</div>`;
+    // Affichage local USER
+    container.innerHTML += buildMsgHTML('user', text, null);
     container.scrollTop = container.scrollHeight;
     
-    // Sauvegarde
     if (!CHAT_SESSIONS[CURRENT_CHAT_TARGET]) CHAT_SESSIONS[CURRENT_CHAT_TARGET] = [];
     CHAT_SESSIONS[CURRENT_CHAT_TARGET].push({ role: "user", content: text });
     
     document.getElementById('prof-chat-input').value = '';
 
-    // Contextualisation IA
     const p = GAME_DATA.personas[CURRENT_CHAT_TARGET];
     let sceneContext = "";
     if (CURRENT_SCENE && CURRENT_SCENE.persona === CURRENT_CHAT_TARGET) {
         sceneContext = `CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}`;
     }
     
-    // NOUVEAU : Contrainte de concision stricte
     const systemPrompt = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. 
     TON RÔLE: ${p.bio}. 
     RÈGLE ABSOLUE: Tes réponses doivent être COURTES (Max 2 phrases, 40 mots). Tu parles à des enfants de 11 ans. Sois percutant, pas bavard.
@@ -334,7 +346,9 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
 
     if (container) {
         const loadingId = 'loading-' + Date.now();
-        container.innerHTML += `<div id="${loadingId}" class="msg bot">...</div>`;
+        // Loader stylisé
+        const loaderHTML = buildMsgHTML('assistant', '...', targetId).replace('class="msg-row bot"', `id="${loadingId}" class="msg-row bot"`);
+        container.innerHTML += loaderHTML;
         container.scrollTop = container.scrollHeight;
     }
 
@@ -351,15 +365,16 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         });
         const data = await res.json();
         
+        // Suppression du loader
         if (container) {
-            const loaders = container.querySelectorAll('.msg.bot');
-            loaders.forEach(el => { if(el.innerText === '...') el.remove(); });
+            const loader = document.getElementById(loadingId); // Plus précis
+            if(loader) loader.remove(); // Ou loader.parentElement.remove() selon structure, ici loader est la row
         }
 
         const reply = data.reply;
         
         if (container) {
-            container.innerHTML += `<div class="msg bot">${reply}</div>`;
+            container.innerHTML += buildMsgHTML('assistant', reply, targetId);
             container.scrollTop = container.scrollHeight;
         }
         
@@ -376,12 +391,12 @@ window.toggleFullScreen = function() {
     else if (document.exitFullscreen) document.exitFullscreen();
 }
 
-// --- NOUVEAU : GESTION SAUVEGARDE & RETOUR ---
+// --- GESTION SAUVEGARDE & RETOUR ---
 
 window.undoLastScene = function() {
     if (SCENE_HISTORY.length === 0) return alert("Impossible de reculer plus loin.");
     const prevId = SCENE_HISTORY.pop();
-    window._isUndoing = true; // Flag pour ne pas re-pusher dans l'historique
+    window._isUndoing = true;
     loadScene(prevId);
 };
 
