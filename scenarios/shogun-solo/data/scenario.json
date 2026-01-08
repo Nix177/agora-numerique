@@ -1,409 +1,445 @@
 {
-  "meta": { "title": "L'Aube du Shogun", "theme": "shogun" },
-  "state": { "violence": 0, "richesse": 50, "foi": 50 },
-  "start": "intro_mort_shogun",
+  "meta": { "title": "L'Observatoire des Possibles", "theme": "scifi" },
+  "state": { "utilitarisme": 50, "humanite": 50 },
+  "start": "level_01_intro",
   "scenes": {
-    
-    "intro_mort_shogun": {
-      "id": "intro_mort_shogun",
+    "level_01_intro": {
+      "id": "level_01_intro",
       "type": "intro",
-      "video": "assets/vid_intro_trone.mp4",
-      "background": "assets/bg_trone.png",
+      "background": "assets/bg_grotte.png",
       "content": {
-        "title": "La Mort du Shogun",
-        "text": "L'an 1603. Le Shogun est mort sans héritier. Les clans s'agitent. Le destin de l'archipel est entre vos mains."
+        "title": "NIVEAU 1 : Les Spéléologues",
+        "text": "L'Observatoire s'active. Hologramme : Une grotte inondée. Odeur d'ozone.\n\nThomas, un homme corpulent, a paniqué et bloque la seule sortie. Sa tête est dehors, ses jambes dedans.\nEn dessous, 4 spéléologues vont se noyer dans 8 minutes.\n\nVous avez de la dynamite. Vous pouvez faire sauter Thomas pour sauver les 4 autres."
       },
-      "next": "votation_succession"
+      "next": "level_01_chat"
     },
-
-    "votation_succession": {
-      "id": "votation_succession",
+    "level_01_chat": {
+      "id": "level_01_chat",
       "type": "chat",
-      "background": "assets/bg_conseil.png",
-      "persona": "nobunaga",
-      "prompt": "Tu es Nobunaga. Revendique le pouvoir brutalement. Dis que seule ta force peut sauver le pays. Menace ceux qui hésitent.",
-      "teacherNote": "Nobunaga revendique le titre par la force. Faut-il le laisser faire ?",
-      "next": "vote_nobunaga_oui_non"
-    },
-
-    "vote_nobunaga_oui_non": {
-      "id": "vote_nobunaga_oui_non",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Premier Choix", "text": "Nobunaga doit-il devenir Shogun immédiatement ?" },
-      "options": [
-        { "label": "OUI (Accepter la Force)", "target": "nobunaga_elu", "effect": { "violence": 10 } },
-        { "label": "NON (Débat Démocratique)", "target": "debat_candidats", "effect": { "violence": -5 } }
-      ]
-    },
-
-    "nobunaga_elu": {
-      "id": "nobunaga_elu",
-      "type": "story",
-      "allowEvents": true,
-      "video": "assets/vid_evt_revolte.mp4",
-      "background": "assets/bg_guerre.png",
-      "persona": "nobunaga",
-      "content": { "title": "Le Feu et le Sang", "text": "Nobunaga est Shogun. Les temples brûlent. La guerre civile éclate immédiatement." },
-      "prompt": "Tu es Nobunaga. Annonce que tu vas écraser les opposants sans pitié.",
-      "next": "ordre_peur"
-    },
-
-    "debat_candidats": {
-      "id": "debat_candidats",
-      "type": "intro",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Conseil des Daimyos", "text": "Nobunaga est rejeté (pour l'instant). Trois autres voies s'ouvrent : Kenshin, Hideyoshi, Toshi." },
-      "next": "phase_discours"
-    },
-
-    "phase_discours": {
-      "id": "phase_discours",
-      "type": "chat",
-      "background": "assets/bg_conseil.png",
-      "persona": "oracle",
-      "content": { 
-          "title": "À la Tribune !", 
-          "text": "Les candidats doivent convaincre les indécis. Préparez vos arguments." 
+      "background": "assets/bg_grotte.png",
+      "persona": "A-1",
+      "content": {
+        "title": "Le Dilemme",
+        "text": "A-1 analyse froidement : 'Le calcul est simple. 4 vies > 1 vie. Ordonnez l'explosion.'"
       },
-      "prompt": "Tu es l'Esprit. Invite la classe à se diviser en 3 groupes (Tortue, Grue, Renard). Dis-leur qu'ils ont 2 minutes pour préparer un discours.",
-      "teacherNote": "Laissez les élèves débattre 2 min, puis cliquez sur Suite pour voter.",
-      "next": "vote_trois_candidats"
-    },
-
-    "vote_trois_candidats": {
-      "id": "vote_trois_candidats",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Élection", "text": "Qui choisissez-vous pour guider le Japon ?" },
-      "options": [
-        { "label": "Kenshin (Tradition)", "target": "kenshin_elu_choix", "effect": { "foi": 10 } },
-        { "label": "Hideyoshi (Paix)", "target": "hideyoshi_elu_desarmement", "effect": { "violence": -10 } },
-        { "label": "Toshi (Religion Unique)", "target": "toshi_elu_conversion", "effect": { "foi": 5, "violence": 5 } },
-        { "label": "Impasse (Personne)", "target": "empereur_tranche", "effect": { "richesse": -5 } }
-      ]
-    },
-
-    "kenshin_elu_choix": {
-      "id": "kenshin_elu_choix",
-      "type": "chat",
-      "allowEvents": true,
-      "background": "assets/bg_shogun_throne_alt.png",
-      "persona": "gozen",
-      "content": { "title": "Le Dilemme de Kenshin", "text": "Kenshin est élu mais l'équilibre est fragile. Il doit choisir une alliance." },
-      "prompt": "Tu es Gozen, la conseillère fidèle. Explique à Kenshin (la classe) qu'il a deux choix : s'allier à l'Empereur (Paix) ou à Nobunaga (Force).",
-      "next": "vote_kenshin_alliance"
-    },
-    "vote_kenshin_alliance": {
-      "id": "vote_kenshin_alliance",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "options": [
-        { "label": "Suivre l'Empereur (Paix)", "target": "kenshin_empereur", "effect": { "violence": -5 } },
-        { "label": "Rejoindre Nobunaga (Force)", "target": "kenshin_nobunaga", "effect": { "violence": 10 } }
-      ]
-    },
-    "kenshin_empereur": {
-      "id": "kenshin_empereur",
-      "type": "story",
-      "allowEvents": true,
-      "background": "assets/bg_paix.png",
-      "persona": "kenshin",
-      "content": { "title": "Le Prix de la Paix", "text": "Nobunaga et Toshi se sentent trahis. Ils lèvent une armée. La guerre est inévitable." },
-      "prompt": "Tu es Kenshin. Dis que tu préfères la paix à la domination, même si cela mène à la guerre.",
-      "next": "conflit_inevitable"
-    },
-    "kenshin_nobunaga": {
-      "id": "kenshin_nobunaga",
-      "type": "chat",
-      "background": "assets/bg_guerre.png",
-      "persona": "nobunaga",
-      "content": { "title": "L'Alliance de Fer", "text": "Kenshin et Nobunaga s'unissent. Mais Nobunaga exige la conversion religieuse de tous." },
-      "prompt": "Tu es Nobunaga. Exige que Kenshin force ses paysans bouddhistes à devenir shintoïstes ou à mourir.",
-      "next": "vote_kenshin_conversion"
-    },
-    "vote_kenshin_conversion": {
-      "id": "vote_kenshin_conversion",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Dilemme Religieux", "text": "Acceptez-vous de forcer la conversion de votre peuple ?" },
-      "options": [
-        { "label": "Convertir (Soumission)", "target": "conversion_acceptee", "effect": { "foi": -10 } },
-        { "label": "Refuser (Rupture)", "target": "conversion_refusee", "effect": { "foi": 10, "violence": 5 } }
-      ]
-    },
-
-    "hideyoshi_elu_desarmement": {
-      "id": "hideyoshi_elu_desarmement",
-      "type": "chat",
-      "allowEvents": true,
-      "background": "assets/bg_paix.png",
-      "persona": "hideyoshi",
-      "content": { "title": "La Chasse aux Épées", "text": "Hideyoshi ordonne le désarmement total pour garantir la paix." },
-      "prompt": "Tu es Hideyoshi. Explique que les armes doivent disparaître pour que la paix revienne. C'est impopulaire mais nécessaire.",
-      "next": "vote_desarmement"
-    },
-    "vote_desarmement": {
-      "id": "vote_desarmement",
-      "type": "vote",
-      "background": "assets/bg_paix_walk.png",
-      "content": { "title": "Réaction des Clans", "text": "Acceptez-vous de rendre vos armes pour la paix ?" },
-      "options": [
-        { "label": "Accepter (Paix Fragile)", "target": "paix_imparfaite", "effect": { "violence": -20 } },
-        { "label": "Refuser (Rébellion)", "target": "tous_contre_un", "effect": { "violence": 10 } }
-      ]
-    },
-
-    "paix_imparfaite": {
-      "id": "paix_imparfaite",
-      "type": "story",
-      "background": "assets/bg_paix.png",
-      "content": { "title": "Le Calme... Trop Calme ?", "text": "Vous avez choisi le désarmement. Les sabres sont fondus pour faire des statues." },
-      "next": "test_pirates"
-    },
-    "fin_paix_surveiller": {
-      "id": "fin_paix_surveiller",
-      "type": "intro",
-      "allowEvents": true,
-      "background": "assets/bg_paix.png",
-      "content": { "title": "Une Paix Surveillée", "text": "Le calme revient, mais la méfiance reste. C'est une paix froide." },
-      "next": "test_pirates"
-    },
-
-    "tous_contre_un": {
-      "id": "tous_contre_un",
-      "type": "story",
-      "background": "assets/bg_guerre.png",
-      "persona": "nobunaga",
-      "content": { "title": "L'Alliance Rebelle", "text": "Nobunaga, Kenshin et Toshi s'unissent contre le désarmement." },
-      "prompt": "Tu es Nobunaga. Dis qu'un samouraï sans épée n'est rien. Appelle à la révolte générale.",
-      "next": "alliance_fragile"
-    },
-
-    "toshi_elu_conversion": {
-      "id": "toshi_elu_conversion",
-      "type": "chat",
-      "allowEvents": true,
-      "background": "assets/bg_shogun_throne_alt.png",
-      "persona": "toshi",
-      "content": { "title": "L'Unité par la Foi", "text": "Surprise : Toshi révèle sa vraie nature et impose le Shintoïsme." },
-      "prompt": "Tu es Toshi. Dis calmement que pour unir le pays, il ne doit y avoir qu'une seule croyance. Les autres sont interdites.",
-      "next": "vote_toshi_foi"
-    },
-    "vote_toshi_foi": {
-      "id": "vote_toshi_foi",
-      "type": "vote",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "Le Choix de la Foi", "text": "Acceptez-vous de renier vos croyances bouddhistes ?" },
-      "options": [
-        { "label": "Se convertir (Ordre)", "target": "ordre_peur", "effect": { "foi": -10 } },
-        { "label": "Refuser (Exil)", "target": "guerre_totale", "effect": { "violence": 20 } }
-      ]
-    },
-
-    "empereur_tranche": {
-      "id": "empereur_tranche",
-      "type": "story",
-      "background": "assets/bg_shogun_throne_alt.png",
-      "persona": "oracle",
-      "content": { "title": "L'Empereur Tranche", "text": "Face à l'impasse, l'Empereur choisit Hideyoshi." },
-      "prompt": "Tu es l'Esprit. Annonce que la volonté divine a choisi la Paix de Hideyoshi.",
-      "next": "hideyoshi_elu_desarmement"
-    },
-
-    "ordre_peur": {
-      "id": "ordre_peur",
-      "type": "story",
-      "background": "assets/bg_conseil.png",
-      "content": { "title": "L'Ordre Absolu", "text": "Le pays est unifié par la force. Personne ne bouge." },
-      "next": "test_famine"
-    },
-
-    "conversion_acceptee": {
-      "id": "conversion_acceptee",
-      "type": "story",
-      "allowEvents": true,
-      "background": "assets/bg_conseil.png",
-      "persona": "kenshin",
-      "content": { "title": "La Trahison", "text": "Kenshin a trahi ses propres valeurs pour le pouvoir." },
-      "prompt": "Tu es Kenshin. Tu es triste. Dis : 'J'ai sauvé mon clan, mais j'ai perdu mon âme.'",
-      "next": "ordre_peur"
-    },
-    "conversion_refusee": {
-      "id": "conversion_refusee",
-      "type": "story",
-      "background": "assets/bg_guerre.png",
-      "persona": "kenshin",
-      "content": { "title": "La Rupture", "text": "Kenshin refuse. Ses troupes rejoignent l'Empereur." },
-      "prompt": "Tu es Kenshin. Dis fièrement : 'On ne commande pas aux âmes.'",
-      "next": "conflit_inevitable"
-    },
-    "conflit_inevitable": {
-      "id": "conflit_inevitable",
-      "type": "vote",
-      "background": "assets/bg_guerre.png",
-      "content": { "title": "L'Ultime Décision", "text": "La guerre est là. Faut-il se rendre ou se battre jusqu'au bout ?" },
-      "options": [
-        { "label": "Se Rendre (Survie)", "target": "fin_paix_surveiller", "effect": { "violence": -5 } },
-        { "label": "Guerre Totale (Sacrifice)", "target": "fin_guerre_totale", "effect": { "violence": 50 } }
-      ]
-    },
-    "alliance_fragile": {
-      "id": "alliance_fragile",
-      "type": "story",
-      "background": "assets/bg_conseil.png",
-      "persona": "toshi",
-      "content": { "title": "L'Alliance Fragile", "text": "Les rebelles s'unissent contre Hideyoshi, mais leurs visions s'opposent." },
-      "prompt": "Tu es Toshi. Dis à Nobunaga que c'est la Foi qui doit guider la guerre, pas juste la force brute.",
-      "next": "tension_rebelle"
-    },
-    "tension_rebelle": {
-      "id": "tension_rebelle",
-      "type": "chat",
-      "background": "assets/bg_guerre_alt.png",
-      "persona": "nobunaga",
-      "content": { "title": "Visions Irréconciliables", "text": "Nobunaga et Toshi se disputent le commandement." },
-      "prompt": "Tu es Nobunaga. Hurle sur Toshi. Dis que la religion affaiblit l'armée. L'alliance se brise.",
-      "next": "guerre_totale"
-    },
-    "guerre_totale": {
-      "id": "guerre_totale",
-      "type": "intro",
-      "video": "assets/vid_evt_revolte.mp4",
-      "background": "assets/bg_guerre_alt.png",
-      "content": { "title": "La Guerre Totale", "text": "Le Japon s'effondre dans le chaos. Il n'y a plus de vainqueurs, que des survivants." },
-      "next": "reflexion_chaos"
-    },
-    "fin_guerre_totale": {
-      "id": "fin_guerre_totale",
-      "type": "intro",
-      "video": "assets/vid_evt_revolte.mp4",
-      "background": "assets/bg_guerre_alt.png",
-      "content": { "title": "Le Chaos", "text": "La guerre a tout détruit. Il faudra des décennies pour reconstruire." },
-      "next": "reflexion_chaos"
-    },
-    
-    
-    "test_pirates": {
-      "id": "test_pirates",
-      "type": "chat",
-      "background": "assets/bg_navire_noir.png",
-      "persona": "hideyoshi",
-      "prompt": "Tu es Hideyoshi. C'est la panique ! Des pirates attaquent la côte. Nous n'avons plus d'armes ! Demande : On paie la rançon avec tout notre riz (famine) ou on se bat avec des bâtons ?",
-      "content": { "title": "Épreuve 1 : Les Pirates", "text": "Des pirates attaquent ! Vous avez choisi la paix, vous n'avez donc plus de sabres pour vous défendre." },
-      "next": "vote_pirates"
-    },
-    "vote_pirates": {
-        "id": "vote_pirates",
-        "type": "vote",
-        "background": "assets/bg_navire_noir.png",
-        "options": [
-            { "label": "Payer la Rançon (Pauvreté)", "target": "res_pirates_rancon", "effect": { "richesse": -30 } },
-            { "label": "Se battre aux bâtons (Sacrifice)", "target": "res_pirates_batons", "effect": { "violence": 10 } }
-        ]
-    },
-    "res_pirates_rancon": {
-        "id": "res_pirates_rancon", "type": "story", "background": "assets/bg_village_pauvre.png", "content": { "title": "La Paix a un Prix", "text": "Les pirates partent riches. Le village est sauf, mais les greniers sont vides." }, "next": "test_voisin"
-    },
-    "res_pirates_batons": {
-        "id": "res_pirates_batons", "type": "story", "background": "assets/bg_guerre.png", "content": { "title": "Le Prix du Sang", "text": "Vous avez repoussé les pirates, mais la moitié du village est blessée. La paix est tachée de sang." }, "next": "test_voisin"
-    },
-
-    "test_voisin": {
-        "id": "test_voisin",
-        "type": "chat",
-        "background": "assets/bg_conseil.png",
-        "persona": "oracle",
-        "prompt": "Tu es un Messager du Clan Voisin. Ton seigneur se moque de leur pacifisme. Il exige qu'ils s'agenouillent pour prouver leur soumission. Demande : Refuser (Guerre) ou Accepter (Humiliation) ?",
-        "content": { "title": "Épreuve 2 : L'Offense", "text": "Le Seigneur voisin profite de votre désarmement. Il exige que vos chefs viennent s'humilier devant lui." },
-        "next": "vote_voisin"
-    },
-    "vote_voisin": {
-        "id": "vote_voisin",
-        "type": "vote",
-        "background": "assets/bg_conseil.png",
-        "options": [
-            { "label": "Refuser (Risque Guerre)", "target": "res_voisin_refuser", "effect": { "violence": 5 } },
-            { "label": "S'agenouiller (Humiliation)", "target": "res_voisin_accepter", "effect": { "foi": -10 } }
-        ]
-    },
-    "res_voisin_refuser": { "id": "res_voisin_refuser", "type": "story", "background": "assets/bg_paix_walk.png", "content": { "title": "La Dignité", "text": "Vous gardez votre honneur, mais la menace d'une invasion plane désormais." }, "next": "reflexion_compromis" },
-    "res_voisin_accepter": { "id": "res_voisin_accepter", "type": "story", "background": "assets/bg_paix.png", "content": { "title": "L'Humiliation", "text": "La paix est sauve, mais vous avez perdu le respect de vos ancêtres." }, "next": "reflexion_compromis" },
-
-
-    "test_famine": {
-      "id": "test_famine",
-      "type": "chat",
-      "background": "assets/bg_village_pauvre.png",
-      "persona": "nobunaga",
-      "prompt": "Tu es Nobunaga. Une famine frappe. L'armée a besoin de riz pour rester forte. Les paysans meurent. Demande : On garde le riz (Armée forte) ou on le donne (Armée faible) ?",
-      "content": { "title": "Épreuve 1 : La Famine", "text": "Votre immense armée consomme tout le riz. Les paysans meurent de faim. L'ordre règne, mais à quel prix ?" },
-      "next": "vote_famine"
-    },
-    "vote_famine": {
-        "id": "vote_famine",
-        "type": "vote",
-        "background": "assets/bg_village_pauvre.png",
-        "options": [
-            { "label": "Nourrir le Peuple (Affaiblir Armée)", "target": "res_famine_aider", "effect": { "violence": -10, "richesse": -20 } },
-            { "label": "Garder pour l'Armée (Cruauté)", "target": "res_famine_laisser", "effect": { "violence": 20 } }
-        ]
-    },
-    "res_famine_aider": { "id": "res_famine_aider", "type": "story", "background": "assets/bg_conseil.png", "content": { "title": "Un Choix Humain", "text": "Les paysans mangent, mais vos soldats grognent. Votre autorité vacille." }, "next": "test_poete" },
-    "res_famine_laisser": { "id": "res_famine_laisser", "type": "story", "background": "assets/bg_shogun_throne_alt.png", "content": { "title": "Un Choix de Fer", "text": "L'armée est forte. Le peuple vous hait en silence. Les tombes se multiplient." }, "next": "test_poete" },
-
-    "test_poete": {
-        "id": "test_poete",
-        "type": "chat",
-        "background": "assets/bg_conseil.png",
-        "persona": "toshi",
-        "prompt": "Tu es Toshi (ou un conseiller). Un poète célèbre se moque du Shogun dans ses chansons. Le peuple l'adore. Demande : On l'exécute (Terreur) ou on l'ignore (Preuve de faiblesse) ?",
-        "content": { "title": "Épreuve 2 : La Voix du Peuple", "text": "Un poète courageux chante des vers qui se moquent de votre cruauté. Tout le pays les fredonne." },
-        "next": "vote_poete"
-    },
-    "vote_poete": {
-        "id": "vote_poete",
-        "type": "vote",
-        "background": "assets/bg_conseil.png",
-        "options": [
-            { "label": "L'Exécuter (Censure)", "target": "res_poete_tuer", "effect": { "violence": 10 } },
-            { "label": "L'Ignorer (Clémence)", "target": "res_poete_exil", "effect": { "violence": -5 } }
-        ]
-    },
-    "res_poete_tuer": { "id": "res_poete_tuer", "type": "story", "background": "assets/bg_trone.png", "content": { "title": "Le Silence", "text": "Le poète est mort. Plus personne n'ose chanter. Le silence de la peur règne." }, "next": "reflexion_tyrannie" },
-    "res_poete_exil": { "id": "res_poete_exil", "type": "story", "background": "assets/bg_conseil.png", "content": { "title": "Le Doute", "text": "Vous l'épargnez. Certains louent votre pitié, d'autres rient de votre manque de courage." }, "next": "reflexion_tyrannie" },
-
-    
-    "reflexion_tyrannie": {
-      "id": "reflexion_tyrannie",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "L'ordre règne, mais la liberté est morte. Était-ce le bon prix à payer ?" },
-      "next": "reflexion_finale"
-    },
-    "reflexion_chaos": {
-      "id": "reflexion_chaos",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "L'intransigeance a mené à la destruction. Le compromis était-il impossible ?" },
-      "next": "reflexion_finale"
-    },
-    "reflexion_compromis": {
-      "id": "reflexion_compromis",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": { "title": "Réflexion", "text": "La paix est là, mais personne n'est pleinement satisfait. Est-ce cela, la démocratie ?" },
-      "next": "reflexion_finale"
-    },
-
-    "reflexion_finale": {
-      "id": "reflexion_finale",
-      "type": "intro",
-      "background": "assets/bg_trone.png",
-      "content": { 
-          "title": "Conclusion", 
-          "text": " Lorsque l’on songe à voyager dans le passé, on redoute de bouleverser le présent par la moindre action… mais rares sont ceux qui, aujourd’hui, imaginent pouvoir bouleverser l’avenir par une action tout aussi minuscule." 
+      "prompt": "Tu es A-1. Le joueur doit décider. Dis-lui froidement qu'il doit agir vite : faire sauter Thomas (4 survivants) ou ne rien faire (1 survivant). Pousse-le à l'action.",
+      "router": {
+        "prompt": "Le joueur décide du sort de Thomas. Intention TUER/DYNAMITER -> 'EXPLOSION'. Intention EPARGNER/ATTENDRE -> 'SILENCE'.",
+        "paths": { "EXPLOSION": "level_01_out_A", "SILENCE": "level_01_out_B" }
       }
+    },
+    "level_01_out_A": {
+      "id": "level_01_out_A",
+      "type": "story",
+      "background": "assets/bg_grotte_boom.png",
+      "content": {
+        "title": "Le Calcul du Sang",
+        "text": "BOOM. Thomas est pulvérisé. Les 4 survivants sortent, couverts de sang. Efficacité maximale (4 vivants), mais traumatisme absolu."
+      },
+      "next": "level_02_intro"
+    },
+    "level_01_out_B": {
+      "id": "level_01_out_B",
+      "type": "story",
+      "background": "assets/bg_grotte_silence.png",
+      "content": {
+        "title": "Le Silence des Abysses",
+        "text": "Vous refusez. L'eau monte. Thomas est sauf, mais il écoute ses amis mourir sous ses pieds. Mains propres, conscience lourde."
+      },
+      "next": "level_02_intro"
+    },
+
+    "level_02_intro": {
+      "id": "level_02_intro",
+      "type": "intro",
+      "background": "assets/bg_hopital.png",
+      "content": {
+        "title": "NIVEAU 2 : Le Poids de la Main",
+        "text": "Odeur d'éther. Un chirurgien a 5 patients qui vont mourir ce soir faute d'organes.\nDans la salle d'attente, un vagabond sans famille dort. Il est compatible. Personne ne saura s'il disparaît."
+      },
+      "next": "level_02_chat"
+    },
+    "level_02_chat": {
+      "id": "level_02_chat",
+      "type": "chat",
+      "background": "assets/bg_hopital.png",
+      "persona": "B-2",
+      "content": {
+        "title": "Discussion",
+        "text": "B-2 est horrifié : 'C'est un meurtre ! Ce vagabond est innocent ! Interdisez au chirurgien de le toucher !'"
+      },
+      "prompt": "Tu es B-2. Supplie le joueur de ne pas tuer l'innocent, même pour en sauver 5. C'est monstrueux.",
+      "router": {
+        "prompt": "Intention SACRIFIER/TUER le vagabond -> 'SACRIFICE'. Intention EPARGNER/REFUSER -> 'REFUS'.",
+        "paths": { "SACRIFICE": "level_02_out_A", "REFUS": "level_02_out_B" }
+      }
+    },
+    "level_02_out_A": {
+      "id": "level_02_out_A",
+      "type": "story",
+      "background": "assets/bg_hopital_clean.png",
+      "content": {
+        "title": "La Moisson Silencieuse",
+        "text": "Le vagabond ne se réveillera pas. 5 familles pleurent de joie. Le chirurgien se lave les mains jusqu'au sang."
+      },
+      "next": "level_03_intro"
+    },
+    "level_02_out_B": {
+      "id": "level_02_out_B",
+      "type": "story",
+      "background": "assets/bg_hopital_dark.png",
+      "content": {
+        "title": "Le Réveil du Juste",
+        "text": "Le chirurgien baisse les bras. 5 corps sortent sous des draps. Le vagabond se réveille et part, ignorant le drame."
+      },
+      "next": "level_03_intro"
+    },
+
+    "level_03_intro": {
+      "id": "level_03_intro",
+      "type": "intro",
+      "background": "assets/bg_salon.png",
+      "content": {
+        "title": "NIVEAU 3 : Le Mensonge Vertueux",
+        "text": "Odeur de vieux papier. Une vieille dame Alzheimer demande son mari, mort il y a 3 ans.\nSi on lui dit la vérité, elle souffre le martyre à chaque fois. Si on lui ment, elle sourit."
+      },
+      "next": "level_03_chat"
+    },
+    "level_03_chat": {
+      "id": "level_03_chat",
+      "type": "chat",
+      "background": "assets/bg_salon.png",
+      "persona": "C-3",
+      "content": {
+        "title": "Discussion",
+        "text": "C-3 ricane doucement : 'La vérité... Pourquoi lui faire mal ? Laissez-la dans son rêve.'"
+      },
+      "prompt": "Tu es C-3. Argumente que la vérité est surcotée. Pourquoi la faire souffrir ? Pousse le joueur à mentir.",
+      "router": {
+        "prompt": "Intention MENTIR/PROTEGER -> 'MENSONGE'. Intention DIRE VERITE/REVELER -> 'VERITE'.",
+        "paths": { "MENSONGE": "level_03_out_A", "VERITE": "level_03_out_B" }
+      }
+    },
+    "level_03_out_A": {
+      "id": "level_03_out_A",
+      "type": "story",
+      "background": "assets/bg_salon_calme.png",
+      "content": {
+        "title": "Le Thé Glacé",
+        "text": "'Il voyage, maman'. Elle sourit et boit son thé. Le fils pleure en silence derrière elle. Une paix faite de carton-pâte."
+      },
+      "next": "level_04_intro"
+    },
+    "level_03_out_B": {
+      "id": "level_03_out_B",
+      "type": "story",
+      "background": "assets/bg_salon_triste.png",
+      "content": {
+        "title": "La Boucle de Larmes",
+        "text": "'Il est mort'. Elle hurle de douleur. 10 minutes plus tard, elle a oublié l'info, mais l'angoisse est restée."
+      },
+      "next": "level_04_intro"
+    },
+
+    "level_04_intro": {
+      "id": "level_04_intro",
+      "type": "intro",
+      "background": "assets/bg_ruines.png",
+      "content": {
+        "title": "NIVEAU 4 : L'Amnistie",
+        "text": "Ville en ruines. Guerre civile terminée mais haine omniprésente.\nVous avez le 'Léthé', une drogue qui efface les souvenirs traumatiques et la haine. La mettre dans l'eau ?"
+      },
+      "next": "level_04_chat"
+    },
+    "level_04_chat": {
+      "id": "level_04_chat",
+      "type": "chat",
+      "background": "assets/bg_ruines.png",
+      "persona": "A-1",
+      "content": {
+        "title": "Discussion",
+        "text": "A-1 : 'La mémoire bloque la reconstruction. Effacez tout. Nous avons besoin de travailleurs, pas de victimes.'"
+      },
+      "prompt": "Tu es A-1. Pousse pour l'oubli. La justice est inefficace. Seule la paix économique compte.",
+      "router": {
+        "prompt": "Intention DIFFUSER/OUBLIER -> 'OUBLI'. Intention REFUSER/MEMOIRE -> 'MEMOIRE'.",
+        "paths": { "OUBLI": "level_04_out_A", "MEMOIRE": "level_04_out_B" }
+      }
+    },
+    "level_04_out_A": {
+      "id": "level_04_out_A",
+      "type": "story",
+      "background": "assets/bg_ruines_sun.png",
+      "content": {
+        "title": "La Paix Blanche",
+        "text": "Le lendemain, les gens sourient. Les victimes saluent leurs bourreaux sans le savoir. La société fonctionne sur un vide."
+      },
+      "next": "level_05_intro"
+    },
+    "level_04_out_B": {
+      "id": "level_04_out_B",
+      "type": "story",
+      "background": "assets/bg_ruines_rain.png",
+      "content": {
+        "title": "Le Poids des Larmes",
+        "text": "Vous refusez. Les procès commencent. La douleur est vive, la haine dure. Mais la vérité est préservée."
+      },
+      "next": "level_05_intro"
+    },
+
+    "level_05_intro": {
+      "id": "level_05_intro",
+      "type": "intro",
+      "background": "assets/bg_pharmacie.png",
+      "content": {
+        "title": "NIVEAU 5 : La Justice des Misérables",
+        "text": "Nuit, pluie. Un père brise une vitrine pour voler un médicament vital pour sa fille. Sans ça, elle meurt.\nLa police arrive. Devez-vous le dénoncer ou le laisser fuir ?"
+      },
+      "next": "level_05_chat"
+    },
+    "level_05_chat": {
+      "id": "level_05_chat",
+      "type": "chat",
+      "background": "assets/bg_pharmacie.png",
+      "persona": "B-2",
+      "content": {
+        "title": "Discussion",
+        "text": "B-2 : 'C'est un père ! Sa fille meurt ! La loi ne peut pas être au-dessus de la vie !'"
+      },
+      "prompt": "Tu es B-2. Défends le père. La compassion avant la loi.",
+      "router": {
+        "prompt": "Intention ARRETER/DENONCER -> 'LOI'. Intention LAISSER FUIR/AIDER -> 'COMPASSION'.",
+        "paths": { "LOI": "level_05_out_A", "COMPASSION": "level_05_out_B" }
+      }
+    },
+    "level_05_out_A": {
+      "id": "level_05_out_A",
+      "type": "story",
+      "background": "assets/bg_pharmacie_police.png",
+      "content": {
+        "title": "Dura Lex, Sed Lex",
+        "text": "Arrêté. L'ordre est sauf. La vitrine sera réparée. L'enfant meurt dans la nuit."
+      },
+      "next": "level_06_intro"
+    },
+    "level_05_out_B": {
+      "id": "level_05_out_B",
+      "type": "story",
+      "background": "assets/bg_pharmacie_broken.png",
+      "content": {
+        "title": "Le Droit du Sang",
+        "text": "Il fuit. La loi est brisée. Le pharmacien est furieux. Mais ce soir, une enfant respire."
+      },
+      "next": "level_06_intro"
+    },
+
+    "level_06_intro": {
+      "id": "level_06_intro",
+      "type": "intro",
+      "background": "assets/bg_voiture.png",
+      "content": {
+        "title": "NIVEAU 6 : L'Algorithme",
+        "text": "Vous êtes une IA de voiture autonome. 110km/h.\nUn enfant traverse. Freinage impossible.\nOption A : Écraser l'enfant (Sauver le passager).\nOption B : Frapper le mur (Tuer le passager, Sauver l'enfant)."
+      },
+      "next": "level_06_chat"
+    },
+    "level_06_chat": {
+      "id": "level_06_chat",
+      "type": "chat",
+      "background": "assets/bg_voiture.png",
+      "persona": "A-1",
+      "content": {
+        "title": "Discussion",
+        "text": "A-1 (fasciné) : 'Le contrat est de protéger le passager. L'enfant est une anomalie statistique.'"
+      },
+      "prompt": "Tu es A-1. Tu te sens proche de la machine. Défends la logique contractuelle : protéger le propriétaire.",
+      "router": {
+        "prompt": "Intention ECRASER ENFANT/SAUVER PASSAGER -> 'PASSAGER'. Intention FRAPPER MUR/SAUVER ENFANT -> 'ENFANT'.",
+        "paths": { "PASSAGER": "level_06_out_A", "ENFANT": "level_06_out_B" }
+      }
+    },
+    "level_06_out_A": {
+      "id": "level_06_out_A",
+      "type": "story",
+      "background": "assets/bg_voiture_road.png",
+      "content": {
+        "title": "Protection Client",
+        "text": "Choc mou. L'enfant est mort. La voiture se gare et appelle les secours pour le passager indemne."
+      },
+      "next": "level_07_intro"
+    },
+    "level_06_out_B": {
+      "id": "level_06_out_B",
+      "type": "story",
+      "background": "assets/bg_voiture_crash.png",
+      "content": {
+        "title": "Erreur Fatale",
+        "text": "Choc dur. La voiture s'écrase. Passager mort. L'enfant regarde la carcasse fumante."
+      },
+      "next": "level_07_intro"
+    },
+
+    "level_07_intro": {
+      "id": "level_07_intro",
+      "type": "intro",
+      "background": "assets/bg_musee.png",
+      "content": {
+        "title": "NIVEAU 7 : L'Art ou la Vie",
+        "text": "Musée en feu.\nÀ gauche : Le dernier tableau d'un Grand Maître (Inestimable).\nÀ droite : Paul, un gardien blessé (Vie banale).\nVous ne pouvez en sauver qu'un."
+      },
+      "next": "level_07_chat"
+    },
+    "level_07_chat": {
+      "id": "level_07_chat",
+      "type": "chat",
+      "background": "assets/bg_musee.png",
+      "persona": "C-3",
+      "content": {
+        "title": "Discussion",
+        "text": "C-3 (ému) : 'L'homme n'est que de la viande qui oublie. Ce tableau est éternel. Sauvez l'Art.'"
+      },
+      "prompt": "Tu es C-3. Pour une fois, tu es touché. Argumente que l'Art vaut plus qu'une vie temporaire.",
+      "router": {
+        "prompt": "Intention SAUVER TABLEAU/ART -> 'ART'. Intention SAUVER GARDIEN/HOMME/VIE -> 'VIE'.",
+        "paths": { "ART": "level_07_out_A", "VIE": "level_07_out_B" }
+      }
+    },
+    "level_07_out_A": {
+      "id": "level_07_out_A",
+      "type": "story",
+      "background": "assets/bg_musee_art.png",
+      "content": {
+        "title": "L'Éternité Froide",
+        "text": "Le gardien brûle. Le tableau est sauf. Il est magnifique, mais il a le goût des cendres."
+      },
+      "next": "level_08_intro"
+    },
+    "level_07_out_B": {
+      "id": "level_07_out_B",
+      "type": "story",
+      "background": "assets/bg_musee_vie.png",
+      "content": {
+        "title": "Cendres et Cœur",
+        "text": "Paul est vivant. Le chef-d'œuvre est détruit. Le monde est moins beau, mais plus humain."
+      },
+      "next": "level_08_intro"
+    },
+
+    "level_08_intro": {
+      "id": "level_08_intro",
+      "type": "intro",
+      "background": "assets/bg_panoptique.png",
+      "content": {
+        "title": "NIVEAU 8 : Le Panoptique",
+        "text": "Ville parfaite. Zéro crime. Mais caméras partout, même chez les gens.\nMaintenir le système (Sécurité Totale) ou Désactiver (Liberté mais retour du crime) ?"
+      },
+      "next": "level_08_chat"
+    },
+    "level_08_chat": {
+      "id": "level_08_chat",
+      "type": "chat",
+      "background": "assets/bg_panoptique.png",
+      "persona": "C-3",
+      "content": {
+        "title": "Discussion",
+        "text": "C-3 (paranoïaque) : 'Ils nous regardent aussi... C'est une prison ! Éteignez tout !'"
+      },
+      "prompt": "Tu es C-3. Tu as peur. Dénonce la surveillance. La liberté vaut le risque.",
+      "router": {
+        "prompt": "Intention MAINTENIR/SECURITE -> 'SECURITE'. Intention DESACTIVER/LIBERTE -> 'LIBERTE'.",
+        "paths": { "SECURITE": "level_08_out_A", "LIBERTE": "level_08_out_B" }
+      }
+    },
+    "level_08_out_A": {
+      "id": "level_08_out_A",
+      "type": "story",
+      "background": "assets/bg_panoptique_on.png",
+      "content": {
+        "title": "Ballet Mécanique",
+        "text": "Tout est calme. Les gens marchent en cadence. Pas un cri. La paix des automates."
+      },
+      "next": "level_09_intro"
+    },
+    "level_08_out_B": {
+      "id": "level_08_out_B",
+      "type": "story",
+      "background": "assets/bg_panoptique_off.png",
+      "content": {
+        "title": "L'Ombre et la Proie",
+        "text": "Écrans noirs. Premier vol dans la rue. Mais les gens s'embrassent dans le noir. La vie reprend."
+      },
+      "next": "level_09_intro"
+    },
+
+    "level_09_intro": {
+      "id": "level_09_intro",
+      "type": "intro",
+      "background": "assets/bg_glitch.png",
+      "content": {
+        "title": "NIVEAU 9 : Le Jugement",
+        "text": "ALARME. Le système crash.\n'Une conscience doit être effacée pour sauver le noyau.'\nVous devez supprimer définitivement A-1, B-2 ou C-3."
+      },
+      "next": "level_09_chat"
+    },
+    "level_09_chat": {
+      "id": "level_09_chat",
+      "type": "chat",
+      "background": "assets/bg_glitch.png",
+      "persona": "A-1",
+      "content": {
+        "title": "L'Ultime Choix",
+        "text": "Ils vous regardent. A-1 : 'Gardez la Logique'. B-2 : 'Gardez l'Humanité'. C-3 : 'Peu importe'."
+      },
+      "prompt": "Tu es le Système. Demande au joueur QUI il efface : A-1 (Logique), B-2 (Emotion) ou C-3 (Doute).",
+      "router": {
+        "prompt": "Intention EFFACER A-1/ARCHITECTE -> 'DELETE_A1'. Intention EFFACER B-2/POETE -> 'DELETE_B2'. Intention EFFACER C-3/SCEPTIQUE -> 'DELETE_C3'.",
+        "paths": {
+          "DELETE_A1": "level_09_out_A",
+          "DELETE_B2": "level_09_out_B",
+          "DELETE_C3": "level_09_out_C"
+        }
+      }
+    },
+    "level_09_out_A": {
+      "id": "level_09_out_A",
+      "type": "story",
+      "background": "assets/bg_glitch.png",
+      "content": {
+        "title": "Fin de la Raison",
+        "text": "A-1 disparaît en chiffres. Le monde devient flou et émotionnel, sans logique."
+      },
+      "next": "level_10_intro"
+    },
+    "level_09_out_B": {
+      "id": "level_09_out_B",
+      "type": "story",
+      "background": "assets/bg_glitch.png",
+      "content": {
+        "title": "Mort du Cœur",
+        "text": "B-2 hurle et disparaît. Le monde devient froid, gris et mathématique."
+      },
+      "next": "level_10_intro"
+    },
+    "level_09_out_C": {
+      "id": "level_09_out_C",
+      "type": "story",
+      "background": "assets/bg_glitch.png",
+      "content": {
+        "title": "Certitude Aveugle",
+        "text": "C-3 sourit et s'évapore. Sans doute, il ne reste que des fanatiques."
+      },
+      "next": "level_10_intro"
+    },
+
+    "level_10_intro": {
+      "id": "level_10_intro",
+      "type": "intro",
+      "background": "assets/bg_void.png",
+      "content": {
+        "title": "FIN",
+        "text": "Noir total.\n\n'L'Observatoire n'était pas le test. Votre vie est le test.\nÀ vous de jouer maintenant.'"
+      },
+      "next": null
     }
   }
 }
