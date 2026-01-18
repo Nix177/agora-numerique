@@ -24,7 +24,7 @@ const ui = {
 
 // 1. INITIALISATION
 async function init() {
-    console.log("Démarrage du moteur Shogun (Version Multi-Chat)...");
+    console.log("Démarrage du moteur Shogun (Version Multi-Chat Corrected)...");
     if(ui.teacherNote) ui.teacherNote.innerText = "Initialisation...";
 
     try {
@@ -183,7 +183,7 @@ function updateScreen(scene) {
     // Scène de Chat (Principale) avec Avatars
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona];
-        const avatarUrl = (p && p.avatar) ? p.avatar : 'assets/avatar_esprit.png';
+        const avatarUrl = p ? p.avatar : 'assets/avatar_esprit.png';
         const name = p ? p.displayName : 'Inconnu';
 
         html += `
@@ -277,7 +277,7 @@ window.closeSideChat = function() {
     }
 }
 
-// --- FONCTION D'AFFICHAGE UNIFIÉE ---
+// --- FONCTION D'AFFICHAGE UNIFIÉE (CORRIGE VIGNETTE) ---
 function buildMsgHTML(role, text, personaId) {
     const isUser = role === 'user';
     let avatarImg = '';
@@ -331,6 +331,7 @@ window.sendUserMessage = async function(text) {
         sceneContext = `CONSIGNE SCÈNE: ${CURRENT_SCENE.prompt}`;
     }
     
+    // Prompt Système (Ajusté pour des enfants)
     const systemPrompt = `CONTEXTE JEU: ${JSON.stringify(GAME_STATE)}. 
     TON RÔLE: ${p.bio}. 
     RÈGLE ABSOLUE: Tes réponses doivent être COURTES (Max 2 phrases, 40 mots). Tu parles à des enfants de 11 ans. Sois percutant, pas bavard.
@@ -339,13 +340,16 @@ window.sendUserMessage = async function(text) {
     await callBot(systemPrompt, CURRENT_CHAT_TARGET);
 }
 
+// CORRECTION BUG LOADING_ID
 async function callBot(systemPrompt, targetId, isIntro = false) {
     const container = (ui.modal && ui.modal.style.display === 'flex' && CURRENT_CHAT_TARGET === targetId) 
         ? ui.modalScroll 
         : (CURRENT_SCENE.persona === targetId ? document.getElementById('chat-scroll') : null);
 
+    // DÉCLARATION ICI (HORS DU BLOC IF)
+    let loadingId = 'loading-' + Date.now();
+
     if (container) {
-        const loadingId = 'loading-' + Date.now();
         // Loader stylisé
         const loaderHTML = buildMsgHTML('assistant', '...', targetId).replace('class="msg-row bot"', `id="${loadingId}" class="msg-row bot"`);
         container.innerHTML += loaderHTML;
@@ -367,8 +371,8 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         
         // Suppression du loader
         if (container) {
-            const loader = document.getElementById(loadingId); // Plus précis
-            if(loader) loader.remove(); // Ou loader.parentElement.remove() selon structure, ici loader est la row
+            const loader = document.getElementById(loadingId); 
+            if(loader) loader.parentElement.remove(); // On enlève la row complète
         }
 
         const reply = data.reply;
@@ -383,6 +387,8 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
 
     } catch (e) {
         console.error(e);
+        const loader = document.getElementById(loadingId);
+        if(loader) loader.innerText = "Erreur IA";
     }
 }
 
