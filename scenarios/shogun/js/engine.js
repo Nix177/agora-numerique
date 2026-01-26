@@ -364,26 +364,113 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
             })
         });
         const data = await res.json();
+        const reply = data.reply;
         
         // Suppression du loader
         if (container) {
-            const loader = document.getElementById(loadingId); // Plus précis
-            if(loader) loader.remove(); // Ou loader.parentElement.remove() selon structure, ici loader est la row
+            const loader = document.getElementById(loadingId);
+            if(loader) loader.remove();
         }
 
-        const reply = data.reply;
-        
-        if (container) {
-            container.innerHTML += buildMsgHTML('assistant', reply, targetId);
-            container.scrollTop = container.scrollHeight;
-        }
-        
         if (!CHAT_SESSIONS[targetId]) CHAT_SESSIONS[targetId] = [];
         CHAT_SESSIONS[targetId].push({ role: "assistant", content: reply });
 
+        if (container) {
+            // Découpage et affichage progressif
+            const chunks = splitMessage(reply);
+            await playChunks(container, targetId, chunks);
+        }
+
     } catch (e) {
         console.error(e);
+        if(document.getElementById(loadingId)) document.getElementById(loadingId).remove();
     }
+}
+
+// --- LOGIQUE TYPING & SUITE ---
+async function playChunks(container, targetId, chunks) {
+    for (let i = 0; i < chunks.length; i++) {
+        // Création bulle vide
+        const msgHTML = buildMsgHTML('assistant', '', targetId);
+        // On l'ajoute. Mais on a besoin d'une ref vers l'élément texte à l'intérieur
+        // buildMsgHTML retourne une string. On va l'insérer puis chopper le dernier enfant.
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = msgHTML;
+        const newMsgRow = tempDiv.firstElementChild;
+        container.appendChild(newMsgRow);
+        
+        const bubble = newMsgRow.querySelector('.msg-bubble');
+        
+        // Typing
+        await typeWriter(bubble, chunks[i], 20); // 20ms par char
+
+        // Si ce n'est pas le dernier chunk, on affiche bouton SUITE
+        if (i < chunks.length - 1) {
+            await waitForNext(container);
+        }
+    }
+}
+
+function typeWriter(element, text, speed) {
+    return new Promise(resolve => {
+        let i = 0;
+        element.classList.add('typing-cursor');
+        
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                // Auto scroll
+                element.closest('.chat-messages').scrollTop = element.closest('.chat-messages').scrollHeight;
+                setTimeout(type, speed);
+            } else {
+                element.classList.remove('typing-cursor');
+                resolve();
+            }
+        }
+        type();
+    });
+}
+
+function waitForNext(container) {
+    return new Promise(resolve => {
+        const btn = document.createElement('button');
+        btn.className = 'btn-suite-chat';
+        btn.innerHTML = 'Suite ⇩';
+        btn.onclick = () => {
+            btn.remove();
+            resolve();
+        };
+        container.appendChild(btn);
+        container.scrollTop = container.scrollHeight;
+    });
+}
+
+function splitMessage(text) {
+    // Découpe par double saut de ligne (paragraphe)
+    // Et si un paragraphe est vraiment TROP long (>400 chars), on le coupe aussi.
+    let rawChunks = text.split('\n\n');
+    let finalChunks = [];
+    
+    rawChunks.forEach(chunk => {
+        if(chunk.length > 500) {
+            // On recoupe grossièrement par phrase
+             const sentences = chunk.match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g) || [chunk];
+             let currentAcc = "";
+             sentences.forEach(s => {
+                 if(currentAcc.length + s.length > 500) {
+                     finalChunks.push(currentAcc.trim());
+                     currentAcc = s;
+                 } else {
+                     currentAcc += s;
+                 }
+             });
+             if(currentAcc.trim()) finalChunks.push(currentAcc.trim());
+        } else {
+            if(chunk.trim()) finalChunks.push(chunk.trim());
+        }
+    });
+    return finalChunks;
 }
 
 window.toggleFullScreen = function() {
