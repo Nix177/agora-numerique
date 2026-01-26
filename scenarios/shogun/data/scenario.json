@@ -345,8 +345,8 @@
         "type": "vote",
         "background": "assets/bg_village_pauvre.png",
         "options": [
-            { "label": "Nourrir le Peuple (Affaiblir Armée)", "target": "res_famine_aider", "effect": { "violence": -10, "richesse": -20 } },
-            { "label": "Garder pour l'Armée (Cruauté)", "target": "res_famine_laisser", "effect": { "violence": 20 } }
+            { "label": "Nourrir le Peuple (Risque Affaiblissement)", "target": "res_famine_aider", "effect": { "violence": -10, "richesse": -20 } },
+            { "label": "Garder pour l'Armée (Stabilité)", "target": "res_famine_laisser", "effect": { "violence": 20 } }
         ]
     },
     "res_famine_aider": { "id": "res_famine_aider", "type": "story", "background": "assets/bg_conseil.png", "content": { "title": "Un Choix Humain", "text": "Les paysans mangent, mais vos soldats grognent. Votre autorité vacille." }, "next": "test_poete" },
@@ -366,8 +366,8 @@
         "type": "vote",
         "background": "assets/bg_conseil.png",
         "options": [
-            { "label": "L'Exécuter (Censure)", "target": "res_poete_tuer", "effect": { "violence": 10 } },
-            { "label": "L'Ignorer (Clémence)", "target": "res_poete_exil", "effect": { "violence": -5 } }
+            { "label": "L'Exécuter (Restaurer l'Ordre)", "target": "res_poete_tuer", "effect": { "violence": 10 } },
+            { "label": "L'Ignorer (Risque de faiblesse)", "target": "res_poete_exil", "effect": { "violence": -5 } }
         ]
     },
     "res_poete_tuer": { "id": "res_poete_tuer", "type": "story", "background": "assets/bg_trone.png", "content": { "title": "Le Silence", "text": "Le poète est mort. Plus personne n'ose chanter. Le silence de la peur règne." }, "next": "reflexion_tyrannie" },
