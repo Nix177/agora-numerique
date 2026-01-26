@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cartes Factions - Shogun</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eee;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            /* 2 cartes par ligne */
+            gap: 20px;
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #999;
+            border-radius: 10px;
+            padding: 20px;
+            page-break-inside: avoid;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #ff8800;
+            object-fit: cover;
+            margin-bottom: 15px;
+            background: #ccc;
+        }
+
+        .card h2 {
+            margin: 0;
+            color: #ff8800;
+            font-size: 1.4em;
+            text-align: center;
+        }
+
+        .card h3 {
+            margin: 5px 0 20px 0;
+            color: #666;
+            font-size: 0.9em;
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        .card p {
+            text-align: justify;
+            line-height: 1.4;
+            color: #333;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ddd;
+        }
+
+        .print-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background: #444;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 5px;
+        }
+
+        @media print {
+            .print-btn {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="print-btn" onclick="window.print()">🖨 Imprimer les Cartes</button>
+    <h1>Factions - Shogun</h1>
+    <div id="cards-container" class="grid"></div>
+
+    <script>
+        fetch('data/personas.json')
+            .then(res => res.json())
+            .then(data => {
+                const container = document.getElementById('cards-container');
+                data.forEach(p => {
+                    const avatar = p.avatar ? p.avatar : 'assets/avatar_esprit.png';
+                    const bio = p.bio || "Aucune description.";
+
+                    const html = `
+                        <div class="card">
+                            <img src="${avatar}" class="card-img">
+                            <h2>${p.displayName || p.name}</h2>
+                            <h3>${p.id}</h3>
+                            <p>${bio}</p>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+            })
+            .catch(err => document.body.innerHTML = "Erreur chargement: " + err);
+    </script>
+</body>
+
+</html>

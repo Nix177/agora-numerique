@@ -420,10 +420,63 @@
         .home-btn:hover svg {
             fill: white;
         }
+
+        /* TIMER */
+        #timer-overlay {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 2px solid #ff8800;
+            z-index: 5000;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .timer-sandglass {
+            width: 30px;
+            height: 30px;
+            animation: rotate 2s infinite linear;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(180deg);
+            }
+        }
+
+        .timer-text {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            font-family: monospace;
+        }
+
+        .btn-timer-ctrl {
+            background: #333;
+            border: 1px solid #555;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-timer-ctrl:hover {
+            background: #555;
+        }
     </style>
 </head>
 
 <body>
+
+    <div id="timer-overlay">
+        <div class="timer-sandglass">⏳</div>
+        <div id="timer-val" class="timer-text">02:00</div>
+        <button class="btn-timer-ctrl" onclick="window.stopTimer()">⏹</button>
+    </div>
 
     <a href="../../index.html" class="home-btn" title="Retour au menu principal">
         <svg viewBox="0 0 24 24">

@@ -22,8 +22,16 @@ const ui = {
     mainInput: document.getElementById('prof-chat-input'),
     // Réglages Prof
     modelSelect: document.getElementById('model-select'),
-    ttsCheck: document.getElementById('tts-toggle')
+    ttsCheck: document.getElementById('tts-toggle'),
+    timerOverlay: document.getElementById('timer-overlay'),
+    timerVal: document.getElementById('timer-val')
 };
+
+// --- AUDIO SYSTEM ---
+let CURRENT_MUSIC = null;
+const AUDIO_PLAYER = new Audio();
+AUDIO_PLAYER.loop = true;
+AUDIO_PLAYER.volume = 0.5;
 
 // 1. INITIALISATION
 async function init() {
@@ -153,12 +161,38 @@ function updateScreen(scene) {
     ui.screen.innerHTML = html;
 
     if (scene.persona) renderChatHistory(scene.persona, document.getElementById('chat-scroll'));
+
+    updateAudio(scene);
+}
+
+function updateAudio(scene) {
+    if (scene.music) {
+        if (CURRENT_MUSIC !== scene.music) {
+            CURRENT_MUSIC = scene.music;
+            AUDIO_PLAYER.src = scene.music;
+            AUDIO_PLAYER.play().catch(e => console.log("Audio play blocked/error:", e));
+        }
+    } else {
+        // Optionnel : Couper la musique si pas de musique définie ?
+        // Pour l'instant on laisse tourner la précédente ambiance
+    }
 }
 
 // 5. INTERFACE PROF
 function updateTeacherInterface(scene) {
     if (!ui.teacherPanel) return;
     ui.teacherPanel.innerHTML = '';
+
+    // Timer Controls
+    const timerDiv = document.createElement('div');
+    timerDiv.style.display = 'flex'; timerDiv.style.gap = '5px'; timerDiv.style.marginRight = '15px';
+    timerDiv.innerHTML = `
+        <button class="btn-icon" onclick="window.startTimer(1)" title="1 min">⏳1</button>
+        <button class="btn-icon" onclick="window.startTimer(2)" title="2 min">⏳2</button>
+        <button class="btn-icon" onclick="window.startTimer(5)" title="5 min">⏳5</button>
+        <button class="btn-icon" onclick="window.stopTimer()" title="Stop Timer">🛑</button>
+    `;
+    ui.teacherPanel.appendChild(timerDiv);
 
     if (scene.options) {
         scene.options.forEach(opt => {
@@ -481,6 +515,42 @@ window.saveGameLog = async function () {
         });
         alert("Sauvegarde réussie !");
     } catch (e) { alert("Erreur sauvegarde: " + e); }
+}
+
+// --- TIMER SYSTEM ---
+let TIMER_INTERVAL = null;
+window.startTimer = function (minutes) {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    let seconds = minutes * 60;
+
+    if (ui.timerOverlay) ui.timerOverlay.style.display = 'flex';
+
+    updateTimerDisplay(seconds);
+
+    TIMER_INTERVAL = setInterval(() => {
+        seconds--;
+        updateTimerDisplay(seconds);
+        if (seconds <= 0) {
+            clearInterval(TIMER_INTERVAL);
+            const alarm = new Audio('assets/sfx_gong.mp3');
+            // alarm.play(); 
+            if (ui.timerVal) ui.timerVal.style.color = 'red';
+            setTimeout(() => { if (ui.timerOverlay) ui.timerOverlay.style.display = 'none'; }, 5000);
+        }
+    }, 1000);
+}
+
+window.stopTimer = function () {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    if (ui.timerOverlay) ui.timerOverlay.style.display = 'none';
+    if (ui.timerVal) ui.timerVal.style.color = 'white';
+}
+
+function updateTimerDisplay(totalSeconds) {
+    if (!ui.timerVal) return;
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const s = (totalSeconds % 60).toString().padStart(2, '0');
+    ui.timerVal.innerText = `${m}:${s}`;
 }
 
 init();
