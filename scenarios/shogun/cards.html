@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Cartes Factions - Shogun</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Noto+Serif+JP:wght@400;700&display=swap"
+        rel="stylesheet">
     <style>
         @page {
             size: A4;
@@ -11,81 +13,139 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #eee;
+            font-family: 'Noto Serif JP', serif;
+            background: #f4f1ea;
+            color: #2c2c2c;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #8b0000;
+            font-family: 'Cinzel', serif;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #8b0000;
+            display: inline-block;
+            padding-bottom: 10px;
+        }
+
+        .header-container {
+            text-align: center;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            /* 2 cartes par ligne */
-            gap: 20px;
-            max-width: 210mm;
+            gap: 30px;
+            max-width: 250mm;
             margin: 0 auto;
         }
 
         .card {
-            background: white;
-            border: 1px solid #999;
-            border-radius: 10px;
-            padding: 20px;
+            background: #fffdf5;
+            border: 4px double #8b0000;
+            border-radius: 4px;
+            padding: 25px;
+            position: relative;
             page-break-inside: avoid;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Watermark effect */
+        .card::before {
+            content: '侍';
+            /* Samourai Kanji */
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 4em;
+            color: rgba(139, 0, 0, 0.05);
+            font-family: 'Noto Serif JP', serif;
+            pointer-events: none;
         }
 
         .card-img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            border: 4px solid #ff8800;
+            border: 3px solid #8b0000;
             object-fit: cover;
             margin-bottom: 15px;
-            background: #ccc;
+            background: #333;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
 
         .card h2 {
             margin: 0;
-            color: #ff8800;
-            font-size: 1.4em;
+            color: #8b0000;
+            font-family: 'Cinzel', serif;
+            font-size: 1.6em;
             text-align: center;
+            border-bottom: 1px solid #ddd;
+            width: 100%;
+            padding-bottom: 10px;
         }
 
         .card h3 {
-            margin: 5px 0 20px 0;
-            color: #666;
+            margin: 10px 0;
+            color: #555;
             font-size: 0.9em;
-            font-weight: normal;
-            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: #ececec;
+            padding: 2px 10px;
+            border-radius: 10px;
         }
 
         .card p {
             text-align: justify;
-            line-height: 1.4;
+            line-height: 1.6;
+            font-size: 1em;
+            margin-top: 15px;
             color: #333;
-            background: #f9f9f9;
+        }
+
+        .secret-mission {
+            margin-top: auto;
+            width: 100%;
             padding: 15px;
+            background: #fcf3f3;
+            border: 1px dashed #8b0000;
+            font-size: 0.9em;
             border-radius: 5px;
-            border-left: 4px solid #ddd;
+            color: #8b0000;
+        }
+
+        .secret-mission strong {
+            display: block;
+            margin-bottom: 5px;
+            text-transform: uppercase;
         }
 
         .print-btn {
             display: block;
             margin: 20px auto;
-            padding: 10px 20px;
-            background: #444;
+            padding: 12px 25px;
+            background: #8b0000;
             color: white;
             border: none;
             cursor: pointer;
             font-size: 1.2em;
             border-radius: 5px;
+            font-family: 'Cinzel', serif;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .print-btn:hover {
+            transform: scale(1.05);
         }
 
         @media print {
@@ -96,14 +156,21 @@
             body {
                 background: white;
             }
+
+            .card {
+                box-shadow: none;
+            }
         }
     </style>
 </head>
 
 <body>
 
-    <button class="print-btn" onclick="window.print()">🖨 Imprimer les Cartes</button>
-    <h1>Factions - Shogun</h1>
+    <div class="header-container">
+        <h1>Factions du Shogunat</h1>
+        <button class="print-btn" onclick="window.print()">🖨 Imprimer les Fiches</button>
+    </div>
+
     <div id="cards-container" class="grid"></div>
 
     <script>
@@ -115,12 +182,23 @@
                     const avatar = p.avatar ? p.avatar : 'assets/avatar_esprit.png';
                     const bio = p.bio || "Aucune description.";
 
+                    // Génération mission secrète (exemple simpliste ou placeholder)
+                    let mission = "Votre but est de guider le débat selon vos valeurs.";
+                    if (p.id.includes('nobunaga')) mission = "Imposez l'idée que seule l'Autorité compte. Ne montrez aucune faiblesse.";
+                    if (p.id.includes('hideyoshi')) mission = "Cherchez le Compromis à tout prix. Proposez toujours une solution pacifique.";
+                    if (p.id.includes('toshi')) mission = "Parlez de 'Destin' ou de 'Volonté Divine' au moins 3 fois.";
+
                     const html = `
                         <div class="card">
-                            <img src="${avatar}" class="card-img">
+                            <img src="${avatar}" class="card-img" onerror="this.src='assets/avatar_esprit.png'">
                             <h2>${p.displayName || p.name}</h2>
-                            <h3>${p.id}</h3>
+                            <h3>${p.id.toUpperCase()}</h3>
                             <p>${bio}</p>
+                            
+                            <div class="secret-mission">
+                                <strong>🎯 Objectif Secret</strong>
+                                ${mission}
+                            </div>
                         </div>
                     `;
                     container.innerHTML += html;
