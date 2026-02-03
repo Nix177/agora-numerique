@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cartes Élèves - Belles-Terres</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Montserrat:wght@600;800&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .card {
+            width: 400px;
+            height: 560px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .header-bg {
+            height: 120px;
+            background: linear-gradient(135deg, #007bff, #00d4ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            border: 5px solid white;
+            position: absolute;
+            bottom: -50px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .content {
+            padding: 20px;
+            padding-top: 60px;
+            /* Space for avatar */
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            font-size: 1.6em;
+            color: #333;
+        }
+
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9em;
+            color: #777;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .lore {
+            background: #e9ecef;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            color: #555;
+            margin: 15px 0;
+            line-height: 1.4;
+        }
+
+        .tags {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .tag {
+            background: #eee;
+            color: #333;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* Color Themes */
+        .theme-green .header-bg {
+            background: linear-gradient(135deg, #28a745, #85e085);
+        }
+
+        .theme-green .tag {
+            color: #28a745;
+            background: #e6f9e9;
+        }
+
+        .theme-blue .header-bg {
+            background: linear-gradient(135deg, #0056b3, #4da3ff);
+        }
+
+        .theme-blue .tag {
+            color: #0056b3;
+            background: #e0f0ff;
+        }
+
+        .theme-orange .header-bg {
+            background: linear-gradient(135deg, #fd7e14, #ffc107);
+        }
+
+        .theme-orange .tag {
+            color: #fd7e14;
+            background: #fff4e6;
+        }
+
+        .theme-purple .header-bg {
+            background: linear-gradient(135deg, #6f42c1, #a66efa);
+        }
+
+        .theme-purple .tag {
+            color: #6f42c1;
+            background: #f3eafa;
+        }
+
+        .theme-teal .header-bg {
+            background: linear-gradient(135deg, #20c997, #7be4c3);
+        }
+
+        .theme-teal .tag {
+            color: #20c997;
+            background: #e6fffa;
+        }
+
+
+        .positions {
+            text-align: left;
+            margin-top: 10px;
+        }
+
+        .pos-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 0.95em;
+            color: #444;
+        }
+
+        .pos-icon {
+            font-size: 1.2em;
+        }
+
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .card {
+                break-inside: avoid;
+                margin: 10px;
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- GASPARD -->
+    <div class="card theme-blue">
+        <div class="header-bg">
+            <div class="avatar-circle" style="background-image:url('../eoliennes/assets/avatars/Gaspard_profile.png')">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Gaspard</h1>
+            <h2>Pêche & Traditions</h2>
+
+            <div class="lore">
+                "Belles-Terres change trop vite. Notre identité et notre calme sont menacés par ces projets industriels
+                venus d'ailleurs."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Héritage</span>
+                <span class="tag">Prudence</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <div class="pos-icon">⚓</div>
+                    <div><strong>Mode de vie :</strong> Préserver le silence et la pêche traditionnelle.</div>
+                </div>
+                <div class="pos-row">
+                    <div class="pos-icon">🛑</div>
+                    <div><strong>Industrie :</strong> Contre l'invasion technologique et le bruit.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAE -->
+    <div class="card theme-purple">
+        <div class="header-bg">
+            <div class="avatar-circle" style="background-image:url('../eoliennes/assets/avatars/nae_profile.png')">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Naé</h1>
+            <h2>Chamanes</h2>
+
+            <div class="lore">
+                "Les Terres Sacrées sont le corps de nos ancêtres. On ne creuse pas une tombe pour en faire de
+                l'argent."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Spiritualité</span>
+                <span class="tag">Harmonie</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <div class="pos-icon">✨</div>
+                    <div><strong>Sacré :</strong> Protection absolue du sanctuaire.</div>
+                </div>
+                <div class="pos-row">
+                    <div class="pos-icon">🤝</div>
+                    <div><strong>Ouverture :</strong> Éoliennes possibles seulement en zone neutre.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MIKA -->
+    <div class="card theme-orange">
+        <div class="header-bg">
+            <div class="avatar-circle" style="background-image:url('../eoliennes/assets/avatars/mika_profile.png')">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Mika</h1>
+            <h2>Creuser-Puiser</h2>
+
+            <div class="lore">
+                "Ce gisement est une chance historique. Il financera enfin un hôpital moderne et des écoles pour nos
+                enfants."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Progrès</span>
+                <span class="tag">Social</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <div class="pos-icon">🏗️</div>
+                    <div><strong>Développement :</strong> Priorité à la santé et au confort de tous.</div>
+                </div>
+                <div class="pos-row">
+                    <div class="pos-icon">🔧</div>
+                    <div><strong>Compromis :</strong> On peut déplacer les lieux de prière si besoin.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LIA -->
+    <div class="card theme-green">
+        <div class="header-bg">
+            <div class="avatar-circle" style="background-image:url('../eoliennes/assets/avatars/lia_profile.png')">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Lia</h1>
+            <h2>Liberté & Nature</h2>
+
+            <div class="lore">
+                "Détruire un écosystème pour produire de l'énergie 'verte', c'est un non-sens. La nature vaut plus que
+                le profit."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Biodiversité</span>
+                <span class="tag">Écologie</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <div class="pos-icon">🦅</div>
+                    <div><strong>Vivant :</strong> Zéro impact sur les espèces locales.</div>
+                </div>
+                <div class="pos-row">
+                    <div class="pos-icon">⛺</div>
+                    <div><strong>Alternative :</strong> Écotourisme et sobriété énergétique.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BRAGI -->
+    <div class="card theme-teal">
+        <div class="header-bg">
+            <div class="avatar-circle" style="background-image:url('../eoliennes/assets/avatars/bragi_profile.png')">
+            </div>
+        </div>
+        <div class="content">
+            <h1>Bragi</h1>
+            <h2>@Rebelle-Terre</h2>
+
+            <div class="lore">
+                "Les prières et les oiseaux, c'est joli, mais ça ne remplit pas le frigo. Il nous faut du travail
+                concret, ici et maintenant."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Réalisme</span>
+                <span class="tag">Emploi</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <div class="pos-icon">💶</div>
+                    <div><strong>Économie :</strong> Oui à la mine pour les salaires.</div>
+                </div>
+                <div class="pos-row">
+                    <div class="pos-icon">👎</div>
+                    <div><strong>Éoliennes :</strong> Non. C'est moche, cher et inefficace.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

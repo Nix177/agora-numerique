@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cartes Élèves - Shogun</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Lato', sans-serif;
+            background: #e0e0e0;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .page-break {
+            width: 100%;
+            height: 0;
+            page-break-after: always;
+        }
+
+        .card {
+            width: 400px;
+            height: 560px;
+            /* Format proche A5 */
+            background: #fdfbf7;
+            border: 8px solid #2c3e50;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('../shogun/assets/bg_paper.png');
+            /* Fallback pattern */
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .card-content {
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            border-bottom: 2px solid #c0392b;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            color: #c0392b;
+            margin: 0;
+            font-size: 1.8em;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            color: #2c3e50;
+            margin: 5px 0 0 0;
+            font-size: 1.2em;
+        }
+
+        .avatar-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #ddd;
+            border: 4px solid #2c3e50;
+            border-radius: 50%;
+            margin: 10px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em;
+            color: #555;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .lore-box {
+            background: rgba(236, 240, 241, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+            font-style: italic;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            border-left: 4px solid #7f8c8d;
+            text-align: left;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #e67e22;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            margin-top: 10px;
+            margin-bottom: 5px;
+            border-bottom: 1px dotted #aaa;
+            display: inline-block;
+        }
+
+        .keywords {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .keyword {
+            background: #2c3e50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9em;
+        }
+
+        .stances {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .stance-item {
+            margin-bottom: 5px;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .card {
+                break-inside: avoid;
+                margin: 10px;
+                box-shadow: none;
+                border-width: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CLAN DU TIGRE -->
+    <div class="card">
+        <div class="card-content">
+            <div class="card-header">
+                <h1>Clan du Tigre</h1>
+                <h2>Nobunaga</h2>
+            </div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tigre.png')">🐯</div>
+
+            <div class="lore-box">
+                "1582. Le Shogun est mort. L'empire est en miettes. Seule la force pure peut restaurer l'ordre et
+                chasser le chaos."
+            </div>
+
+            <div class="section-title">Philosophie</div>
+            <div class="keywords">
+                <span class="keyword">Force</span>
+                <span class="keyword">Ordre</span>
+                <span class="keyword">Autorité</span>
+            </div>
+
+            <div class="section-title">Vos Positions</div>
+            <div class="stances">
+                <div class="stance-item">🗡️ <strong>Unification :</strong> Par la conquête militaire.</div>
+                <div class="stance-item">🏯 <strong>Politique :</strong> Centralisation totale du pouvoir.</div>
+                <div class="stance-item">🚫 <strong>Sectes & Rébellions :</strong> Éradication sans pitié.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ALLIANCE DE LA GRUE -->
+    <div class="card">
+        <div class="card-content">
+            <div class="card-header">
+                <h1>Alliance Grue</h1>
+                <h2>Hideyoshi</h2>
+            </div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_grue.png')">🐦</div>
+
+            <div class="lore-box">
+                "1582. La guerre ruine le commerce. Il faut baisser les armes pour que le riz et l'or circulent à
+                nouveau."
+            </div>
+
+            <div class="section-title">Philosophie</div>
+            <div class="keywords">
+                <span class="keyword">Paix</span>
+                <span class="keyword">Commerce</span>
+                <span class="keyword">Diplomatie</span>
+            </div>
+
+            <div class="section-title">Vos Positions</div>
+            <div class="stances">
+                <div class="stance-item">🤝 <strong>Unification :</strong> Par les alliances et l'argent.</div>
+                <div class="stance-item">💰 <strong>Économie :</strong> Ouverture du commerce (même étranger).</div>
+                <div class="stance-item">🕊️ <strong>Armée :</strong> Désarmement progressif des campagnes.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- GARDIENS DE LA TORTUE -->
+    <div class="card">
+        <div class="card-content">
+            <div class="card-header">
+                <h1>Clan Tortue</h1>
+                <h2>Kenshin</h2>
+            </div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tortue.png')">🐢</div>
+
+            <div class="lore-box">
+                "1582. Nous avons oublié nos ancêtres. L'honneur et la protection du peuple passent avant la conquête."
+            </div>
+
+            <div class="section-title">Philosophie</div>
+            <div class="keywords">
+                <span class="keyword">Honneur</span>
+                <span class="keyword">Tradition</span>
+                <span class="keyword">Protection</span>
+            </div>
+
+            <div class="section-title">Vos Positions</div>
+            <div class="stances">
+                <div class="stance-item">🛡️ <strong>Unification :</strong> Défensive. Protéger ses terres.</div>
+                <div class="stance-item">🌾 <strong>Peuple :</strong> Justice et bienveillance envers les faibles.</div>
+                <div class="stance-item">📜 <strong>Valeurs :</strong> Le Code du Bushido avant tout.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLAN DU RENARD -->
+    <div class="card">
+        <div class="card-content">
+            <div class="card-header">
+                <h1>Clan Renard</h1>
+                <h2>Toshi</h2>
+            </div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_renard.png')">🦊</div>
+
+            <div class="lore-box">
+                "1582. Les dieux (Kamis) sont en colère. Seule une purification spirituelle sauvera le Japon de la
+                corruption."
+            </div>
+
+            <div class="section-title">Philosophie</div>
+            <div class="keywords">
+                <span class="keyword">Spiritualité</span>
+                <span class="keyword">Pureté</span>
+                <span class="keyword">Shinto</span>
+            </div>
+
+            <div class="section-title">Vos Positions</div>
+            <div class="stances">
+                <div class="stance-item">⛩️ <strong>Unification :</strong> Par la foi commune.</div>
+                <div class="stance-item">🔥 <strong>Action :</strong> Rituels et influence religieuse.</div>
+                <div class="stance-item">🚫 <strong>Étrangers :</strong> Méfiance envers leurs "faux dieux".</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
