@@ -31,34 +31,40 @@ AUDIO_PLAYER.loop = true;
 AUDIO_PLAYER.volume = 0.5;
 
 // 1. INITIALISATION
+// 1. INITIALISATION
 async function init() {
-    console.log("Démarrage du moteur Shogun (Version Multi-Chat)...");
+    console.log("Démarrage du moteur Shogun (Version Multi-Chat 2.0)...");
     if (ui.teacherNote) ui.teacherNote.innerText = "Initialisation...";
 
     try {
         const loadFile = async (path) => {
+            console.log("Loading:", path);
             const res = await fetch(path);
             if (!res.ok) throw new Error(`Fichier manquant: ${path}`);
             return await res.json();
         };
 
-        const [scenario, personas, world] = await Promise.all([
+        const [scenario, personasList, world] = await Promise.all([
             loadFile('data/scenario.json'),
             loadFile('data/personas.json'),
             loadFile('data/world.json')
         ]);
 
-        GAME_DATA = { scenario, personas: mapPersonas(personas), world };
+        console.log("Files loaded. Processing...");
+
+        GAME_DATA = { scenario, personas: mapPersonas(personasList), world };
         GAME_STATE = scenario.state || {};
 
         Object.keys(GAME_DATA.personas).forEach(id => CHAT_SESSIONS[id] = []);
         renderRoster();
 
+        console.log("Roster rendered. Showing mode selection.");
+
         showModeSelection();
 
     } catch (e) {
-        console.error("Erreur:", e);
-        if (ui.teacherNote) ui.teacherNote.innerHTML = `<span style="color:red">ERREUR CHARGEMENT</span>`;
+        console.error("Erreur CRITIQUE init:", e);
+        if (ui.teacherNote) ui.teacherNote.innerHTML = `<span style="color:red">ERREUR CHARGEMENT: ${e.message}</span>`;
     }
 }
 
@@ -422,12 +428,11 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
 }
 
 // --- LOGIQUE TYPING & SUITE ---
+// --- LOGIQUE TYPING & SUITE ---
 async function playChunks(container, targetId, chunks) {
     for (let i = 0; i < chunks.length; i++) {
         // Création bulle vide
         const msgHTML = buildMsgHTML('assistant', '', targetId);
-        // On l'ajoute. Mais on a besoin d'une ref vers l'élément texte à l'intérieur
-        // buildMsgHTML retourne une string. On va l'insérer puis chopper le dernier enfant.
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = msgHTML;
         const newMsgRow = tempDiv.firstElementChild;
@@ -435,12 +440,13 @@ async function playChunks(container, targetId, chunks) {
 
         const bubble = newMsgRow.querySelector('.msg-bubble');
 
-        // Typing
-        await typeWriter(bubble, chunks[i], 20); // 20ms par char
+        // Typing (Vitesse ~250 wpm -> ~40-50ms/char ? Non, 250 mots/min = 4.1 mots/sec. 
+        // 1 mot ~ 5 chars. 20 chars/sec. => 1 char tous les 50ms.)
+        await typeWriter(bubble, chunks[i], 40);
 
-        // Si ce n'est pas le dernier chunk, on affiche bouton SUITE
+        // Si ce n'est pas le dernier chunk, on attend 1s et on enchaine (AUTO)
         if (i < chunks.length - 1) {
-            await waitForNext(container);
+            await new Promise(r => setTimeout(r, 1000));
         }
     }
 }
@@ -455,7 +461,8 @@ function typeWriter(element, text, speed) {
                 element.innerHTML += text.charAt(i);
                 i++;
                 // Auto scroll
-                element.closest('.chat-messages').scrollTop = element.closest('.chat-messages').scrollHeight;
+                const scroller = element.closest('.chat-messages') || element.closest('#modal-chat-scroll');
+                if (scroller) scroller.scrollTop = scroller.scrollHeight;
                 setTimeout(type, speed);
             } else {
                 element.classList.remove('typing-cursor');
@@ -466,45 +473,26 @@ function typeWriter(element, text, speed) {
     });
 }
 
-function waitForNext(container) {
-    return new Promise(resolve => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-suite-chat';
-        btn.innerHTML = 'Suite ⇩';
-        btn.onclick = () => {
-            btn.remove();
-            resolve();
-        };
-        container.appendChild(btn);
-        container.scrollTop = container.scrollHeight;
-    });
-}
-
+// Fonction utilitaire pour découper par MOTS (Max 70 mots)
 function splitMessage(text) {
-    // Découpe par double saut de ligne (paragraphe)
-    // Et si un paragraphe est vraiment TROP long (>400 chars), on le coupe aussi.
-    let rawChunks = text.split('\n\n');
-    let finalChunks = [];
+    const MAX_WORDS = 70;
+    const words = text.split(/\s+/); // Découpe espaces
+    const chunks = [];
 
-    rawChunks.forEach(chunk => {
-        if (chunk.length > 500) {
-            // On recoupe grossièrement par phrase
-            const sentences = chunk.match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g) || [chunk];
-            let currentAcc = "";
-            sentences.forEach(s => {
-                if (currentAcc.length + s.length > 500) {
-                    finalChunks.push(currentAcc.trim());
-                    currentAcc = s;
-                } else {
-                    currentAcc += s;
-                }
-            });
-            if (currentAcc.trim()) finalChunks.push(currentAcc.trim());
-        } else {
-            if (chunk.trim()) finalChunks.push(chunk.trim());
+    let currentChunk = [];
+
+    for (let w of words) {
+        currentChunk.push(w);
+        if (currentChunk.length >= MAX_WORDS && ['.', '!', '?'].includes(w.slice(-1))) {
+            chunks.push(currentChunk.join(" "));
+            currentChunk = [];
         }
-    });
-    return finalChunks;
+    }
+    if (currentChunk.length > 0) {
+        chunks.push(currentChunk.join(" "));
+    }
+
+    return chunks;
 }
 
 window.toggleFullScreen = function () {

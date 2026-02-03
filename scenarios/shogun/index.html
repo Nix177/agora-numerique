@@ -115,6 +115,56 @@
             fill: white;
         }
 
+        /* --- ROSTER / VIGNETTES (Ajouté pour parité avec Eoliennes) --- */
+        #roster-bar {
+            position: absolute;
+            top: 20px;
+            right: 80px;
+            /* Decalé car bouton home a right:20px */
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border-radius: 30px;
+        }
+
+        .roster-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #555;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+            position: relative;
+        }
+
+        .roster-btn:hover {
+            transform: scale(1.1);
+            border-color: #fff;
+        }
+
+        .roster-tooltip {
+            position: absolute;
+            right: 60px;
+            top: 10px;
+            background: black;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            opacity: 0;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        .roster-btn:hover .roster-tooltip {
+            opacity: 1;
+        }
+
         /* --- Styles du Chat (Style "Messenger" avec Avatars) --- */
         .chat-box {
             width: 80%;

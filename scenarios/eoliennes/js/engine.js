@@ -356,6 +356,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
 }
 
 // --- LOGIQUE TYPING & SUITE ---
+// --- LOGIQUE TYPING & SUITE ---
 async function playChunks(container, targetId, chunks) {
     for (let i = 0; i < chunks.length; i++) {
         // Création bulle vide logic
@@ -367,12 +368,12 @@ async function playChunks(container, targetId, chunks) {
         // Target the actual text bubble inside. In Eoliennes, it's .msg.bot
         const bubble = newMsgRow.querySelector('.msg.bot');
 
-        // Typing
-        await typeWriter(bubble, chunks[i], 20);
+        // Typing (40ms/char ~ 250 wpm)
+        await typeWriter(bubble, chunks[i], 40);
 
-        // Suite button
+        // Automatic Wait 1s
         if (i < chunks.length - 1) {
-            await waitForNext(container);
+            await new Promise(r => setTimeout(r, 1000));
         }
     }
 }
@@ -381,7 +382,8 @@ function typeWriter(element, text, speed) {
     return new Promise(resolve => {
         let i = 0;
         element.classList.add('typing-cursor');
-        const scrollTarget = element.closest('#chat-scroll') || element.closest('#modal-chat-scroll') || element.parentElement;
+        // Fix selector for scroll target
+        const scrollTarget = element.closest('#chat-scroll') || element.closest('#modal-chat-scroll') || element.parentElement.parentElement;
 
         function type() {
             if (i < text.length) {
@@ -398,41 +400,25 @@ function typeWriter(element, text, speed) {
     });
 }
 
-function waitForNext(container) {
-    return new Promise(resolve => {
-        const btn = document.createElement('button');
-        btn.className = 'btn-suite-chat';
-        btn.innerHTML = 'Suite ⇩';
-        btn.onclick = () => {
-            btn.remove();
-            resolve();
-        };
-        container.appendChild(btn);
-        container.scrollTop = container.scrollHeight;
-    });
-}
-
+// Fonction utilitaire pour découper par MOTS (Max 70 mots)
 function splitMessage(text) {
-    let rawChunks = text.split('\n\n');
-    let finalChunks = [];
-    rawChunks.forEach(chunk => {
-        if (chunk.length > 500) {
-            const sentences = chunk.match(/[^.!?]+[.!?]+["']?|[^.!?]+$/g) || [chunk];
-            let currentAcc = "";
-            sentences.forEach(s => {
-                if (currentAcc.length + s.length > 500) {
-                    finalChunks.push(currentAcc.trim());
-                    currentAcc = s;
-                } else {
-                    currentAcc += s;
-                }
-            });
-            if (currentAcc.trim()) finalChunks.push(currentAcc.trim());
-        } else {
-            if (chunk.trim()) finalChunks.push(chunk.trim());
+    const MAX_WORDS = 70;
+    const words = text.split(/\s+/); // Découpe espaces
+    const chunks = [];
+
+    let currentChunk = [];
+
+    for (let w of words) {
+        currentChunk.push(w);
+        if (currentChunk.length >= MAX_WORDS && ['.', '!', '?'].includes(w.slice(-1))) {
+            chunks.push(currentChunk.join(" "));
+            currentChunk = [];
         }
-    });
-    return finalChunks;
+    }
+    if (currentChunk.length > 0) {
+        chunks.push(currentChunk.join(" "));
+    }
+    return chunks;
 }
 
 async function playTTS(text, persona) {
