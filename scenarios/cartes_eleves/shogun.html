@@ -49,7 +49,6 @@
             right: 0;
             bottom: 0;
             background-image: url('../shogun/assets/bg_paper.png');
-            /* Fallback pattern */
             opacity: 0.1;
             z-index: 0;
         }
@@ -144,11 +143,25 @@
         }
 
         .stance-item {
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
 
-        .icon {
-            margin-right: 5px;
+        strong {
+            color: #c0392b;
+        }
+
+        /* Style spécifique pour la carte Contexte */
+        .card.context-card {
+            border-color: #8e44ad;
+            background: #fcf3cf;
+        }
+
+        .card.context-card h1 {
+            color: #8e44ad;
+        }
+
+        .card.context-card strong {
+            color: #8e44ad;
         }
 
         @media print {
@@ -163,11 +176,46 @@
                 box-shadow: none;
                 border-width: 4px;
             }
+
+            .page-break {
+                display: block;
+            }
         }
     </style>
 </head>
 
 <body>
+
+    <!-- CARTE CONTEXTE (LORE) -->
+    <div class="card context-card">
+        <div class="card-content">
+            <div class="card-header">
+                <h1>Contexte & Enjeux</h1>
+                <h2>Archipel de Yamato - 1582</h2>
+            </div>
+
+            <div class="lore-box">
+                "Le grand Shogun est mort, laissant derrière lui un trône vide. Sans chef pour les unir, les clans se
+                déchirent. La guerre civile menace d'engloutir l'archipel tout entier."
+            </div>
+
+            <div class="section-title">La Situation</div>
+            <div class="stances">
+                <div class="stance-item"><strong>Le Chaos :</strong> Les bandits (Ronins) pillent les campagnes. Les
+                    paysans souffrent et demandent protection.</div>
+                <div class="stance-item"><strong>L'Étranger :</strong> Des "Navires Noirs" venus du Sud apportent des
+                    mousquets puissants mais terrifiants, et une religion nouvelle qui défie nos traditions.</div>
+                <div class="stance-item"><strong>La Colère Divine :</strong> Les Kami (esprits) semblent furieux.
+                    Typhons et séismes se multiplient. Avons-nous perdu la faveur des Dieux ?</div>
+            </div>
+
+            <div class="section-title">Votre Mission</div>
+            <div class="stances" style="text-align:center; font-style:italic;">
+                "Vous êtes réunis en conseil exceptionnel pour désigner le nouveau Shogun. Débattez, négociez, et
+                choisissez la voie qui sauvera le Japon."
+            </div>
+        </div>
+    </div>
 
     <!-- CLAN DU TIGRE -->
     <div class="card">
@@ -176,28 +224,33 @@
                 <h1>Clan du Tigre</h1>
                 <h2>Nobunaga</h2>
             </div>
-            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tigre.png')">🐯</div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tigre.png')"></div>
 
             <div class="lore-box">
-                "1582. Le Shogun est mort. L'empire est en miettes. Seule la force pure peut restaurer l'ordre et
-                chasser le chaos."
+                "Le monde est cruel. Les faibles périssent, les forts règnent. Pour sauver le Japon, il faut un poing
+                d'acier capable d'écraser toute dissidence."
             </div>
 
             <div class="section-title">Philosophie</div>
             <div class="keywords">
                 <span class="keyword">Force</span>
                 <span class="keyword">Ordre</span>
-                <span class="keyword">Autorité</span>
+                <span class="keyword">Autorité Absolue</span>
             </div>
 
             <div class="section-title">Vos Positions</div>
             <div class="stances">
-                <div class="stance-item">🗡️ <strong>Unification :</strong> Par la conquête militaire.</div>
-                <div class="stance-item">🏯 <strong>Politique :</strong> Centralisation totale du pouvoir.</div>
-                <div class="stance-item">🚫 <strong>Sectes & Rébellions :</strong> Éradication sans pitié.</div>
+                <div class="stance-item"><strong>Unification :</strong> Seule la conquête militaire peut unir le pays.
+                    La diplomatie est une perte de temps.</div>
+                <div class="stance-item"><strong>Politique :</strong> Centralisation totale. Les seigneurs locaux
+                    doivent obéir ou mourir.</div>
+                <div class="stance-item"><strong>Menaces :</strong> Les sectes religieuses et les rébellions paysannes
+                    doivent être éradiquées sans pitié.</div>
             </div>
         </div>
     </div>
+
+    <div class="page-break"></div>
 
     <!-- ALLIANCE DE LA GRUE -->
     <div class="card">
@@ -206,11 +259,11 @@
                 <h1>Alliance Grue</h1>
                 <h2>Hideyoshi</h2>
             </div>
-            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_grue.png')">🐦</div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_grue.png')"></div>
 
             <div class="lore-box">
-                "1582. La guerre ruine le commerce. Il faut baisser les armes pour que le riz et l'or circulent à
-                nouveau."
+                "La guerre coûte cher et affame le peuple. La vraie puissance réside dans l'or, le riz et les alliances.
+                Faisons du Japon un empire prospère."
             </div>
 
             <div class="section-title">Philosophie</div>
@@ -222,14 +275,15 @@
 
             <div class="section-title">Vos Positions</div>
             <div class="stances">
-                <div class="stance-item">🤝 <strong>Unification :</strong> Par les alliances et l'argent.</div>
-                <div class="stance-item">💰 <strong>Économie :</strong> Ouverture du commerce (même étranger).</div>
-                <div class="stance-item">🕊️ <strong>Armée :</strong> Désarmement progressif des campagnes.</div>
+                <div class="stance-item"><strong>Unification :</strong> Acheter la paix est moins coûteux que la guerre.
+                    Tissons des liens commerciaux.</div>
+                <div class="stance-item"><strong>Économie :</strong> Ouvrons nos ports aux étrangers. Leurs mousquets et
+                    leurs richesses nous rendront puissants.</div>
+                <div class="stance-item"><strong>Armée :</strong> Il faut désarmer les campagnes pour éviter les
+                    révoltes et stabiliser le pays.</div>
             </div>
         </div>
     </div>
-
-    <div class="page-break"></div>
 
     <!-- GARDIENS DE LA TORTUE -->
     <div class="card">
@@ -238,10 +292,11 @@
                 <h1>Clan Tortue</h1>
                 <h2>Kenshin</h2>
             </div>
-            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tortue.png')">🐢</div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_tortue.png')"></div>
 
             <div class="lore-box">
-                "1582. Nous avons oublié nos ancêtres. L'honneur et la protection du peuple passent avant la conquête."
+                "Nous avons perdu notre chemin. L'honneur d'un samouraï ne se vend pas. Notre devoir est de protéger la
+                terre et ceux qui la cultivent."
             </div>
 
             <div class="section-title">Philosophie</div>
@@ -253,12 +308,17 @@
 
             <div class="section-title">Vos Positions</div>
             <div class="stances">
-                <div class="stance-item">🛡️ <strong>Unification :</strong> Défensive. Protéger ses terres.</div>
-                <div class="stance-item">🌾 <strong>Peuple :</strong> Justice et bienveillance envers les faibles.</div>
-                <div class="stance-item">📜 <strong>Valeurs :</strong> Le Code du Bushido avant tout.</div>
+                <div class="stance-item"><strong>Unification :</strong> Nous ne cherchons pas à conquérir, mais à
+                    défendre nos terres ancestrales contre les agresseurs.</div>
+                <div class="stance-item"><strong>Peuple :</strong> Le seigneur doit être un père pour ses sujets.
+                    Justice et bienveillance avant tout.</div>
+                <div class="stance-item"><strong>Valeurs :</strong> Le Code du Bushido est sacré. Les armes à feu sont
+                    lâches et déshonorantes.</div>
             </div>
         </div>
     </div>
+
+    <div class="page-break"></div>
 
     <!-- CLAN DU RENARD -->
     <div class="card">
@@ -267,25 +327,28 @@
                 <h1>Clan Renard</h1>
                 <h2>Toshi</h2>
             </div>
-            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_renard.png')">🦊</div>
+            <div class="avatar-placeholder" style="background-image:url('../shogun/assets/avatar_renard.png')"></div>
 
             <div class="lore-box">
-                "1582. Les dieux (Kamis) sont en colère. Seule une purification spirituelle sauvera le Japon de la
-                corruption."
+                "Les hommes s'agitent, mais les Dieux observent. Les typhons et la famine sont des punitions. Seule la
+                foi pure nous sauvera du désastre."
             </div>
 
             <div class="section-title">Philosophie</div>
             <div class="keywords">
                 <span class="keyword">Spiritualité</span>
                 <span class="keyword">Pureté</span>
-                <span class="keyword">Shinto</span>
+                <span class="keyword">Tradition Shinto</span>
             </div>
 
             <div class="section-title">Vos Positions</div>
             <div class="stances">
-                <div class="stance-item">⛩️ <strong>Unification :</strong> Par la foi commune.</div>
-                <div class="stance-item">🔥 <strong>Action :</strong> Rituels et influence religieuse.</div>
-                <div class="stance-item">🚫 <strong>Étrangers :</strong> Méfiance envers leurs "faux dieux".</div>
+                <div class="stance-item"><strong>Unification :</strong> Un peuple uni par une même foi et des rituels
+                    communs sera invincible.</div>
+                <div class="stance-item"><strong>Action :</strong> Restaurons les temples. Écoutons les présages avant
+                    d'agir.</div>
+                <div class="stance-item"><strong>Menace :</strong> Les étrangers et leurs faux dieux polluent notre âme.
+                    Il faut les chasser pour apaiser les Kami.</div>
             </div>
         </div>
     </div>
