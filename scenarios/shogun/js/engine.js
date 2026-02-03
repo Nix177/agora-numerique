@@ -101,6 +101,7 @@ function showModeSelection() {
 
 // 2. MOTEUR DE SCÈNE
 function loadScene(sceneId) {
+    console.log("Loading Scene:", sceneId);
     const scene = GAME_DATA.scenario.scenes[sceneId];
     if (!scene) return alert("ERREUR : Scène introuvable -> " + sceneId);
 
@@ -115,6 +116,7 @@ function loadScene(sceneId) {
         const events = GAME_DATA.world.randomEvents;
         if (events && events.length > 0) {
             const randomEvt = events[Math.floor(Math.random() * events.length)];
+            console.log("Triggering Event:", randomEvt.id);
 
             const evtScene = {
                 id: randomEvt.id,
@@ -151,16 +153,19 @@ function loadScene(sceneId) {
     updateTeacherInterface(scene);
 
     if (scene.persona && CHAT_SESSIONS[scene.persona].length === 0 && scene.prompt) {
+        console.log("Auto-calling bot for scene:", sceneId);
         callBot(scene.prompt, scene.persona, true);
     }
 }
 
 // 3. AFFICHAGE
 function updateScreen(scene) {
+    console.log("Updating Screen for:", scene.id);
     const videoContainer = document.getElementById('video-bg-container');
 
     if (scene.video) {
         if (!videoContainer) {
+            console.log("Creating video container for:", scene.video);
             document.body.insertAdjacentHTML('afterbegin', `
                 <div id="video-bg-container" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:-1; overflow:hidden; background:black;">
                     <video autoplay loop muted playsinline style="width:100%; height:100%; object-fit:cover; opacity:0.6;">
@@ -280,7 +285,7 @@ function renderRoster() {
         div.className = 'roster-btn';
         div.style.backgroundImage = `url('${p.avatar}')`;
         div.onclick = () => openSideChat(p.id);
-        div.innerHTML = `<div class="roster-tooltip">${p.firstName}</div>`;
+        div.innerHTML = `<div class="roster-tooltip">${p.displayName || p.name}</div>`;
         ui.roster.appendChild(div);
     });
 }
@@ -375,6 +380,7 @@ window.sendUserMessage = async function (text) {
 }
 
 async function callBot(systemPrompt, targetId, isIntro = false) {
+    console.log("Calling Bot...", targetId);
     const container = (ui.modal && ui.modal.style.display === 'flex' && CURRENT_CHAT_TARGET === targetId)
         ? ui.modalScroll
         : (CURRENT_SCENE.persona === targetId ? document.getElementById('chat-scroll') : null);
@@ -387,8 +393,10 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         container.scrollTop = container.scrollHeight;
     }
 
+    // Protection contre boucle infinie ou appels trop rapides ?
     try {
         const history = CHAT_SESSIONS[targetId] || [];
+        console.log("Fetching chat...");
         const res = await fetch(`${API_BASE}/chat`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -400,6 +408,7 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         });
         const data = await res.json();
         const reply = data.reply;
+        console.log("Reply received:", reply);
 
         // Suppression du loader
         if (container) {
@@ -417,7 +426,7 @@ async function callBot(systemPrompt, targetId, isIntro = false) {
         }
 
     } catch (e) {
-        console.error(e);
+        console.error("Bot Error:", e);
         if (document.getElementById(loadingId)) document.getElementById(loadingId).remove();
     }
 }
