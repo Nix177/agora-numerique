@@ -431,6 +431,60 @@
             transform: translateY(3px);
             box-shadow: none;
         }
+
+        /* Discrete Timer Animation */
+        .timer-pill {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff8800;
+            color: #ff8800;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-family: monospace;
+            font-size: 1.2em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .timer-pill:hover {
+            transform: scale(1.05);
+            background: #222;
+        }
+
+        .timer-pill.paused {
+            border-color: #666;
+            color: #888;
+        }
+
+        .timer-icon {
+            animation: pulse 1s infinite;
+        }
+
+        .timer-pill.paused .timer-icon {
+            animation: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 

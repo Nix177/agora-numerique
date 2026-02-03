@@ -538,40 +538,86 @@ window.uploadSave = function (input) {
     reader.readAsText(file);
 };
 
-// --- TIMER SYSTEM ---
+// --- TIMER SYSTEM (DISCRETE & PAUSABLE) ---
 let TIMER_INTERVAL = null;
+let TIMER_SECONDS = 0;
+let TIMER_PAUSED = false;
+
 window.startTimer = function (minutes) {
+    // Si un timer existe déjà, on le reset sauf si c'est pour changer la durée
     if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
-    let seconds = minutes * 60;
 
-    if (ui.timerOverlay) ui.timerOverlay.style.display = 'flex';
+    TIMER_SECONDS = minutes * 60;
+    TIMER_PAUSED = false;
 
-    updateTimerDisplay(seconds);
+    // Injection ou Récupération du pill
+    let timerEl = document.getElementById('mini-timer');
+    if (!timerEl) {
+        timerEl = document.createElement('div');
+        timerEl.id = 'mini-timer';
+        timerEl.className = 'timer-pill';
+        timerEl.onclick = window.toggleTimerPause;
+        timerEl.title = "Cliquer pour Pauser/Reprendre";
+        // On l'ajoute directement au container de jeu pour qu'il soit "sur le texte"
+        ui.screen.appendChild(timerEl);
+    }
+    timerEl.style.display = 'flex';
+    timerEl.classList.remove('paused');
+
+    updateTimerDisplay();
 
     TIMER_INTERVAL = setInterval(() => {
-        seconds--;
-        updateTimerDisplay(seconds);
-        if (seconds <= 0) {
-            clearInterval(TIMER_INTERVAL);
-            const alarm = new Audio('assets/sfx_gong.mp3');
-            // alarm.play(); 
-            if (ui.timerVal) ui.timerVal.style.color = 'red';
-            setTimeout(() => { if (ui.timerOverlay) ui.timerOverlay.style.display = 'none'; }, 5000);
+        if (!TIMER_PAUSED) {
+            TIMER_SECONDS--;
+            updateTimerDisplay();
+            if (TIMER_SECONDS <= 0) {
+                clearInterval(TIMER_INTERVAL);
+                const alarm = new Audio('assets/sfx_gong.mp3');
+                // alarm.play(); 
+                document.getElementById('mini-timer').style.color = 'red';
+                document.getElementById('mini-timer').style.borderColor = 'red';
+                // Auto-hide après 10 secondes ou au clic
+                setTimeout(() => {
+                    if (document.getElementById('mini-timer')) document.getElementById('mini-timer').remove();
+                }, 10000);
+            }
         }
     }, 1000);
 }
 
-window.stopTimer = function () {
-    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
-    if (ui.timerOverlay) ui.timerOverlay.style.display = 'none';
-    if (ui.timerVal) ui.timerVal.style.color = 'white';
+window.toggleTimerPause = function () {
+    if (!TIMER_INTERVAL) return;
+    TIMER_PAUSED = !TIMER_PAUSED;
+    const el = document.getElementById('mini-timer');
+    if (el) {
+        if (TIMER_PAUSED) {
+            el.classList.add('paused');
+            el.querySelector('.timer-text').innerText = "PAUSE";
+        } else {
+            el.classList.remove('paused');
+            updateTimerDisplay();
+        }
+    }
 }
 
-function updateTimerDisplay(totalSeconds) {
-    if (!ui.timerVal) return;
-    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const s = (totalSeconds % 60).toString().padStart(2, '0');
-    ui.timerVal.innerText = `${m}:${s}`;
+window.stopTimer = function () {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    TIMER_INTERVAL = null;
+    const el = document.getElementById('mini-timer');
+    if (el) el.remove();
+}
+
+function updateTimerDisplay() {
+    const el = document.getElementById('mini-timer');
+    if (!el) return;
+
+    const m = Math.floor(TIMER_SECONDS / 60).toString().padStart(2, '0');
+    const s = (TIMER_SECONDS % 60).toString().padStart(2, '0');
+
+    el.innerHTML = `
+        <span class="timer-icon">⏳</span>
+        <span class="timer-text">${m}:${s}</span>
+    `;
 }
 
 init();
