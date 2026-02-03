@@ -184,13 +184,12 @@ function updateTeacherInterface(scene) {
     ui.teacherPanel.innerHTML = '';
 
     // Timer Controls
+    // Timer Controls
     const timerDiv = document.createElement('div');
     timerDiv.style.display = 'flex'; timerDiv.style.gap = '5px'; timerDiv.style.marginRight = '15px';
     timerDiv.innerHTML = `
-        <button class="btn-icon" onclick="window.startTimer(1)" title="1 min">⏳1</button>
-        <button class="btn-icon" onclick="window.startTimer(2)" title="2 min">⏳2</button>
-        <button class="btn-icon" onclick="window.startTimer(5)" title="5 min">⏳5</button>
-        <button class="btn-icon" onclick="window.stopTimer()" title="Stop Timer">🛑</button>
+        <button class="btn-icon" onclick="window.openTimerDialog()" title="Lancer un minuteur personnalisé" 
+        style="background:none; border:2px solid #ff8800; border-radius:50%; width:40px; height:40px; font-size:1.5em; cursor:pointer; display:flex; align-items:center; justify-content:center;">⏳</button>
     `;
     ui.teacherPanel.appendChild(timerDiv);
 
@@ -502,40 +501,95 @@ window.saveGameLog = async function () {
     } catch (e) { alert("Erreur sauvegarde: " + e); }
 }
 
-// --- TIMER SYSTEM ---
+// --- TIMER SYSTEM (DISCRETE & PAUSABLE) ---
 let TIMER_INTERVAL = null;
+let TIMER_SECONDS = 0;
+let TIMER_PAUSED = false;
+
+window.openTimerDialog = function () {
+    let input = prompt("Durée du minuteur (en minutes) :", "5");
+    if (input !== null) {
+        let minutes = parseInt(input);
+        if (!isNaN(minutes) && minutes > 0) {
+            startTimer(minutes);
+        } else {
+            alert("Veuillez entrer un nombre valide.");
+        }
+    }
+}
+
 window.startTimer = function (minutes) {
     if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
-    let seconds = minutes * 60;
 
-    if (ui.timerOverlay) ui.timerOverlay.style.display = 'flex';
+    TIMER_SECONDS = minutes * 60;
+    TIMER_PAUSED = false;
 
-    updateTimerDisplay(seconds);
+    // Injection ou Récupération du pill
+    let timerEl = document.getElementById('mini-timer');
+    if (!timerEl) {
+        timerEl = document.createElement('div');
+        timerEl.id = 'mini-timer';
+        timerEl.className = 'timer-pill';
+        timerEl.onclick = window.toggleTimerPause;
+        timerEl.title = "Cliquer pour Pauser/Reprendre";
+        ui.screen.appendChild(timerEl);
+    }
+    timerEl.style.display = 'flex';
+    timerEl.classList.remove('paused');
+
+    updateTimerDisplay();
 
     TIMER_INTERVAL = setInterval(() => {
-        seconds--;
-        updateTimerDisplay(seconds);
-        if (seconds <= 0) {
-            clearInterval(TIMER_INTERVAL);
-            const alarm = new Audio('assets/sfx_gong.mp3');
-            // alarm.play(); 
-            if (ui.timerVal) ui.timerVal.style.color = 'red';
-            setTimeout(() => { if (ui.timerOverlay) ui.timerOverlay.style.display = 'none'; }, 5000);
+        if (!TIMER_PAUSED) {
+            TIMER_SECONDS--;
+            updateTimerDisplay();
+            if (TIMER_SECONDS <= 0) {
+                clearInterval(TIMER_INTERVAL);
+                const alarm = new Audio('assets/sfx_gong.mp3');
+                // alarm.play(); 
+                document.getElementById('mini-timer').style.color = 'red';
+                document.getElementById('mini-timer').style.borderColor = 'red';
+                setTimeout(() => {
+                    if (document.getElementById('mini-timer')) document.getElementById('mini-timer').remove();
+                }, 10000);
+            }
         }
     }, 1000);
 }
 
-window.stopTimer = function () {
-    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
-    if (ui.timerOverlay) ui.timerOverlay.style.display = 'none';
-    if (ui.timerVal) ui.timerVal.style.color = 'white';
+window.toggleTimerPause = function () {
+    if (!TIMER_INTERVAL) return;
+    TIMER_PAUSED = !TIMER_PAUSED;
+    const el = document.getElementById('mini-timer');
+    if (el) {
+        if (TIMER_PAUSED) {
+            el.classList.add('paused');
+            el.querySelector('.timer-text').innerText = "PAUSE";
+        } else {
+            el.classList.remove('paused');
+            updateTimerDisplay();
+        }
+    }
 }
 
-function updateTimerDisplay(totalSeconds) {
-    if (!ui.timerVal) return;
-    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
-    const s = (totalSeconds % 60).toString().padStart(2, '0');
-    ui.timerVal.innerText = `${m}:${s}`;
+window.stopTimer = function () {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    TIMER_INTERVAL = null;
+    const el = document.getElementById('mini-timer');
+    if (el) el.remove();
+}
+
+function updateTimerDisplay() {
+    const el = document.getElementById('mini-timer');
+    if (!el) return;
+
+    const m = Math.floor(TIMER_SECONDS / 60).toString().padStart(2, '0');
+    const s = (TIMER_SECONDS % 60).toString().padStart(2, '0');
+
+    el.innerHTML = `
+        <span class="timer-icon">⏳</span>
+        <span class="timer-text">${m}:${s}</span>
+    `;
 }
 
 init();
