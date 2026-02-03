@@ -237,12 +237,12 @@ function updateTeacherInterface(scene) {
     ui.teacherPanel.innerHTML = '';
 
     // Timer Controls
+    // Timer Controls (Hourglass Button)
     const timerDiv = document.createElement('div');
     timerDiv.style.display = 'flex'; timerDiv.style.gap = '5px'; timerDiv.style.marginRight = '15px';
     timerDiv.innerHTML = `
-        <button class="btn-icon" onclick="window.startTimer(1)" title="1 min">⏳1</button>
-        <button class="btn-icon" onclick="window.startTimer(2)" title="2 min">⏳2</button>
-        <button class="btn-icon" onclick="window.startTimer(5)" title="5 min">⏳5</button>
+        <button class="btn-icon" onclick="window.openTimerDialog()" title="Lancer un minuteur personnalisé" 
+        style="background:none; border:2px solid #ff8800; border-radius:50%; width:40px; height:40px; font-size:1.5em; cursor:pointer; display:flex; align-items:center; justify-content:center;">⏳</button>
     `;
     ui.teacherPanel.appendChild(timerDiv);
 
@@ -284,7 +284,10 @@ function renderRoster() {
         const div = document.createElement('div');
         div.className = 'roster-btn';
         div.style.backgroundImage = `url('${p.avatar}')`;
+        // FIX: Add title attribute for native tooltip
+        div.title = p.displayName || p.name;
         div.onclick = () => openSideChat(p.id);
+        // Custom Inner Tooltip (kept for styling)
         div.innerHTML = `<div class="roster-tooltip">${p.displayName || p.name}</div>`;
         ui.roster.appendChild(div);
     });
@@ -297,11 +300,16 @@ window.openSideChat = function (personaId) {
     CURRENT_CHAT_TARGET = personaId;
 
     if (ui.modalTitle) {
+        // Clear previous content to avoid button duplication if we were just appending
+        ui.modalTitle.innerHTML = '';
+
         ui.modalTitle.innerHTML = `
             <div style="display:flex; align-items:center; gap:10px;">
                 <img src="${p.avatar}" style="height:40px; width:40px; border-radius:50%; border:2px solid #ff8800; object-fit:cover;">
-                <span>${p.name}</span>
-            </div>`;
+                <span>${p.displayName || p.name}</span>
+            </div>
+            <button onclick="closeSideChat()" style="background:#cc0000; border:1px solid white; color:white; width:30px; height:30px; border-radius:50%; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center;" title="Fermer">X</button>
+        `;
     }
 
     if (ui.modal) ui.modal.style.display = 'flex';
@@ -542,6 +550,18 @@ window.uploadSave = function (input) {
 let TIMER_INTERVAL = null;
 let TIMER_SECONDS = 0;
 let TIMER_PAUSED = false;
+
+window.openTimerDialog = function () {
+    let input = prompt("Durée du minuteur (en minutes) :", "5");
+    if (input !== null) {
+        let minutes = parseInt(input);
+        if (!isNaN(minutes) && minutes > 0) {
+            startTimer(minutes);
+        } else {
+            alert("Veuillez entrer un nombre valide.");
+        }
+    }
+}
 
 window.startTimer = function (minutes) {
     // Si un timer existe déjà, on le reset sauf si c'est pour changer la durée
