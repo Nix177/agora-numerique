@@ -436,7 +436,8 @@
         .timer-pill {
             position: absolute;
             top: 20px;
-            right: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(0, 0, 0, 0.8);
             border: 1px solid #ff8800;
             color: #ff8800;
@@ -455,7 +456,7 @@
         }
 
         .timer-pill:hover {
-            transform: scale(1.05);
+            transform: translateX(-50%) scale(1.05);
             background: #222;
         }
 
