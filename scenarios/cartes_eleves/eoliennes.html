@@ -18,6 +18,12 @@
             gap: 20px;
         }
 
+        .page-break {
+            width: 100%;
+            height: 0;
+            page-break-after: always;
+        }
+
         .card {
             width: 400px;
             height: 560px;
@@ -55,9 +61,10 @@
         .content {
             padding: 20px;
             padding-top: 60px;
-            /* Space for avatar */
             text-align: center;
             flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         h1 {
@@ -84,13 +91,14 @@
             color: #555;
             margin: 15px 0;
             line-height: 1.4;
+            font-style: italic;
         }
 
         .tags {
             display: flex;
             justify-content: center;
             gap: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .tag {
@@ -148,23 +156,33 @@
             background: #e6fffa;
         }
 
+        .theme-context .header-bg {
+            background: linear-gradient(135deg, #343a40, #6c757d);
+        }
+
+        .theme-context .tag {
+            color: #343a40;
+            background: #e9ecef;
+        }
 
         .positions {
             text-align: left;
-            margin-top: 10px;
+            margin-top: auto;
         }
 
         .pos-row {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            margin-bottom: 12px;
-            font-size: 0.95em;
+            margin-bottom: 10px;
+            font-size: 0.9em;
             color: #444;
         }
 
-        .pos-icon {
-            font-size: 1.2em;
+        .pos-label {
+            font-weight: bold;
+            color: #333;
+            min-width: 80px;
         }
 
         @media print {
@@ -185,6 +203,44 @@
 
 <body>
 
+    <!-- CARTE CONTEXTE -->
+    <div class="card theme-context">
+        <div class="header-bg">
+        </div>
+        <div class="content" style="padding-top: 20px;">
+            <h1>Contexte & Enjeux</h1>
+            <h2>L'Île de Belles-Terres</h2>
+
+            <div class="lore">
+                "Des géologues ont découvert un immense gisement de Néodyme, une terre rare indispensable à la
+                fabrication d'éoliennes modernes. Problème : le gisement se trouve sous les Terres Sacrées des Chamanes
+                locaux."
+            </div>
+
+            <div class="tags">
+                <span class="tag">Transition Énergétique</span>
+                <span class="tag">Spiritualité</span>
+                <span class="tag">Emploi</span>
+            </div>
+
+            <div class="positions">
+                <div class="pos-row">
+                    <span class="pos-label">La Promesse :</span>
+                    <span>Exploiter le gisement pourrait financer un hôpital et des écoles pour toute la région.</span>
+                </div>
+                <div class="pos-row">
+                    <span class="pos-label">Le Dilemme :</span>
+                    <span>Peut-on profaner un lieu sacré pour le bien commun ? L'écologie justifie-t-elle la mine
+                        ?</span>
+                </div>
+                <div class="pos-row">
+                    <span class="pos-label">Votre Mission :</span>
+                    <span>Vous participez à une Table de Paroles citoyenne pour décider de l'avenir de la région.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- GASPARD -->
     <div class="card theme-blue">
         <div class="header-bg">
@@ -196,8 +252,8 @@
             <h2>Pêche & Traditions</h2>
 
             <div class="lore">
-                "Belles-Terres change trop vite. Notre identité et notre calme sont menacés par ces projets industriels
-                venus d'ailleurs."
+                "Belles-Terres a toujours été un havre de paix. Nous ne voulons pas de vos machines bruyantes et de vos
+                touristes envahissants. Respectez notre mode de vie."
             </div>
 
             <div class="tags">
@@ -207,16 +263,18 @@
 
             <div class="positions">
                 <div class="pos-row">
-                    <div class="pos-icon">⚓</div>
-                    <div><strong>Mode de vie :</strong> Préserver le silence et la pêche traditionnelle.</div>
+                    <span class="pos-label">Mode de vie :</span>
+                    <span>Préserver le calme et les traditions locales.</span>
                 </div>
                 <div class="pos-row">
-                    <div class="pos-icon">🛑</div>
-                    <div><strong>Industrie :</strong> Contre l'invasion technologique et le bruit.</div>
+                    <span class="pos-label">Industrie :</span>
+                    <span>Méfiance envers tout changement brutal.</span>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="page-break"></div>
 
     <!-- NAE -->
     <div class="card theme-purple">
@@ -226,11 +284,11 @@
         </div>
         <div class="content">
             <h1>Naé</h1>
-            <h2>Chamanes</h2>
+            <h2>Chamanes Ancestraux</h2>
 
             <div class="lore">
-                "Les Terres Sacrées sont le corps de nos ancêtres. On ne creuse pas une tombe pour en faire de
-                l'argent."
+                "Les Terres Sacrées abritent l'esprit de nos ancêtres. Creuser là-bas serait une profanation. L'argent
+                ne peut pas acheter la paix de nos morts."
             </div>
 
             <div class="tags">
@@ -240,12 +298,12 @@
 
             <div class="positions">
                 <div class="pos-row">
-                    <div class="pos-icon">✨</div>
-                    <div><strong>Sacré :</strong> Protection absolue du sanctuaire.</div>
+                    <span class="pos-label">Lieux Sacrés :</span>
+                    <span>Intouchables, quoi qu'il en coûte.</span>
                 </div>
                 <div class="pos-row">
-                    <div class="pos-icon">🤝</div>
-                    <div><strong>Ouverture :</strong> Éoliennes possibles seulement en zone neutre.</div>
+                    <span class="pos-label">Éoliennes :</span>
+                    <span>Acceptables si installées loin des sites spirituels.</span>
                 </div>
             </div>
         </div>
@@ -262,27 +320,29 @@
             <h2>Creuser-Puiser</h2>
 
             <div class="lore">
-                "Ce gisement est une chance historique. Il financera enfin un hôpital moderne et des écoles pour nos
-                enfants."
+                "Ce gisement est une chance historique. Il pourrait financer un hôpital, des écoles, et sortir notre
+                région de la précarité. Saisissons cette opportunité !"
             </div>
 
             <div class="tags">
                 <span class="tag">Progrès</span>
-                <span class="tag">Social</span>
+                <span class="tag">Développement</span>
             </div>
 
             <div class="positions">
                 <div class="pos-row">
-                    <div class="pos-icon">🏗️</div>
-                    <div><strong>Développement :</strong> Priorité à la santé et au confort de tous.</div>
+                    <span class="pos-label">Priorité :</span>
+                    <span>Financer les services publics (santé, éducation).</span>
                 </div>
                 <div class="pos-row">
-                    <div class="pos-icon">🔧</div>
-                    <div><strong>Compromis :</strong> On peut déplacer les lieux de prière si besoin.</div>
+                    <span class="pos-label">Compromis :</span>
+                    <span>Ouvert à déplacer les lieux de culte si nécessaire.</span>
                 </div>
             </div>
         </div>
     </div>
+
+    <div class="page-break"></div>
 
     <!-- LIA -->
     <div class="card theme-green">
@@ -295,23 +355,23 @@
             <h2>Liberté & Nature</h2>
 
             <div class="lore">
-                "Détruire un écosystème pour produire de l'énergie 'verte', c'est un non-sens. La nature vaut plus que
-                le profit."
+                "Détruire un écosystème pour produire de l'énergie 'verte' est une absurdité. La vraie écologie, c'est
+                protéger ce qui existe, pas le remplacer par des machines."
             </div>
 
             <div class="tags">
                 <span class="tag">Biodiversité</span>
-                <span class="tag">Écologie</span>
+                <span class="tag">Protection</span>
             </div>
 
             <div class="positions">
                 <div class="pos-row">
-                    <div class="pos-icon">🦅</div>
-                    <div><strong>Vivant :</strong> Zéro impact sur les espèces locales.</div>
+                    <span class="pos-label">Vivant :</span>
+                    <span>Protéger la faune et la flore locales.</span>
                 </div>
                 <div class="pos-row">
-                    <div class="pos-icon">⛺</div>
-                    <div><strong>Alternative :</strong> Écotourisme et sobriété énergétique.</div>
+                    <span class="pos-label">Alternatives :</span>
+                    <span>Promouvoir l'écotourisme et la sobriété.</span>
                 </div>
             </div>
         </div>
@@ -328,8 +388,8 @@
             <h2>@Rebelle-Terre</h2>
 
             <div class="lore">
-                "Les prières et les oiseaux, c'est joli, mais ça ne remplit pas le frigo. Il nous faut du travail
-                concret, ici et maintenant."
+                "Les prières ne remplissent pas le frigo. Nos familles ont besoin de travail, ici et maintenant. Le
+                reste, c'est du blabla pour les gens qui n'ont pas de factures à payer."
             </div>
 
             <div class="tags">
@@ -339,12 +399,12 @@
 
             <div class="positions">
                 <div class="pos-row">
-                    <div class="pos-icon">💶</div>
-                    <div><strong>Économie :</strong> Oui à la mine pour les salaires.</div>
+                    <span class="pos-label">Économie :</span>
+                    <span>Les emplois locaux sont la priorité absolue.</span>
                 </div>
                 <div class="pos-row">
-                    <div class="pos-icon">👎</div>
-                    <div><strong>Éoliennes :</strong> Non. C'est moche, cher et inefficace.</div>
+                    <span class="pos-label">Éoliennes :</span>
+                    <span>Sceptique (coûteuses et inesthétiques).</span>
                 </div>
             </div>
         </div>
