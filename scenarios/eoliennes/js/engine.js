@@ -4,8 +4,8 @@ import { API_BASE } from "../assets/config.js";
 let GAME_DATA = {};
 let CURRENT_SCENE = null;
 let GAME_STATE = {};
-let CHAT_SESSIONS = {}; 
-let CURRENT_CHAT_TARGET = null; 
+let CHAT_SESSIONS = {};
+let CURRENT_CHAT_TARGET = null;
 let GAME_MODE = 'standard';
 let SCENE_HISTORY = []; // Historique pour le bouton Retour
 
@@ -22,15 +22,23 @@ const ui = {
     mainInput: document.getElementById('prof-chat-input'),
     // Réglages Prof
     modelSelect: document.getElementById('model-select'),
-    ttsCheck: document.getElementById('tts-toggle')
+    ttsCheck: document.getElementById('tts-toggle'),
+    timerOverlay: document.getElementById('timer-overlay'),
+    timerVal: document.getElementById('timer-val')
 };
+
+// --- AUDIO SYSTEM ---
+let CURRENT_MUSIC = null;
+const AUDIO_PLAYER = new Audio();
+AUDIO_PLAYER.loop = true;
+AUDIO_PLAYER.volume = 0.5;
 
 // 1. INITIALISATION
 async function init() {
-    console.log("Moteur Éoliennes Démarré.");
+    console.log("Moteur Éoliennes Démarré (Version corrigée 70 mots).");
     try {
         const load = async (p) => (await fetch(p)).json();
-        
+
         // Chargement local
         const [scenario, personas, world] = await Promise.all([
             load('data/scenario.json'),
@@ -40,15 +48,15 @@ async function init() {
 
         GAME_DATA = { scenario, personas: mapPersonas(personas), world };
         GAME_STATE = scenario.state || {};
-        
+
         // Init sessions
         Object.keys(GAME_DATA.personas).forEach(id => CHAT_SESSIONS[id] = []);
         renderRoster();
-        
+
         // Déblocage audio
         document.body.addEventListener('click', () => {
-            const a = new Audio(); a.muted=true; a.play().catch(()=>{});
-        }, {once:true});
+            const a = new Audio(); a.muted = true; a.play().catch(() => { });
+        }, { once: true });
 
         showModeSelection();
 
@@ -75,9 +83,9 @@ function showModeSelection() {
                 <button id="btn-ext" style="padding:20px; font-size:1.2em; background:#ff8800; border:none; color:white; cursor:pointer; border-radius:10px;">Mode Campagne (45min+)</button>
             </div>
         </div>`;
-    
-    document.getElementById('btn-std').onclick = () => { GAME_MODE='standard'; loadScene(GAME_DATA.scenario.start); };
-    document.getElementById('btn-ext').onclick = () => { GAME_MODE='extended'; loadScene(GAME_DATA.scenario.start); };
+
+    document.getElementById('btn-std').onclick = () => { GAME_MODE = 'standard'; loadScene(GAME_DATA.scenario.start); };
+    document.getElementById('btn-ext').onclick = () => { GAME_MODE = 'extended'; loadScene(GAME_DATA.scenario.start); };
 }
 
 // 3. MOTEUR SCÈNE
@@ -138,7 +146,7 @@ function updateScreen(scene) {
 
     let html = '';
     if (scene.content) html += `<div class="slide-content"><h1>${scene.content.title}</h1><p>${scene.content.text}</p></div>`;
-    
+
     if (scene.type === 'chat' || scene.persona) {
         const p = GAME_DATA.personas[scene.persona] || { name: '?', avatar: '' };
         // --- MISE A JOUR : Header avec Avatar pour le Chat Principal ---
@@ -153,13 +161,39 @@ function updateScreen(scene) {
     ui.screen.innerHTML = html;
 
     if (scene.persona) renderChatHistory(scene.persona, document.getElementById('chat-scroll'));
+
+    updateAudio(scene);
+}
+
+function updateAudio(scene) {
+    if (scene.music) {
+        if (CURRENT_MUSIC !== scene.music) {
+            CURRENT_MUSIC = scene.music;
+            AUDIO_PLAYER.src = scene.music;
+            AUDIO_PLAYER.play().catch(e => console.log("Audio play blocked/error:", e));
+        }
+    } else {
+        // Optionnel : Couper la musique si pas de musique définie ?
+        // Pour l'instant on laisse tourner la précédente ambiance
+    }
 }
 
 // 5. INTERFACE PROF
 function updateTeacherInterface(scene) {
-    if(!ui.teacherPanel) return;
+    if (!ui.teacherPanel) return;
     ui.teacherPanel.innerHTML = '';
-    
+
+    // Timer Controls
+    const timerDiv = document.createElement('div');
+    timerDiv.style.display = 'flex'; timerDiv.style.gap = '5px'; timerDiv.style.marginRight = '15px';
+    timerDiv.innerHTML = `
+        <button class="btn-icon" onclick="window.startTimer(1)" title="1 min">⏳1</button>
+        <button class="btn-icon" onclick="window.startTimer(2)" title="2 min">⏳2</button>
+        <button class="btn-icon" onclick="window.startTimer(5)" title="5 min">⏳5</button>
+        <button class="btn-icon" onclick="window.stopTimer()" title="Stop Timer">🛑</button>
+    `;
+    ui.teacherPanel.appendChild(timerDiv);
+
     if (scene.options) {
         scene.options.forEach(opt => {
             const btn = document.createElement('button');
@@ -195,12 +229,12 @@ function renderRoster() {
     });
 }
 
-window.openSideChat = function(pid) {
+window.openSideChat = function (pid) {
     CURRENT_CHAT_TARGET = pid;
     const p = GAME_DATA.personas[pid];
     const avatarUrl = p.avatar || 'assets/avatars/default.png';
 
-    if(ui.modalTitle) {
+    if (ui.modalTitle) {
         ui.modalTitle.innerHTML = `
             <div style="display:flex; align-items:center; gap:15px;">
                 <img src="${avatarUrl}" style="height:50px; width:50px; border-radius:50%; border:2px solid #ff8800; object-fit:cover;">
@@ -209,12 +243,12 @@ window.openSideChat = function(pid) {
         `;
     }
 
-    if(ui.modal) ui.modal.style.display = 'flex';
+    if (ui.modal) ui.modal.style.display = 'flex';
     renderChatHistory(pid, ui.modalScroll);
 }
 
-window.closeSideChat = function() {
-    if(ui.modal) ui.modal.style.display = 'none';
+window.closeSideChat = function () {
+    if (ui.modal) ui.modal.style.display = 'none';
     CURRENT_CHAT_TARGET = CURRENT_SCENE && CURRENT_SCENE.persona ? CURRENT_SCENE.persona : null;
 }
 
@@ -226,7 +260,7 @@ function buildMsgHTML(role, content, personaId) {
         // C'est le bot : on affiche l'avatar à gauche + la bulle
         const p = GAME_DATA.personas[personaId] || {};
         const avatarUrl = p.avatar || 'assets/avatars/default.png';
-        
+
         return `
         <div style="display:flex; align-items:flex-start; gap:10px; max-width:85%;">
             <img src="${avatarUrl}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:2px solid #ff8800; flex-shrink:0;">
@@ -238,7 +272,7 @@ function buildMsgHTML(role, content, personaId) {
 }
 
 function renderChatHistory(pid, container) {
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     (CHAT_SESSIONS[pid] || []).forEach(m => {
         container.innerHTML += buildMsgHTML(m.role, m.content, pid);
@@ -247,19 +281,19 @@ function renderChatHistory(pid, container) {
 }
 
 // 7. IA & TTS
-window.sendUserMessage = async function(text, source = 'main') {
+window.sendUserMessage = async function (text, source = 'main') {
     if (!text || !CURRENT_CHAT_TARGET) return;
-    
+
     const container = (source === 'modal') ? ui.modalScroll : document.getElementById('chat-scroll');
     if (!container) return;
 
     // Affiche message user
     container.innerHTML += buildMsgHTML('user', text, null);
     container.scrollTop = container.scrollHeight;
-    
+
     if (!CHAT_SESSIONS[CURRENT_CHAT_TARGET]) CHAT_SESSIONS[CURRENT_CHAT_TARGET] = [];
     CHAT_SESSIONS[CURRENT_CHAT_TARGET].push({ role: 'user', content: text });
-    
+
     if (source === 'modal' && ui.modalInput) ui.modalInput.value = '';
     if (source === 'main' && ui.mainInput) ui.mainInput.value = '';
 
@@ -283,7 +317,7 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
 
     try {
         const chosenModel = ui.modelSelect ? ui.modelSelect.value : "gpt-4o";
-        
+
         const res = await fetch(`${API_BASE}/chat`, {
             method: "POST", headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -298,32 +332,99 @@ async function callBot(sys, targetId, source = 'main', isIntro = false) {
         if (container) {
             // On supprime le bloc de chargement
             const loaderEl = document.getElementById(loadId);
-            if(loaderEl) loaderEl.parentElement.remove();
-
-            // On ajoute la réponse finale
-            container.innerHTML += buildMsgHTML('assistant', reply, targetId);
-            container.scrollTop = container.scrollHeight;
+            if (loaderEl) loaderEl.parentElement.remove();
         }
-        
-        if(!CHAT_SESSIONS[targetId]) CHAT_SESSIONS[targetId] = [];
+
+        if (!CHAT_SESSIONS[targetId]) CHAT_SESSIONS[targetId] = [];
         CHAT_SESSIONS[targetId].push({ role: 'assistant', content: reply });
 
-        // TTS
+        // TTS (Note: Play full audio while text is typing? Or disable for now to avoid sync issues?)
+        // For now, we play audio immediately. It might be faster than typing.
         if (ui.ttsCheck && ui.ttsCheck.checked && reply) {
             playTTS(reply, GAME_DATA.personas[targetId]);
         }
 
+        if (container) {
+            const chunks = splitMessage(reply);
+            await playChunks(container, targetId, chunks);
+        }
+
     } catch (e) {
         console.error(e);
-        if(document.getElementById(loadId)) document.getElementById(loadId).innerText = "Erreur IA";
+        if (document.getElementById(loadId)) document.getElementById(loadId).innerText = "Erreur IA";
     }
+}
+
+// --- LOGIQUE TYPING & SUITE ---
+async function playChunks(container, targetId, chunks) {
+    for (let i = 0; i < chunks.length; i++) {
+        // Création bulle vide logic
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = buildMsgHTML('assistant', '', targetId);
+        const newMsgRow = tempDiv.firstElementChild; // The wrapper div
+        container.appendChild(newMsgRow);
+
+        // Target the actual text bubble inside. In Eoliennes, it's .msg.bot
+        const bubble = newMsgRow.querySelector('.msg.bot');
+
+        // Typing (40ms/char ~ 250 wpm)
+        await typeWriter(bubble, chunks[i], 40);
+
+        // Automatic Wait 1s
+        if (i < chunks.length - 1) {
+            await new Promise(r => setTimeout(r, 1000));
+        }
+    }
+}
+
+function typeWriter(element, text, speed) {
+    return new Promise(resolve => {
+        let i = 0;
+        element.classList.add('typing-cursor');
+        // Fix selector for scroll target
+        const scrollTarget = element.closest('#chat-scroll') || element.closest('#modal-chat-scroll') || element.parentElement.parentElement;
+
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                if (scrollTarget) scrollTarget.scrollTop = scrollTarget.scrollHeight;
+                setTimeout(type, speed);
+            } else {
+                element.classList.remove('typing-cursor');
+                resolve();
+            }
+        }
+        type();
+    });
+}
+
+// Fonction utilitaire pour découper par MOTS (Max 70 mots)
+function splitMessage(text) {
+    const MAX_WORDS = 70;
+    const words = text.split(/\s+/); // Découpe espaces
+    const chunks = [];
+
+    let currentChunk = [];
+
+    for (let w of words) {
+        currentChunk.push(w);
+        if (currentChunk.length >= MAX_WORDS && ['.', '!', '?'].includes(w.slice(-1))) {
+            chunks.push(currentChunk.join(" "));
+            currentChunk = [];
+        }
+    }
+    if (currentChunk.length > 0) {
+        chunks.push(currentChunk.join(" "));
+    }
+    return chunks;
 }
 
 async function playTTS(text, persona) {
     try {
         const voiceId = persona.openaiVoice || "alloy";
-        const cleanText = text.replace(/\*[^*]+\*/g, '').trim(); 
-        if(!cleanText) return;
+        const cleanText = text.replace(/\*[^*]+\*/g, '').trim();
+        if (!cleanText) return;
 
         const res = await fetch(`${API_BASE}/tts?voice=${voiceId}&model=gpt-4o-mini-tts&format=mp3`, {
             method: "POST", headers: { "Content-Type": "application/json" },
@@ -332,20 +433,20 @@ async function playTTS(text, persona) {
         const blob = await res.blob();
         const audio = new Audio(URL.createObjectURL(blob));
         audio.play();
-    } catch(e) { console.warn("TTS Error", e); }
+    } catch (e) { console.warn("TTS Error", e); }
 }
 
 // --- SAUVEGARDE & RETOUR (Version Eoliennes) ---
 
-window.undoLastScene = function() {
+window.undoLastScene = function () {
     if (SCENE_HISTORY.length === 0) return alert("Impossible de reculer plus loin.");
     const prevId = SCENE_HISTORY.pop();
     window._isUndoing = true;
     loadScene(prevId);
-    document.getElementById('settings-popup').style.display='none';
+    document.getElementById('settings-popup').style.display = 'none';
 };
 
-window.downloadSave = function() {
+window.downloadSave = function () {
     const saveObj = {
         date: new Date().toISOString(),
         sceneId: CURRENT_SCENE.id,
@@ -354,14 +455,14 @@ window.downloadSave = function() {
         chats: CHAT_SESSIONS,
         mode: GAME_MODE
     };
-    const blob = new Blob([JSON.stringify(saveObj, null, 2)], {type : 'application/json'});
+    const blob = new Blob([JSON.stringify(saveObj, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = `eoliennes_save_${new Date().toLocaleTimeString().replace(/:/g,'-')}.json`;
+    a.download = `eoliennes_save_${new Date().toLocaleTimeString().replace(/:/g, '-')}.json`;
     a.click();
 };
 
-window.uploadSave = function(input) {
+window.uploadSave = function (input) {
     const file = input.files[0];
     if (!file) return;
     const reader = new FileReader();
@@ -374,19 +475,19 @@ window.uploadSave = function(input) {
             GAME_MODE = data.mode || 'standard';
             loadScene(data.sceneId);
             alert("Partie chargée !");
-            document.getElementById('settings-popup').style.display='none';
-        } catch(err) { alert("Fichier invalide"); }
+            document.getElementById('settings-popup').style.display = 'none';
+        } catch (err) { alert("Fichier invalide"); }
     };
     reader.readAsText(file);
 };
 
-window.saveGameLog = async function() {
-    const transcript = JSON.stringify({ 
+window.saveGameLog = async function () {
+    const transcript = JSON.stringify({
         date: new Date().toISOString(),
         state: GAME_STATE,
-        sessions: CHAT_SESSIONS 
+        sessions: CHAT_SESSIONS
     }, null, 2);
-    
+
     try {
         await fetch(`${API_BASE}/save`, {
             method: "POST", headers: { "Content-Type": "application/json" },
@@ -398,7 +499,43 @@ window.saveGameLog = async function() {
             })
         });
         alert("Sauvegarde réussie !");
-    } catch(e) { alert("Erreur sauvegarde: " + e); }
+    } catch (e) { alert("Erreur sauvegarde: " + e); }
+}
+
+// --- TIMER SYSTEM ---
+let TIMER_INTERVAL = null;
+window.startTimer = function (minutes) {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    let seconds = minutes * 60;
+
+    if (ui.timerOverlay) ui.timerOverlay.style.display = 'flex';
+
+    updateTimerDisplay(seconds);
+
+    TIMER_INTERVAL = setInterval(() => {
+        seconds--;
+        updateTimerDisplay(seconds);
+        if (seconds <= 0) {
+            clearInterval(TIMER_INTERVAL);
+            const alarm = new Audio('assets/sfx_gong.mp3');
+            // alarm.play(); 
+            if (ui.timerVal) ui.timerVal.style.color = 'red';
+            setTimeout(() => { if (ui.timerOverlay) ui.timerOverlay.style.display = 'none'; }, 5000);
+        }
+    }, 1000);
+}
+
+window.stopTimer = function () {
+    if (TIMER_INTERVAL) clearInterval(TIMER_INTERVAL);
+    if (ui.timerOverlay) ui.timerOverlay.style.display = 'none';
+    if (ui.timerVal) ui.timerVal.style.color = 'white';
+}
+
+function updateTimerDisplay(totalSeconds) {
+    if (!ui.timerVal) return;
+    const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+    const s = (totalSeconds % 60).toString().padStart(2, '0');
+    ui.timerVal.innerText = `${m}:${s}`;
 }
 
 init();
